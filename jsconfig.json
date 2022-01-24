@@ -1,0 +1,24 @@
+{
+	"compilerOptions": {
+		"target": "es6",
+		"module": "commonjs",
+		"allowSyntheticDefaultImports": false,
+		"baseUrl": ".",
+		"paths": {
+			"@Screen/*": ["./src/app/screens/*"],
+			"@Items/*": ["./src/app/screens/Items/*"],
+			"@Layouts/*": ["./src/app/screens/Layouts/*"],
+			"@Component/*": ["./src/app/components/*"],
+			"@Config/*": ["./src/app/config/*"],
+			"@Constant/*": ["./src/app/constants/*"],
+			"@Action/*": ["./src/app/redux/actions/*"],	
+			"@Saga/*": ["./src/app/redux/sagas/*"],
+			"@Api/*": ["./src/app/api/*"],
+			"@Reducer/*": ["./src/app/redux/reducers/*"],
+			"@Service/*": ["./src/app/services/*"],
+			"@Util/*": ["./src/app/utils/*"],
+			"@Asset/*": ["./assets/*"]
+		}
+	},
+	"exclude": ["node_modules", "dist"]
+}
