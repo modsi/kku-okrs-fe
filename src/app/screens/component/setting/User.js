@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { Card, Table, Button, Modal, Form, Row, Col, Input, Radio, Select } from 'antd';
-import { EditOutlined, EyeOutlined, SettingOutlined } from "@ant-design/icons";
+import { Card, Table, Button, Modal, Form, Row, Col, Input, Radio, Select, Typography } from 'antd';
+import { EditOutlined, EyeOutlined, SettingOutlined, PlusOutlined } from "@ant-design/icons";
 
+const { Text, Link } = Typography;
 const User = () => {
     const [form] = Form.useForm();
     const [isLoading, setIsLoading] = useState(false);
@@ -38,7 +39,7 @@ const User = () => {
 
     const columns = [
         {
-            title: 'ลำดับ',
+            title: 'No.',
             dataIndex: 'no',
             key: 'no',
             align: 'center',
@@ -53,28 +54,35 @@ const User = () => {
             render: (_, record) => record?.name + ' ' + record.lastName
         },
         {
-            title: 'ชื่อผู้ใช้งาน',
+            title: 'Email',
+            dataIndex: 'email',
+            key: 'email',
+            align: 'center',
+            width: 80,
+        },
+        {
+            title: 'Username',
             dataIndex: 'username',
             key: 'username',
             align: 'center',
             width: 80,
         },
         {
-            title: 'บทบาท/กลุ่ม',
+            title: 'Role',
             dataIndex: 'role',
             key: 'role',
             align: 'center',
             width: 80,
         },
         {
-            title: 'สถานะ',
+            title: 'Status',
             dataIndex: 'status',
             key: 'status',
             align: 'center',
             width: 80,
         },
         {
-            title: 'ใช้งานเมื่อ',
+            title: 'Last Active',
             dataIndex: 'lastLogin',
             key: 'lastLogin',
             align: 'center',
@@ -108,11 +116,11 @@ const User = () => {
         setIsModalAddEditVisible(true);
         setAddEditTitle('แก้ไขผู้ใช้งาน');
         form.setFieldsValue({
-            ['name']: record?.name,
-            ['lastName']: record?.lastName,
-            ['username']: record?.username,
-            ['role']: record?.role
-        });  
+            name: record?.name,
+            lastName: record?.lastName,
+            username: record?.username,
+            role: record?.role
+        });
     }
 
     const newUser = async () => {
@@ -138,18 +146,19 @@ const User = () => {
             value: "User",
             label: "User",
         },
-      ];
+    ];
 
     return (
         <>
-            <Card title={"ผู้ใช้งาน"} className="rounded" >
+            <Card title={"User"} className="rounded" >
                 <Row gutter={24} className="row-inquiry-customer">
-                    <Col span={24} style={{ textAlign: "right" }}>
-                        <Button                            
+                    <Col span={24} style={{ textAlign: "left" }}>
+                        <Button
+                            className="nol-button"
                             onClick={newUser}
                             loading={isLoading}
                         >
-                            เพิ่มผู้ใช้งาน
+                            <Text className="big6-title"><PlusOutlined className="big6-title" style={{ color: 'hotpink' }}/> Add User</Text>
                         </Button>
                     </Col>
                     <Col span={24} style={{ textAlign: "center" }}>
