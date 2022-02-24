@@ -1,18 +1,34 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { Card, Table, Button, Modal, Form, Row, Col, Input, Radio, Select, Typography } from 'antd';
+import { useDispatch, useSelector } from 'react-redux'
+import { Card, Table, Button, Modal, Form, Row, Col, Input, Radio, Select, Typography, Switch } from 'antd';
 import { EditOutlined, EyeOutlined, SettingOutlined, PlusOutlined } from "@ant-design/icons";
+import { ListInstitutionsAction, ListRolesAction, LIST_INSTITUTIONS, LIST_ROLES } from '../../../redux/actions/ListMasterAction'
+import SetOptionsForSelect, { SetOptionsForSelectSetLable } from '../../items/SetOptionsForSelect'
 
+const { Option } = Select;
 const { Text, Link } = Typography;
 const User = () => {
+    const dispatch = useDispatch()
     const [form] = Form.useForm();
+    const listInstitutions = useSelector(state => state?.main?.[LIST_INSTITUTIONS])
+    const listRoles = useSelector(state => state?.main?.[LIST_ROLES])
     const [isLoading, setIsLoading] = useState(false);
     const [isModalAddEditVisible, setIsModalAddEditVisible] = useState(false);
     const [addEditTitle, setAddEditTitle] = useState('');
     const layout = {
-        labelCol: { span: 4 },
-        wrapperCol: { span: 18, align: "left" },
-        layout: "horizontal"
+        labelCol: { span: 24 },
+        wrapperCol: { span: 22 },
+        layout: "vertical"
     };
+
+    useEffect(() => {
+        handleListMaster()
+    }, [])
+
+    async function handleListMaster() {
+        dispatch(await ListInstitutionsAction())
+        dispatch(await ListRolesAction())
+    }
 
     const dataSource = [
         {
@@ -125,7 +141,7 @@ const User = () => {
 
     const newUser = async () => {
         setIsModalAddEditVisible(true);
-        setAddEditTitle('เพิ่มผู้ใช้งาน');
+        setAddEditTitle('Registration');
     }
 
     const onSubmit = async () => {
@@ -158,7 +174,7 @@ const User = () => {
                             onClick={newUser}
                             loading={isLoading}
                         >
-                            <Text className="big6-title"><PlusOutlined className="big6-title" style={{ color: 'hotpink' }}/> Add User</Text>
+                            <Text className="big6-title"><PlusOutlined /> Add User</Text>
                         </Button>
                     </Col>
                     <Col span={24} style={{ textAlign: "center" }}>
@@ -180,7 +196,7 @@ const User = () => {
                     closable={true}
                     title={addEditTitle}
                     visible={isModalAddEditVisible}
-                    width={"30%"}
+                    width={"70%"}
                     centered={true}
                     footer={null}
                     onCancel={handleClickCancel}
@@ -189,69 +205,67 @@ const User = () => {
                         <Form form={form} {...layout} >
                             <Card loading={isLoading}>
                                 <Row>
-                                    <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                                    <Col xs={24} sm={24} md={24} lg={12} xl={12}>
                                         <Form.Item
-                                            label={"ชื่อ"} name={"name"}  >
-                                            <Input style={{ textAlign: "left" }} />
+                                            label={"Full Name"} name={"fullName"}  >
+                                            <Input style={{ textAlign: "left" }} size="small" />
+                                        </Form.Item>
+                                    </Col>
+                                    <Col xs={24} sm={24} md={24} lg={12} xl={12}>
+                                        <Form.Item
+                                            rules={[{ type: 'email', }]}
+                                            label={"Email"} name={"email"}  >
+                                            <Input style={{ textAlign: "left" }}  size="small" />
                                         </Form.Item>
                                     </Col>
                                 </Row>
                                 <Row>
-                                    <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                                    <Col xs={24} sm={24} md={12} lg={12} xl={12}>
                                         <Form.Item
-                                            label={"นามสกุล"} name={"lastName"}  >
-                                            <Input style={{ textAlign: "left" }} />
-                                        </Form.Item>
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-                                        <Form.Item
-                                            label={"ชื่อผู้ใช้งาน"} name={"username"}  >
-                                            <Input style={{ textAlign: "left" }} />
-                                        </Form.Item>
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-                                        <Form.Item
-                                            label={"อีเมล"} name={"email"}  >
-                                            <Input style={{ textAlign: "left" }} />
-                                        </Form.Item>
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-                                        <Form.Item
-                                            label={"เบอร์โทร"} name={"tel"}  >
-                                            <Input style={{ textAlign: "left" }} />
-                                        </Form.Item>
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-                                        <Form.Item
-                                            label={"บทบาท/กลุ่ม"} name={"role"}  >
+                                            label={"Role"} name={"role"}  >
                                             <Select
+                                                options={SetOptionsForSelect({ label: 'role_name', value: 'id', data: listRoles })}
+                                                placeholder="Please select"
+                                                // onChange={handleChange}
                                                 size="middle"
-                                                className="input-longtype select-normaltype"
-                                                placeholder={"-Please select-"}
-                                                options={statusOrder}
+                                                style={{ width: '100%' }}
                                             />
                                         </Form.Item>
                                     </Col>
-                                </Row>
-                                <Row>
-                                    <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                                    <Col xs={24} sm={24} md={12} lg={8} xl={10}>
                                         <Form.Item
-                                            label={"สถานะ"} name={"status"}  >
-                                            <Radio.Group
+                                            label={"Username"} name={"username"}  >
+                                            <Input style={{ textAlign: "left" }} size="small" />
+                                        </Form.Item>
+                                    </Col>
+                                    <Col xs={24} sm={24} md={12} lg={4} xl={2}>
+                                        <Form.Item
+                                            label={"Status"} name={"status"}  >
+                                            {/* <Radio.Group
                                                 name="radiogroup"
                                                 initialValues={1}
                                             >
                                                 <Radio value={1}>ใช้งาน</Radio>
                                                 <Radio value={2}>ปิดการใช้งาน</Radio>
-                                            </Radio.Group>
+                                            </Radio.Group> */}
+
+                                            <Switch />
+                                        </Form.Item>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                                        <Form.Item
+                                            wrapperCol={{ span: 23 }}
+                                            label={"Group"} name={"group"}  >
+                                            <Select
+                                                options={SetOptionsForSelect({ label: 'groupname', value: 'groupid', data: listInstitutions })}
+                                                mode="multiple"
+                                                placeholder="Please select"
+                                                // onChange={handleChange}
+                                                size="large"
+                                                style={{ width: '100%' }}
+                                            />
                                         </Form.Item>
                                     </Col>
                                 </Row>

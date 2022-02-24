@@ -9,7 +9,7 @@ export const getStorage = (key) => {
 };
 
 export const setStorage = (key,item) => {
-  if (!localStorage) return;
+  if (!localStorage) return null;
 
   try {
         console.log('page storage',key,item);

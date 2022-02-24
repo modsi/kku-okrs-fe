@@ -81,7 +81,7 @@ div#root {
 
   .big6-title, .big6-title > svg {
 	font-family: 'THSarabunBold' !important;
-	font-size: 18px !important;
+	/* font-size: 18px !important; */
 	color: #fff !important;
   }
 
@@ -91,7 +91,7 @@ div#root {
 	border-radius: 5px;
   }
 
-  .nol-button:hover {
+  .nol-button:hover, .nol-button:focus {
 	background-color: #30282880; 
 	border-color: #30282880;
   }
@@ -157,6 +157,17 @@ div#root {
 	color: #4E5C84BF;
   }
 
+  .ant-modal-title {
+	font-family: 'InterBold' !important;
+	font-size: 18px !important;
+	color: #4E5C84BF;
+  }
+
+  .ant-form-item-label > label{
+	font-family: 'InterBold' !important;
+	font-size: 14px !important;
+	color: #4E5C84BF;
+  }
   .ant-table-small .ant-table-thead > tr > th {
 	background: rgba(245, 124, 0, 0.8);
 	
@@ -164,6 +175,10 @@ div#root {
 
   .ant-table-thead {
 	border-radius: 10px;
+  }
+
+  .ant-select-arrow{
+	  top: 40%;
   }
 
   @media (min-width: 1500px) {
