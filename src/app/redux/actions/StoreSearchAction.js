@@ -13,3 +13,9 @@ export const SecondStoreAction = (data = {}) => {
 }
 
 export default StoreSearchAction
+
+export const STORE_TEMPLATE = 'storeTemplate'
+export const StoreTemplateAction = (data = {}) => {
+    console.log('StoreTemplateAction act',data);
+    return Payload({ params: { [STORE_TEMPLATE]: data }, type: STORE_TEMPLATE })
+}

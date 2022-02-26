@@ -43,10 +43,10 @@ const Main = () => {
                 breakpoint="lg"
                 collapsedWidth="0"
                 onBreakpoint={broken => {
-                    console.log(broken);
+                    // console.log(broken);
                 }}
                 onCollapse={(collapsed, type) => {
-                    console.log(collapsed, type);
+                    // console.log(collapsed, type);
                 }}
             >
                 <div className="logo">
@@ -102,7 +102,7 @@ const Main = () => {
                         {mycontent}
                     </div>
                 </Content>
-                <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
+                <Footer style={{ textAlign: 'center' }}>HUSO-KKU ©2022 Faculty of Humanities and Social Sciences</Footer>
             </Layout>
         </Layout>
     )

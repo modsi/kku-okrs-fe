@@ -13,6 +13,13 @@ export const ListRoles = async () => {
     return await get(`${MANAGE_URL}/role`)
 }
 
+export const SaveAccountService = async (data = {}) => {
+    return await post(`${USER_URL}/register`, data)
+}
+
+export const GetAccountService = async(data = {})=>{
+    return await get(`${MANAGE_URL}/accounts?page=${data.page}&size=${data.size}&q=${data.str}`)
+}
 
 
 

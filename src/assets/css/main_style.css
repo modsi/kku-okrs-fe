@@ -38,25 +38,31 @@ div#root {
 .grad1 {
 	/* height: 100%; */
 	background-color: red; /* For browsers that do not support gradients */
-	background-image: linear-gradient(to right,  rgb(151, 151, 151), rgb(243, 212, 126), rgb(245, 232, 53) );
+	background-image: linear-gradient(to right,  white, rgb(148, 0, 32) );
   }
 
   .small-text{
-	font-size: 16px !important;
+	font-size: 14px !important;
   }
   
+  .template-text, .template-text .ant-form-item-label > label {
+	font-family: 'THSarabun' !important;
+	font-size: var(--main-font-size) !important;
+	color: black;
+  }
+
   .big1-title {
 	font-family: 'InterBold' !important;
-	font-size: 50px !important;
-	background: -webkit-linear-gradient(#eb680a, #f7e72b);
+	font-size: 26px !important;
+	background: -webkit-linear-gradient(#eb680a, #eb9046);
 	-webkit-background-clip: text;
 	-webkit-text-fill-color: transparent;
   }
 
   .big2-title {
 	font-family: 'InterBold' !important;
-	font-size: 30px !important;
-	background: -webkit-linear-gradient(#eb680a, #f7e72b);
+	font-size: 20px !important;
+	background: -webkit-linear-gradient(#eb680a, #eb9046);;
 	-webkit-background-clip: text;
 	-webkit-text-fill-color: transparent;
   }
@@ -179,6 +185,23 @@ div#root {
 
   .ant-select-arrow{
 	  top: 40%;
+  }
+
+  .dynamic-delete-button {
+	position: relative;
+	top: 4px;
+	margin: 0 8px;
+	color: #999;
+	font-size: 24px;
+	cursor: pointer;
+	transition: all 0.3s;
+  }
+  .dynamic-delete-button:hover {
+	color: #777;
+  }
+  .dynamic-delete-button[disabled] {
+	cursor: not-allowed;
+	opacity: 0.5;
   }
 
   @media (min-width: 1500px) {

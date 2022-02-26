@@ -4,6 +4,11 @@ import { Card, Table, Button, Modal, Form, Row, Col, Input, Radio, Select, Typog
 import { EditOutlined, EyeOutlined, SettingOutlined, PlusOutlined } from "@ant-design/icons";
 import { ListInstitutionsAction, ListRolesAction, LIST_INSTITUTIONS, LIST_ROLES } from '../../../redux/actions/ListMasterAction'
 import SetOptionsForSelect, { SetOptionsForSelectSetLable } from '../../items/SetOptionsForSelect'
+import CustomizeTable from '../../items/CustomizeTable'
+import { ConfirmModalEditText, SuccessModal, ErrorModalMassageHtml } from "../../items/Modal";
+import { SaveAccAction, listAccountAction, LLIST_ACCOUNT } from '../../../redux/actions/UserAction'
+import { DATE_FULL, DATE_NORMAL } from '../../../utils/Elements'
+import moment from 'moment';
 
 const { Option } = Select;
 const { Text, Link } = Typography;
@@ -11,10 +16,12 @@ const User = () => {
     const dispatch = useDispatch()
     const [form] = Form.useForm();
     const listInstitutions = useSelector(state => state?.main?.[LIST_INSTITUTIONS])
+    const dataSource = useSelector(state => state?.main?.[LLIST_ACCOUNT])
     const listRoles = useSelector(state => state?.main?.[LIST_ROLES])
     const [isLoading, setIsLoading] = useState(false);
     const [isModalAddEditVisible, setIsModalAddEditVisible] = useState(false);
     const [addEditTitle, setAddEditTitle] = useState('');
+    const [currentPage, setCurrentPage] = useState(1);
     const layout = {
         labelCol: { span: 24 },
         wrapperCol: { span: 22 },
@@ -22,7 +29,13 @@ const User = () => {
     };
 
     useEffect(() => {
+        console.log(dataSource)
+    }, [dataSource])
+
+
+    useEffect(() => {
         handleListMaster()
+        listAccount({ str: "" })
     }, [])
 
     async function handleListMaster() {
@@ -30,87 +43,65 @@ const User = () => {
         dispatch(await ListRolesAction())
     }
 
-    const dataSource = [
-        {
-            no: 1,
-            key: '1',
-            name: 'Mike',
-            lastName: 'App',
-            username: 'asdd',
-            role: 'User',
-            status: 'Active',
-            lastLogin: '15 minute ago'
-        },
-        {
-            no: 2,
-            key: '2',
-            name: 'John',
-            lastName: 'Xoui',
-            username: 'ghjk',
-            role: 'Admin',
-            status: 'Active',
-            lastLogin: '35 minute ago'
-        },
-    ];
+    async function listAccount(data) {
+        dispatch(await listAccountAction(data))
+    }
 
     const columns = [
         {
             title: 'No.',
             dataIndex: 'no',
-            key: 'no',
             align: 'center',
             width: 50,
+            render: (text, record, index) => ((currentPage - 1) * 10) + index + 1
         },
         {
             title: 'Full Name',
             dataIndex: 'name',
-            key: 'name',
-            align: 'center',
+            align: 'left',
             width: 80,
-            render: (_, record) => record?.name + ' ' + record.lastName
+            render: (_, record) => record?.full_name
         },
         {
             title: 'Email',
             dataIndex: 'email',
-            key: 'email',
-            align: 'center',
+            align: 'left',
             width: 80,
+            render: (_, record) => record?.email
         },
         {
             title: 'Username',
             dataIndex: 'username',
-            key: 'username',
-            align: 'center',
+            align: 'left',
             width: 80,
+            render: (_, record) => record?.username
         },
         {
             title: 'Role',
             dataIndex: 'role',
-            key: 'role',
-            align: 'center',
+            align: 'left',
             width: 80,
+            render: (_, record) => record?.role?.role_name
         },
         {
             title: 'Status',
             dataIndex: 'status',
-            key: 'status',
             align: 'center',
             width: 80,
+            render: (_, record) => record?.status === "1" ? 'active' : 'disabled',
         },
         {
             title: 'Last Active',
             dataIndex: 'lastLogin',
-            key: 'lastLogin',
             align: 'center',
             width: 80,
+            render: (_, record) => record?.last_login !== null ? moment(record.last_login).format(DATE_FULL) : null
         },
         {
             title: 'Action',
             fixed: 'right',
             align: 'center',
             width: 100,
-            dataIndex: '',
-            key: 'x',
             render: (record) =>
                 <div className="text-center">
                     <Button
@@ -130,13 +121,20 @@ const User = () => {
     const handleClickEdit = (record) => {
         console.log('record >> ', record);
         setIsModalAddEditVisible(true);
-        setAddEditTitle('แก้ไขผู้ใช้งาน');
+        setAddEditTitle('User Management');
+        let ag = []
+        record?.account_groups?.map((item) => {
+            ag.push(item.group_id)
+        })
         form.setFieldsValue({
-            name: record?.name,
-            lastName: record?.lastName,
+            fullName: record?.full_name,
             username: record?.username,
-            role: record?.role
+            email: record?.email,
+            role: record?.role?.id,
+            status: record?.status === "1" ? true : false,
+            group: ag
         });
+
     }
 
     const newUser = async () => {
@@ -144,8 +142,42 @@ const User = () => {
         setAddEditTitle('Registration');
     }
 
+    const conditionSave = () => {
+        return {
+            title: "Confirm",
+            content: "Are you sure you want to save ?"
+        }
+    }
+
     const onSubmit = async () => {
-        handleClickCancel()
+        console.log(form.getFieldValue())
+        if (form.getFieldValue('fullName') && form.getFieldValue('email') && form.getFieldValue('role') && form.getFieldValue('username')) {
+            ConfirmModalEditText(onFinish, conditionSave());
+        } else {
+            form.validateFields()
+        }
+    }
+
+    async function onFinish() {
+        setIsLoading(true)
+        let data = {}
+        data.username = form.getFieldValue('username')
+        data.password = "1234"
+        data.email = form.getFieldValue('email')
+        data.full_name = form.getFieldValue('fullName')
+        data.role_id = form.getFieldValue('role')
+        data.status = form.getFieldValue('status') || form.getFieldValue('status') === undefined || form.getFieldValue('status') === null ? 1 : 0
+        data.group = form.getFieldValue('group')
+        console.log('onFinish >> data is ', data)
+        let res = await SaveAccAction(data)
+        if (res.error === null) {
+            handleClickCancel();
+            listAccount({ str: "" })
+            SuccessModal("Success");
+        } else {
+            ErrorModalMassageHtml(res.error.message);
+        }
+        setIsLoading(false)
     }
 
     const handleClickCancel = () => {
@@ -153,16 +185,18 @@ const User = () => {
         setIsModalAddEditVisible(false);
     }
 
-    const statusOrder = [
-        {
-            value: "Admin",
-            label: "Admin",
-        },
-        {
-            value: "User",
-            label: "User",
-        },
-    ];
+    const setUsername = (e) => {
+        console.log('setUsername', e.target.value)
+        let value = e.target.value.split("@")
+        form.setFieldsValue({
+            username: value ? value[0] : null
+        });
+    }
+
+    const handleTableChange = (pagination, filters, sorter) => {
+        console.log('pagination >> ', pagination)
+        setCurrentPage(pagination.current)
+    };
 
     return (
         <>
@@ -185,7 +219,10 @@ const User = () => {
                             scroll={{ x: 'max-content' }}
                             size="small"
                             bordered
-                            dataSource={dataSource}
+                            dataSource={dataSource?.result?.accounts}
+                            onChange={handleTableChange}
+                            pagination={true}
+                            pageSize={10}
                             columns={columns} />
                     </Col>
                 </Row>
@@ -207,22 +244,24 @@ const User = () => {
                                 <Row>
                                     <Col xs={24} sm={24} md={24} lg={12} xl={12}>
                                         <Form.Item
-                                            label={"Full Name"} name={"fullName"}  >
+                                            label={"Full Name"} name={"fullName"}
+                                            rules={[{ required: true, message: 'Full Name is required!' }]}>
                                             <Input style={{ textAlign: "left" }} size="small" />
                                         </Form.Item>
                                     </Col>
                                     <Col xs={24} sm={24} md={24} lg={12} xl={12}>
                                         <Form.Item
-                                            rules={[{ type: 'email', }]}
+                                            rules={[{ type: 'email', message: 'The input is not valid E-mail!' }, { required: true, message: 'Email is required!' }]}
                                             label={"Email"} name={"email"}  >
-                                            <Input style={{ textAlign: "left" }}  size="small" />
+                                            <Input style={{ textAlign: "left" }} size="small" onChange={setUsername} />
                                         </Form.Item>
                                     </Col>
                                 </Row>
                                 <Row>
                                     <Col xs={24} sm={24} md={12} lg={12} xl={12}>
                                         <Form.Item
-                                            label={"Role"} name={"role"}  >
+                                            label={"Role"} name={"role"}
+                                            rules={[{ required: true, message: 'Role is required!' }]}>
                                             <Select
                                                 options={SetOptionsForSelect({ label: 'role_name', value: 'id', data: listRoles })}
                                                 placeholder="Please select"
@@ -234,22 +273,15 @@ const User = () => {
                                     </Col>
                                     <Col xs={24} sm={24} md={12} lg={8} xl={10}>
                                         <Form.Item
-                                            label={"Username"} name={"username"}  >
+                                            label={"Username"} name={"username"}
+                                            rules={[{ required: true, message: 'Username is required!' }]}>
                                             <Input style={{ textAlign: "left" }} size="small" />
                                         </Form.Item>
                                     </Col>
                                     <Col xs={24} sm={24} md={12} lg={4} xl={2}>
                                         <Form.Item
-                                            label={"Status"} name={"status"}  >
-                                            {/* <Radio.Group
-                                                name="radiogroup"
-                                                initialValues={1}
-                                            >
-                                                <Radio value={1}>ใช้งาน</Radio>
-                                                <Radio value={2}>ปิดการใช้งาน</Radio>
-                                            </Radio.Group> */}
-
-                                            <Switch />
+                                            label={"Status"} name={"status"} valuePropName="checked" >
+                                            <Switch defaultChecked />
                                         </Form.Item>
                                     </Col>
                                 </Row>
