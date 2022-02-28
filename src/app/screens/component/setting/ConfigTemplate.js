@@ -144,9 +144,9 @@ const ConfigTemplate = () => {
                                 <Col xs={24} sm={24} md={24} lg={12} xl={12}>
                                     <Form.Item name="group">
                                         <Radio.Group>
-                                            <Radio value="a">แบบแผนที่ 1</Radio>
-                                            <Radio value="b">แบบแผนที่ 2</Radio>
-                                            <Radio value="c">แบบพิเศษ</Radio>
+                                            <Radio value="1">แบบแผนที่ 1</Radio>
+                                            <Radio value="2">แบบแผนที่ 2</Radio>
+                                            <Radio value="3">แบบพิเศษ</Radio>
                                         </Radio.Group>
                                     </Form.Item>
                                 </Col>

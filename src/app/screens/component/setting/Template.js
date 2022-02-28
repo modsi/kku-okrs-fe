@@ -2,10 +2,11 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from "react-router-dom";
 import { Card, Row, Col, Button, Typography, Table, Form, PageHeader } from 'antd';
-import { EditOutlined, EyeOutlined, SettingOutlined, PlusOutlined } from "@ant-design/icons";
+import { EditOutlined, EyeOutlined, SettingOutlined, PlusOutlined, FileSearchOutlined } from "@ant-design/icons";
 import { DATE_FULL, DATE_NORMAL } from '../../../utils/Elements'
 import moment from 'moment';
 import ConfigTemplate from './ConfigTemplate'
+import {tem1, tem2} from '../../../../template-mock'
 
 const { Text, Link } = Typography;
 const Template = () => {
@@ -17,6 +18,7 @@ const Template = () => {
     const [isModalAddEditVisible, setIsModalAddEditVisible] = useState(false);
     const [addEditTitle, setAddEditTitle] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
+    const [dataSource, setDataSource] = useState([])
 
     const routeChange = () => {
         let path = '/admin/addTempalte';
@@ -33,45 +35,45 @@ const Template = () => {
         },
         {
             title: 'Template Name',
-            dataIndex: 'name',
+            dataIndex: 'templateName',
             align: 'left',
             width: 80,
-            render: (_, record) => record?.full_name
+            render: (_, record) => record?.templateName
         },
         {
             title: 'Type',
-            dataIndex: 'email',
+            dataIndex: 'type',
             align: 'left',
             width: 80,
-            render: (_, record) => record?.email
+            render: (_, record) => record?.type === 1 ? 'แบบแผนที่ 1' : 'แบบแผนที่ 2'
         },
         {
             title: 'Created By',
-            dataIndex: 'username',
+            dataIndex: 'createdBy',
             align: 'left',
             width: 80,
-            render: (_, record) => record?.username
+            render: (_, record) => record?.createdBy
         },
         {
             title: 'Update By',
-            dataIndex: 'role',
+            dataIndex: 'updateBy',
             align: 'left',
             width: 80,
-            render: (_, record) => record?.role?.role_name
+            render: (_, record) => record?.updateBy
         },
         {
             title: 'Last Update',
             dataIndex: 'status',
             align: 'center',
             width: 80,
-            render: (_, record) => record?.status === "1" ? 'active' : 'disabled',
+            render: (_, record) => record?.lastUpdate
         },
         {
             title: 'Status',
-            dataIndex: 'lastLogin',
+            dataIndex: 'status',
             align: 'center',
             width: 80,
-            render: (_, record) => record?.last_login !== null ? moment(record.last_login).format(DATE_FULL) : null
+            render: (_, record) => record?.status === 1 ? 'active' : 'disabled',
         },
         {
             title: 'Action',
@@ -87,7 +89,7 @@ const Template = () => {
                             handleClickEdit(record)
                         }
                     >
-                        <EditOutlined />
+                        <FileSearchOutlined />
                     </Button>
                 </div>
 
@@ -116,7 +118,14 @@ const Template = () => {
     const handleTableChange = (pagination, filters, sorter) => {
         console.log('pagination >> ', pagination)
         setCurrentPage(pagination.current)
-    };    
+    };   
+    
+    useEffect(() => {
+        let ar = []
+        ar.push(tem1)
+        ar.push(tem2)
+        setDataSource(ar)
+    }, [])
 
     return (
         <>
@@ -148,8 +157,8 @@ const Template = () => {
                                 loading={isLoading}
                                 scroll={{ x: 'max-content' }}
                                 size="small"
-                                bordered
-                                // dataSource={dataSource?.result?.accounts}
+                                bordered={false}
+                                dataSource={dataSource}
                                 onChange={handleTableChange}
                                 pagination={true}
                                 pageSize={10}

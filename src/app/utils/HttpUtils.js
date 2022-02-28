@@ -5,7 +5,8 @@ export const httpUtils = {
 	post,
 	get,
 	postFormData,
-	postUpload
+	postUpload,
+	patch
 };
 
 function getHeaders(headersOption) {
@@ -41,6 +42,30 @@ axios.interceptors.response.use(function (response) {
 	}
 	return Promise.reject(error);
 });
+
+function patch(url, payload = {}, headersOption, responseType = 'application/json') {
+	try {
+		const call = async () => {
+			const headers = getHeaders(headersOption);
+			const options = {
+				method: 'PATCH',
+				url,
+				...headers,
+				data: JSON.stringify(payload),
+				responseType: responseType,
+			};
+			const response = await axios(options)
+				.then(response => {
+					return response;
+				});
+			return response
+		}
+		return call();
+	} catch (err) {
+		console.error(err);
+		throw err;
+	}
+};
 
 function post(url, payload = {}, headersOption, responseType = 'application/json') {
 	try {

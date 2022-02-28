@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Layout, Menu, Image, Row, Col, Typography, Space } from 'antd';
-import { FileTextOutlined, UserOutlined, FolderOpenOutlined, MailOutlined, AppstoreOutlined, GroupOutlined } from '@ant-design/icons';
+import { FileTextOutlined, UserOutlined, FolderOpenOutlined, AuditOutlined, AppstoreOutlined, GroupOutlined } from '@ant-design/icons';
 import logo from "../../assets/images/favicon-32x32.png"
 import Admin from './component/admin/Admin';
 import Dashboard from './component/dashboard/Dashboard';
@@ -24,12 +24,11 @@ const Main = () => {
         //     setContent(<Dashboard />);
         // } else if (value.key === '2') {
         //     setContent(<Faculty />);
-        // } else if (value.key === '3') {
-        //     setContent(<Course />);
-        // } else if (value.key === '4') {
+        // } else  if (value.key === '4') {
         //     setContent(<Institution />);
-        // } else 
-        if (value.key === '6') {
+        if (value.key === '3') {
+            setContent(<Admin />);
+        } else if (value.key === '6') {
             setContent(<User />);
         } else if (value.key === '7') {
             setContent(<Template />);
@@ -54,7 +53,7 @@ const Main = () => {
                         <Image
                             src={logo}
                         />
-                        <Space direction="vertical" style={{ padding: "5px", gap: "0px"}}>
+                        <Space direction="vertical" style={{ padding: "5px", gap: "0px" }}>
                             <Text strong>E - Project</Text>
                             <Text className="small-text">Faculty of Humanities  and Social Sciences</Text>
                         </Space>
@@ -68,13 +67,16 @@ const Main = () => {
                         <Menu.Item key="2" icon={<AppstoreOutlined />}>
                             Dashboard 2 - ผลการดำเนินงานของคณะ
                         </Menu.Item>
-                        <Menu.Item key="3" icon={<FileTextOutlined />}>
-                            Report Form 1
+                        <Menu.Item key="3" icon={<AuditOutlined />}>
+                            Manage Template
                         </Menu.Item>
                         <Menu.Item key="4" icon={<FileTextOutlined />}>
+                            Report Form 1
+                        </Menu.Item>
+                        <Menu.Item key="5" icon={<FileTextOutlined />}>
                             Report Form 2
                         </Menu.Item>
-                        <Menu.Item key="5" icon={<FolderOpenOutlined />}>
+                        <Menu.Item key="8" icon={<FolderOpenOutlined />}>
                             Data History
                         </Menu.Item>
                     </Menu.ItemGroup>

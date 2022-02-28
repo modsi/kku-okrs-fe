@@ -1,6 +1,6 @@
 import { httpUtils } from '../utils/HttpUtils'
 
-const { get, post } = httpUtils
+const { get, post, patch } = httpUtils
 const API_ENDPOINT = `http://128.199.225.180/app/api`
 const USER_URL = `${API_ENDPOINT}/users`
 const MANAGE_URL = `${API_ENDPOINT}/manage`
@@ -25,3 +25,6 @@ export const LoginService = async (data = {}) => {
     return await post(`${USER_URL}/login`, data)
 }
 
+export const UpdateAccountService = async (data = {}) => {
+    return await patch(`${USER_URL}/update`, data)
+}

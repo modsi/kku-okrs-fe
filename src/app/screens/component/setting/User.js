@@ -6,7 +6,7 @@ import { ListInstitutionsAction, ListRolesAction, LIST_INSTITUTIONS, LIST_ROLES 
 import SetOptionsForSelect, { SetOptionsForSelectSetLable } from '../../items/SetOptionsForSelect'
 import CustomizeTable from '../../items/CustomizeTable'
 import { ConfirmModalEditText, SuccessModal, ErrorModalMassageHtml } from "../../items/Modal";
-import { SaveAccAction, listAccountAction, LLIST_ACCOUNT } from '../../../redux/actions/UserAction'
+import { SaveAccAction, listAccountAction, LLIST_ACCOUNT, UpdateAccAction } from '../../../redux/actions/UserAction'
 import { DATE_FULL, DATE_NORMAL } from '../../../utils/Elements'
 import moment from 'moment';
 
@@ -22,15 +22,16 @@ const User = () => {
     const [isModalAddEditVisible, setIsModalAddEditVisible] = useState(false);
     const [addEditTitle, setAddEditTitle] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
+    const [id, setId] = useState(null);
     const layout = {
         labelCol: { span: 24 },
         wrapperCol: { span: 22 },
         layout: "vertical"
     };
 
-    useEffect(() => {
-        console.log(dataSource)
-    }, [dataSource])
+    // useEffect(() => {
+    //     console.log(dataSource)
+    // }, [dataSource])
 
 
     useEffect(() => {
@@ -120,6 +121,7 @@ const User = () => {
 
     const handleClickEdit = (record) => {
         console.log('record >> ', record);
+        setId(record.id)
         setIsModalAddEditVisible(true);
         setAddEditTitle('User Management');
         let ag = []
@@ -169,7 +171,14 @@ const User = () => {
         data.status = form.getFieldValue('status') || form.getFieldValue('status') === undefined || form.getFieldValue('status') === null ? 1 : 0
         data.group = form.getFieldValue('group')
         console.log('onFinish >> data is ', data)
-        let res = await SaveAccAction(data)
+        let res = {}
+        if(id){
+            data.id = id
+            data.updated_datetime = moment().format(DATE_FULL)
+            res = await UpdateAccAction(data)
+        }else {
+          res = await SaveAccAction(data)
+        }
         if (res.error === null) {
             handleClickCancel();
             listAccount({ str: "" })
@@ -182,6 +191,7 @@ const User = () => {
 
     const handleClickCancel = () => {
         form.resetFields();
+        setId(null)
         setIsModalAddEditVisible(false);
     }
 
@@ -218,7 +228,7 @@ const User = () => {
                             loading={isLoading}
                             scroll={{ x: 'max-content' }}
                             size="small"
-                            bordered
+                            bordered={false}
                             dataSource={dataSource?.result?.accounts}
                             onChange={handleTableChange}
                             pagination={true}

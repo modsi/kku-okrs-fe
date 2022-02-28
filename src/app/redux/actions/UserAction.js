@@ -1,4 +1,4 @@
-import { SaveAccountService, GetAccountService, LoginService } from '../../services/MainService'
+import { SaveAccountService, GetAccountService, LoginService, UpdateAccountService } from '../../services/MainService'
 import { Payload } from '../../utils/Payload'
 
 
@@ -7,20 +7,25 @@ export const SaveAccAction = async (data) => {
   return result?.data
 }
 
+export const UpdateAccAction = async (data) => {
+  const result = await UpdateAccountService(data)
+  return result?.data
+}
+
 export const LLIST_ACCOUNT = 'list_account'
 export const listAccountAction = async (data = {}) => {
   try {
     const onSearch = {
-      ...data, 
+      ...data,
       page: 0,
-      size: 1000000     
+      size: 1000000
     }
     const result = await GetAccountService(onSearch)
     console.log('GetAccountService >> result', result)
     const params = {
       [LLIST_ACCOUNT]: {
         result: result?.data?.data,
-        totalData: result?.data?.data?.totalItems       
+        totalData: result?.data?.data?.totalItems
       }
     }
     return Payload({ params: params, type: LLIST_ACCOUNT })
