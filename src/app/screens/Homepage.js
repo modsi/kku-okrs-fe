@@ -2,28 +2,43 @@ import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { Card, Row, Col, Typography, Space, Image, Button, Form, Input } from 'antd';
 import logo from "../../assets/images/favicon-96x96.png"
+import { ErrorModalMassageHtml } from "./items/Modal";
+import { LoginAction } from '../redux/actions/UserAction'
+import { setStorage, getStorage } from "../screens/state/localStorage";
 
 const { Text, Link } = Typography;
 const Homepage = () => {
     const navigate = useNavigate();
+    const [form] = Form.useForm();
     const [isLoggedIn, setIsLoggedIn] = useState(false)
+
+    const checkLogin = async () => {
+        console.log(form.getFieldValue())
+        if (form.getFieldValue('username') && form.getFieldValue('password')) {
+            let data = {}
+            data.username = form.getFieldValue('username')
+            data.password = form.getFieldValue('password')
+            try {
+                let res = await LoginAction(data)
+                if (res.error === null || res.code !== 200) {
+                    setStorage('token', res.data.token)
+                    routeChange()
+                } else {
+                    ErrorModalMassageHtml(res.error.message ?? 'username or password is incorrect');
+                }
+            } catch (e) {
+                ErrorModalMassageHtml('service error : ' + e.message);
+            }
+
+        } else {
+            form.validateFields()
+        }
+    }
 
     const routeChange = () => {
         let path = '/admin';
         navigate(path);
     }
-
-    function callback(key) {
-        console.log(key);
-    }
-
-    const onFinish = (values) => {
-        console.log('Success:', values);
-    };
-
-    const onFinishFailed = (errorInfo) => {
-        console.log('Failed:', errorInfo);
-    };
 
     const setLeftLayout = () => {
         if (!isLoggedIn) {
@@ -33,35 +48,40 @@ const Homepage = () => {
                         <Text className="big3-title" >Welcome to E - Project</Text>
                         <Text>Login by your Account</Text>
                         <Form
+                            form={form}
                             name="login"
                             layout="vertical"
                             labelCol={{ span: 24 }}
                             wrapperCol={{ span: 24 }}
-                            onFinish={onFinish}
-                            onFinishFailed={onFinishFailed}
                             autoComplete="off"
                         >
-                            <Form.Item
-                                label="Email or Username"
-                                name="username"
-                                rules={[{ required: true, message: 'Please input your username!' }]}
-                            >
-                                <Input />
-                            </Form.Item>
-
-                            <Form.Item
-                                label="Password"
-                                name="password"
-                                rules={[{ required: true, message: 'Please input your password!' }]}
-                            >
-                                <Input.Password />
-                            </Form.Item>
-
-                            <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                                <Button shape="round" className="login-button" onClick={routeChange} >
-                                    <Text className="big5-title" >Login</Text>
-                                </Button>
-                            </Form.Item>
+                            <Row>
+                                <Col span={24} style={{ textAlign: "center", padding: "20px 70px" }}>
+                                    <Form.Item
+                                        label="Email or Username"
+                                        name="username"
+                                        rules={[{ required: true, message: 'Please input your username!' }]}
+                                    >
+                                        <Input />
+                                    </Form.Item>
+                                </Col>
+                                <Col span={24} style={{ textAlign: "center", padding: "0px 70px" }}>
+                                    <Form.Item
+                                        label="Password"
+                                        name="password"
+                                        rules={[{ required: true, message: 'Please input your password!' }]}
+                                    >
+                                        <Input.Password />
+                                    </Form.Item>
+                                </Col>
+                                <Col span={24} style={{ textAlign: "center" }}>
+                                    <Form.Item>
+                                        <Button shape="round" className="login-button" onClick={checkLogin} >
+                                            <Text className="big5-title" >Login</Text>
+                                        </Button>
+                                    </Form.Item>
+                                </Col>
+                            </Row>
                         </Form>
                     </Space>
                 </>
@@ -72,7 +92,7 @@ const Homepage = () => {
                     <Row>
                         <Col span={24} style={{ textAlign: "left" }}>
                             <Space direction="vertical">
-                                <Text className="big3-title" >Welcome to page Document</Text>
+                                <Text className="big3-title" >Welcome to Page Document</Text>
                                 <Text>Click for more detail</Text>
                             </Space>
                         </Col>

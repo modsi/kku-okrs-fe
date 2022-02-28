@@ -1,20 +1,18 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from "react-router-dom";
-import { Card, Row, Col, Button, Typography, Table, Form, Input, Radio, Space, Image, Switch, InputNumber, Checkbox } from 'antd';
+import { Card, Row, Col, Button, Typography, Select, Form, Input, Radio, Space, Image, Switch, InputNumber, Checkbox } from 'antd';
 import logo from "../../../../../assets/images/favicon-96x96.png"
 import { STORE_TEMPLATE, StoreTemplateAction } from "../../../../redux/actions/StoreSearchAction"
 import { PlusOutlined, MinusCircleOutlined } from "@ant-design/icons";
 
 const { Text, Link } = Typography;
-const CheckboxField = ({ form }) => {
+const RadioField = ({ form }) => {
     const dispatch = useDispatch()
     const [form2] = Form.useForm();
     const storeTemplate = useSelector(state => state?.storeSearchReducer?.[STORE_TEMPLATE])
     const [title, setTitle] = useState('Label Text Field');
-    const [required, setRequired] = useState(false);
     const [size, setSize] = useState(2);
-    const [max, setMax] = useState(null);
     const [options, setOptions] = useState([{ index: 1, label: 'A', value: 'A' }]);
     const [formLayout, setFormLayout] = useState('vertical');
     const [listField, setListField] = useState([]);
@@ -58,7 +56,7 @@ const CheckboxField = ({ form }) => {
             let obj = {
                 index: store.length + 1,
                 labelPosition: form.getFieldValue('labelPosition'),
-                type: 'checkbox',
+                type: 'radio',
                 key: 'input_' + (store.length + 1),
                 label: form.getFieldValue('label'),
                 size: form.getFieldValue('size') === 2 ? 'long' : 'short',
@@ -116,7 +114,7 @@ const CheckboxField = ({ form }) => {
                 )
             }
         })]
-        setOptions([ ...store, op ])
+        setOptions([...store, op])
     };
 
     const DynamicFieldSet = () => {
@@ -185,7 +183,7 @@ const CheckboxField = ({ form }) => {
                                                 <Radio value={2}>long</Radio>
                                             </Radio.Group>
                                         </Form.Item>
-                                    </Col>
+                                    </Col>                                   
                                     <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                                         <Form.Item
                                             label={"Options "} name={"options"}>
@@ -221,7 +219,7 @@ const CheckboxField = ({ form }) => {
                                                 <Form.Item
                                                     label={title}
                                                 >
-                                                    <Checkbox
+                                                    <Radio.Group                                                       
                                                         options={options}
                                                     />
                                                 </Form.Item>
@@ -245,4 +243,4 @@ const CheckboxField = ({ form }) => {
         </>
     )
 }
-export default CheckboxField;
+export default RadioField;

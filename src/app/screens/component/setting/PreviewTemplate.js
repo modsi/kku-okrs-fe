@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from "react-router-dom";
-import { Card, Row, Col, Button, Typography, Table, Form, Input, Radio, Space, Image, InputNumber, Checkbox, Select } from 'antd';
+import { Card, Row, Col, Button, Typography, Table, Form, Input, Radio, Space, Image, InputNumber, Checkbox, Select, DatePicker } from 'antd';
 import { DeleteFilled } from "@ant-design/icons";
 import { DATE_FULL, DATE_NORMAL } from '../../../utils/Elements'
 import moment from 'moment';
@@ -9,6 +9,7 @@ import logo from "../../../../assets/images/favicon-96x96.png"
 import { STORE_TEMPLATE, StoreTemplateAction } from "../../../redux/actions/StoreSearchAction"
 
 const { Text, Link } = Typography;
+const { RangePicker } = DatePicker;
 const PreviewTemplate = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch()
@@ -108,7 +109,17 @@ const PreviewTemplate = () => {
                                                             style={{ width: '100%' }}
                                                             options={item.options}
                                                         />)
-                                                        : (<Input />)
+                                                        : item.type === 'radio' ?
+                                                            (<Radio.Group
+                                                                options={item.options}
+                                                            />)
+                                                            : item.type === 'day' ?
+                                                                (<DatePicker />)
+                                                                : item.type === 'date_time' ?
+                                                                    (<DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />)
+                                                                    : item.type === 'range_date' ?
+                                                                        ( <RangePicker />)
+                                                                        : (<Input />)
                                     }
                                     {/* </Space> */}
                                 </Form.Item>

@@ -14,6 +14,11 @@ import TextAreaField from './field/TextAreaField'
 import NumberField from './field/NumberField'
 import CheckboxField from './field/CheckboxField'
 import SelectField from './field/SelectField'
+import RadioField from './field/RadioField'
+import DayField from './field/DayField'
+import DateTimeField from './field/DateTimeField'
+import RangeDateField from './field/RangeDateField'
+import UploadField from './field/UploadField'
 
 const { Text, Link } = Typography;
 const ConfigTemplate = () => {
@@ -84,7 +89,37 @@ const ConfigTemplate = () => {
         setAddEditTitle("Select Field Component")
         setFieldContent(<SelectField form={formField} />)
     }
-    
+
+    const setRadioField = () => {
+        setIsModalAddEditVisible(true);
+        setAddEditTitle("Radio Field Component")
+        setFieldContent(<RadioField form={formField} />)
+    }
+
+    const setDayField = () => {
+        setIsModalAddEditVisible(true);
+        setAddEditTitle("Day Field Component")
+        setFieldContent(<DayField form={formField} />)
+    }
+
+    const setDateTimeField = () => {
+        setIsModalAddEditVisible(true);
+        setAddEditTitle("Date/Time Field Component")
+        setFieldContent(<DateTimeField form={formField} />)
+    }
+
+    const setRangeDateField = () => {
+        setIsModalAddEditVisible(true);
+        setAddEditTitle("Range Date Field Component")
+        setFieldContent(<RangeDateField form={formField} />)
+    }
+
+    const setUploadField = () => {
+        setIsModalAddEditVisible(true);
+        setAddEditTitle("Upload Field Component")
+        setFieldContent(<UploadField form={formField} />)
+    }
+
     useEffect(() => {
         handleClickCancel()
     }, [storeTemplate])
@@ -122,20 +157,21 @@ const ConfigTemplate = () => {
                 <Row gutter={24}>
                     <Col xs={24} sm={24} md={8} lg={6} xl={4}>
                         <Button type="primary" loading={isLoading} danger style={{ width: '100%' }}>Save</Button>
-                        <Button type="primary" style={{ width: '100%', textAlign: "left" }} onClick={setTitleField} ><FaIndent style={{ paddingRight: '3px' }}/> Title</Button>
+                        <Button type="primary" style={{ width: '100%', textAlign: "left" }} onClick={setTitleField} ><FaIndent style={{ paddingRight: '3px' }} /> Title</Button>
                         <Button type="primary" style={{ width: '100%', textAlign: "left" }} onClick={setTextField}><FaAdn style={{ paddingRight: '3px' }} /> Text Field</Button>
                         <Button type="primary" style={{ width: '100%', textAlign: "left" }} onClick={setTextAreaField}><FaAdversal style={{ paddingRight: '3px' }} /> Text Area</Button>
                         <Button type="primary" style={{ width: '100%', textAlign: "left" }} onClick={setNumberField}><FaCalculator style={{ paddingRight: '3px' }} /> Number</Button>
                         <Button type="primary" style={{ width: '100%', textAlign: "left" }} onClick={setCheckboxField}><FaCheckSquare style={{ paddingRight: '3px' }} /> Checkbox</Button>
                         <Button type="primary" style={{ width: '100%', textAlign: "left" }} onClick={setSelectField}><FaList style={{ paddingRight: '3px' }} /> Select</Button>
-                        <Button type="primary" style={{ width: '100%', textAlign: "left" }}><FaRecordVinyl style={{ paddingRight: '3px' }} /> Radio</Button>
+                        <Button type="primary" style={{ width: '100%', textAlign: "left" }} onClick={setRadioField}><FaRecordVinyl style={{ paddingRight: '3px' }} /> Radio</Button>
                         <Button type="primary" style={{ width: '100%', textAlign: "left" }}><FaMailBulk style={{ paddingRight: '3px' }} /> Email</Button>
                         <Button type="primary" style={{ width: '100%', textAlign: "left" }}><FaLink style={{ paddingRight: '3px' }} /> Url</Button>
                         <Button type="primary" style={{ width: '100%', textAlign: "left" }}><FaPhoneAlt style={{ paddingRight: '3px' }} /> Phone</Button>
-                        <Button type="primary" style={{ width: '100%', textAlign: "left" }}><FaCalendarDay style={{ paddingRight: '3px' }} /> Day</Button>
-                        <Button type="primary" style={{ width: '100%', textAlign: "left" }}><FaCalendarAlt style={{ paddingRight: '3px' }} /> Date/Time</Button>
+                        <Button type="primary" style={{ width: '100%', textAlign: "left" }} onClick={setDayField}><FaCalendarDay style={{ paddingRight: '3px' }} /> Day</Button>
+                        <Button type="primary" style={{ width: '100%', textAlign: "left" }} onClick={setDateTimeField}><FaCalendarAlt style={{ paddingRight: '3px' }} /> Date/Time</Button>
+                        <Button type="primary" style={{ width: '100%', textAlign: "left" }} onClick={setRangeDateField}><FaCalendarAlt style={{ paddingRight: '3px' }} /> Range Date</Button>
                         <Button type="primary" style={{ width: '100%', textAlign: "left" }}><FaBuromobelexperte style={{ paddingRight: '3px' }} /> Table</Button>
-                        <Button type="primary" style={{ width: '100%', textAlign: "left" }}><FaFileUpload style={{ paddingRight: '3px' }} /> Upload</Button>
+                        <Button type="primary" style={{ width: '100%', textAlign: "left" }} onClick={setUploadField}><FaFileUpload style={{ paddingRight: '3px' }} /> Upload</Button>
                     </Col>
                     <Col xs={24} sm={24} md={16} lg={18} xl={20}>
                         <PreviewTemplate />
@@ -154,7 +190,7 @@ const ConfigTemplate = () => {
                     onCancel={handleClickCancel}
                 >
                     <>
-                         {fieldContent}
+                        {fieldContent}
                     </>
                 </Modal>
             </div>

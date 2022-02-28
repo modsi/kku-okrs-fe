@@ -21,5 +21,7 @@ export const GetAccountService = async(data = {})=>{
     return await get(`${MANAGE_URL}/accounts?page=${data.page}&size=${data.size}&q=${data.str}`)
 }
 
-
+export const LoginService = async (data = {}) => {
+    return await post(`${USER_URL}/login`, data)
+}
 

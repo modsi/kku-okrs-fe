@@ -13,7 +13,8 @@ function getHeaders(headersOption) {
 		'headers': {
 			"Accept": "application/json",
 			"Content-Type": "application/json",
-			// "Authorization": `Bearer ${getStorage("token") === undefined ? null : getStorage("token")}`,
+			"authorization": `Bearer ${getStorage("token") === undefined ? null : getStorage("token")}`,
+			"fbclid": `${getStorage("token") === undefined ? null : getStorage("token")}`,
 			"Access-Control-Allow-Origin": "*",
 			...headersOption
 		}

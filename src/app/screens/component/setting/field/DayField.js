@@ -1,43 +1,40 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from "react-router-dom";
-import { Card, Row, Col, Button, Typography, Table, Form, Input, Radio, Space, Image, Switch, InputNumber, Checkbox } from 'antd';
+import { Card, Row, Col, Button, Typography, Table, Form, Input, Radio, Space, Image, Switch, DatePicker } from 'antd';
 import logo from "../../../../../assets/images/favicon-96x96.png"
 import { STORE_TEMPLATE, StoreTemplateAction } from "../../../../redux/actions/StoreSearchAction"
-import { PlusOutlined, MinusCircleOutlined } from "@ant-design/icons";
 
 const { Text, Link } = Typography;
-const CheckboxField = ({ form }) => {
+const DayField = ({ form }) => {
     const dispatch = useDispatch()
     const [form2] = Form.useForm();
     const storeTemplate = useSelector(state => state?.storeSearchReducer?.[STORE_TEMPLATE])
     const [title, setTitle] = useState('Label Text Field');
     const [required, setRequired] = useState(false);
-    const [size, setSize] = useState(2);
-    const [max, setMax] = useState(null);
-    const [options, setOptions] = useState([{ index: 1, label: 'A', value: 'A' }]);
+    const [size, setSize] = useState(1);
+    const [labelPosition, setLabelPosition] = useState(1);
     const [formLayout, setFormLayout] = useState('vertical');
-    const [listField, setListField] = useState([]);
 
     const formItemLayout =
         formLayout === 'horizontal'
-            ? {
-                labelCol: {
-                    span: 4,
-                },
-                wrapperCol: {
-                    span: 20,
-                },
-                labelAlign: "left"
+        ? {
+            labelCol: {
+                span: 4,
+            },
+            wrapperCol: {
+                span: 20,
+            },
+            labelAlign: "left"
+        }
+        : {
+            labelCol: {
+                span: 24,
+            },
+            wrapperCol: {
+                span: 24,
             }
-            : {
-                labelCol: {
-                    span: 24,
-                },
-                wrapperCol: {
-                    span: 24,
-                }
-            };
+        };
 
     const layout = {
         labelCol: { span: 24 },
@@ -58,17 +55,15 @@ const CheckboxField = ({ form }) => {
             let obj = {
                 index: store.length + 1,
                 labelPosition: form.getFieldValue('labelPosition'),
-                type: 'checkbox',
+                type: 'day',
                 key: 'input_' + (store.length + 1),
                 label: form.getFieldValue('label'),
                 size: form.getFieldValue('size') === 2 ? 'long' : 'short',
-                options: options,
                 align: "left"
             }
             components.push(obj)
             console.log(components)
             setTitle('Label Text Field')
-            setOptions([{ index: 1, label: 'A', value: 'A' }])
             setSize(2)
             setFormLayout('vertical')
             setTemplate({ ...storeTemplate, components: components })
@@ -81,82 +76,12 @@ const CheckboxField = ({ form }) => {
         setFormLayout(e.target.value);
     };
 
-    const add = () => {
-        let max = Math.max(...options.map(({ index }) => index));
-        setOptions([...options, { index: max + 1, label: 'A', value: 'A' }])
-    };
-
-    const remove = (index) => {
-        let store = [...options?.filter((item) => {
-            if (item.index !== index) {
-                return (
-                    true
-                )
-            }
-        })]
-        setOptions(store)
-    };
-
-    useEffect(() => {
-        DynamicFieldSet()
-    }, [options])
-
-    const updateOption = (inx, type, e) => {
-        // console.log('updateOption >>', index, type, e)
-        let op = options.find(({ index }) => index === inx)
-        if (type === "label") {
-            op.label = e.target.value
-        } else {
-            op.value = e.target.value
-        }
-        let store = [...options?.filter((item) => {
-            if (item.index !== inx) {
-                return (
-                    true
-                )
-            }
-        })]
-        setOptions([ ...store, op ])
-    };
-
-    const DynamicFieldSet = () => {
-        let listField = []
-        // console.log('options >>', options)
-        options.map((item, index) => {
-            let field = (
-                <>
-                    <Form.Item
-                        noStyle
-                        name={"label" + item.index}
-                        rules={[{ required: true }]}
-                    >
-                        <Input placeholder="label" onChange={(e) => updateOption(item.index, 'label', e)} defaultValue={item.label} style={{ width: '40%' }} />
-                    </Form.Item>
-                    <Form.Item
-                        noStyle
-                        name={"value" + item.index}
-                        rules={[{ required: true }]}
-                    >
-                        <Input placeholder="value" onChange={(e) => updateOption(item.index, 'value', e)} defaultValue={item.value} style={{ width: '40%' }} />
-                    </Form.Item>
-
-                    <MinusCircleOutlined
-                        className="dynamic-delete-button"
-                        onClick={() => remove(item.index)}
-                    />
-                </>
-            )
-            listField.push(field);
-        })
-        setListField(listField);
-    };
-
     return (
         <>
             <Row gutter={24}>
                 <Col span={24} style={{ textAlign: "left" }}>
                     <Row>
-                        <Col xs={24} sm={24} md={24} lg={10} xl={10} style={{ paddingRight: "10px" }}>
+                        <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <Form form={form} {...layout} >
                                 <Row>
                                     <Col xs={24} sm={24} md={24} lg={24} xl={24}>
@@ -186,26 +111,10 @@ const CheckboxField = ({ form }) => {
                                             </Radio.Group>
                                         </Form.Item>
                                     </Col>
-                                    <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-                                        <Form.Item
-                                            label={"Options "} name={"options"}>
-                                            {listField}
-                                            <Form.Item>
-                                                <Button
-                                                    type="dashed"
-                                                    onClick={() => add()}
-                                                    style={{ width: '60%' }}
-                                                    icon={<PlusOutlined />}
-                                                >
-                                                    Add Option
-                                                </Button>
-                                            </Form.Item>
-                                        </Form.Item>
-                                    </Col>
                                 </Row>
                             </Form>
                         </Col>
-                        <Col xs={24} sm={24} md={24} lg={14} xl={14}>
+                        <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <Space direction="vertical" style={{ width: '100%' }}>
                                 <Card title={"Preview"} className="rounded"  >
                                     <Row>
@@ -220,10 +129,11 @@ const CheckboxField = ({ form }) => {
                                                 layout={formLayout} >
                                                 <Form.Item
                                                     label={title}
+                                                // name="key"
+                                                // rules={[{ required: required ? true : false, message: 'Please input ' + title }]}
                                                 >
-                                                    <Checkbox
-                                                        options={options}
-                                                    />
+                                                     <DatePicker />
+
                                                 </Form.Item>
                                             </Form>
                                         </Col>
@@ -245,4 +155,4 @@ const CheckboxField = ({ form }) => {
         </>
     )
 }
-export default CheckboxField;
+export default DayField;

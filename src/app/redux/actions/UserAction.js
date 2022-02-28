@@ -1,4 +1,4 @@
-import { SaveAccountService, GetAccountService } from '../../services/MainService'
+import { SaveAccountService, GetAccountService, LoginService } from '../../services/MainService'
 import { Payload } from '../../utils/Payload'
 
 
@@ -28,4 +28,9 @@ export const listAccountAction = async (data = {}) => {
     console.error(e)
     return Payload({ params: [], type: LLIST_ACCOUNT })
   }
+}
+
+export const LoginAction = async (data) => {
+  const result = await LoginService(data)
+  return result?.data
 }
