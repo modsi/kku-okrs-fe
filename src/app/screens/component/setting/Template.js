@@ -6,8 +6,8 @@ import { EditOutlined, EyeOutlined, SettingOutlined, PlusOutlined, FileSearchOut
 import { DATE_FULL, DATE_NORMAL } from '../../../utils/Elements'
 import moment from 'moment';
 import ConfigTemplate from './ConfigTemplate'
-import {tem1, tem2} from '../../../../template-mock'
-
+import { tem1, tem2 } from '../../../../template-mock'
+import SettingTemplate from './SettingTemplate'
 const { Text, Link } = Typography;
 const Template = () => {
     const navigate = useNavigate();
@@ -15,10 +15,12 @@ const Template = () => {
     const [form] = Form.useForm();
     const [isLoading, setIsLoading] = useState(false);
     const [showConfigPage, setShowConfigPage] = useState(false);
+    const [showSettingPage, setShowSettingPage] = useState(false);
     const [isModalAddEditVisible, setIsModalAddEditVisible] = useState(false);
     const [addEditTitle, setAddEditTitle] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [dataSource, setDataSource] = useState([])
+    const [data, setData] = useState([])
 
     const routeChange = () => {
         let path = '/admin/addTempalte';
@@ -97,29 +99,16 @@ const Template = () => {
     ];
 
     const handleClickEdit = (record) => {
-        console.log('record >> ', record);
-        setIsModalAddEditVisible(true);
-        setAddEditTitle('User Management');
-        let ag = []
-        record?.account_groups?.map((item) => {
-            ag.push(item.group_id)
-        })
-        form.setFieldsValue({
-            fullName: record?.full_name,
-            username: record?.username,
-            email: record?.email,
-            role: record?.role?.id,
-            status: record?.status === "1" ? true : false,
-            group: ag
-        });
-
+        setShowSettingPage(true)
+        // console.log('record >> ', record);
+        setData(record)
     }
 
     const handleTableChange = (pagination, filters, sorter) => {
-        console.log('pagination >> ', pagination)
+        // console.log('pagination >> ', pagination)
         setCurrentPage(pagination.current)
-    };   
-    
+    };
+
     useEffect(() => {
         let ar = []
         ar.push(tem1)
@@ -132,11 +121,20 @@ const Template = () => {
             {showConfigPage ? (
                 <>
                     <PageHeader
-                    style={{ padding: "0px"}}
+                        style={{ padding: "0px" }}
                         onBack={() => setShowConfigPage(false)}
                         title="Back"
                     />
                     <ConfigTemplate />
+                </>
+            ) : showSettingPage ? (
+                <>
+                    <PageHeader
+                        style={{ padding: "0px" }}
+                        onBack={() => setShowSettingPage(false)}
+                        title="Back"
+                    />
+                    <SettingTemplate data={data} />
                 </>
             ) : (
                 <Card title={"List Template"} className="rounded" >

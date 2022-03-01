@@ -98,8 +98,29 @@ div#root {
   }
 
   .nol-button:hover, .nol-button:focus {
-	background-color: #30282880; 
-	border-color: #30282880;
+	background-color: #85828280; 
+	border-color: #fff;
+  }
+
+  .pre-button {
+	background-color: #f77904; 
+	border-color: #fff;
+	border-radius: 5px;
+  }
+
+  .pre-button:hover, .pre-button:focus {
+	background-color: #f7b578; 
+	border-color: #fff;
+  }
+
+  .nol-button[disabled], .nol-button[disabled]:hover, .nol-button[disabled]:focus, .nol-button[disabled]:active {
+	background-color: #8d8b8b80; 
+	border-color: #fff;
+  }
+
+  .pre-button[disabled], .pre-button[disabled]:hover, .pre-button[disabled]:focus, .pre-button[disabled]:active {
+	background-color: #55545480; 
+	border-color: #fff;
   }
 
   .g-button {
@@ -175,10 +196,8 @@ div#root {
 	color: #4E5C84BF;
   }
   .ant-table-small .ant-table-thead > tr > th {
-	background: rgba(245, 124, 0, 0.8);
-	
+	background: rgb(245 125 1 / 55%);	
   }
-
   .ant-table-thead {
 	border-radius: 10px;
   }
