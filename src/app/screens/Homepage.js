@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, Fragment } from 'react';
 import { useNavigate } from "react-router-dom";
 import { Card, Row, Col, Typography, Space, Image, Button, Form, Input } from 'antd';
 import logo from "../../assets/images/favicon-96x96.png"
@@ -44,9 +44,9 @@ const Homepage = () => {
         if (!isLoggedIn) {
             return (
                 <>
-                    <Space direction="vertical">
+                    <Space direction="vertical" style={{marginTop: "20px"}} >
                         <Text className="big3-title" >Welcome to E - Project</Text>
-                        <Text>Login by your Account</Text>
+                        <Text className='big7-title'>Login by your Account</Text>
                         <Form
                             form={form}
                             name="login"
@@ -56,7 +56,7 @@ const Homepage = () => {
                             autoComplete="off"
                         >
                             <Row>
-                                <Col span={24} style={{ textAlign: "center", padding: "20px 70px" }}>
+                                <Col className='form-login' span={24} style={{ textAlign: "center" }}>
                                     <Form.Item
                                         label="Email or Username"
                                         name="username"
@@ -65,7 +65,7 @@ const Homepage = () => {
                                         <Input />
                                     </Form.Item>
                                 </Col>
-                                <Col span={24} style={{ textAlign: "center", padding: "0px 70px" }}>
+                                <Col className='form-login' span={24} style={{ textAlign: "center" }}>
                                     <Form.Item
                                         label="Password"
                                         name="password"
@@ -97,32 +97,32 @@ const Homepage = () => {
                             </Space>
                         </Col>
                     </Row>
-                    <Row gutter={16}>
-                        <Col span={12}>
-                            <Card title="แผนยุทธศาสตร์" bordered={false}>
-                                คณะมนุษยศาสตร์และสังคมศาสตร์
-                                รายละเอียดแผนยุทธศาสตร์ 4 ปี
-                                (พ.ศ. 2564 - 2567)
+                    <Row gutter={16} className="container-box">
+                        <Col span={12} className="box">
+                            <Card className="box-detail box-detail-color1" title="แผนยุทธศาสตร์" bordered={false}>
+                                <Text className='box-detail-text'>คณะมนุษยศาสตร์และสังคมศาสตร์<br />
+                                    รายละเอียดแผนยุทธศาสตร์ 4 ปี
+                                    (พ.ศ. 2564 - 2567)</Text>
                             </Card>
                         </Col>
-                        <Col span={12}>
-                            <Card title="แผนปฏิบัติการ" bordered={false}>
-                                รายละเอียดแผนปฏิบัติการ
-                                ประจำปีงบ
-                                ประมาณ พ.ศ. 2564
+                        <Col span={12} className="box">
+                            <Card className="box-detail box-detail-color2" title="แผนปฏิบัติการ" bordered={false}>
+                                <Text className='box-detail-text'>รายละเอียดแผนปฏิบัติการ<br />
+                                    ประจำปีงบ
+                                    ประมาณ พ.ศ. 2564</Text>
                             </Card>
                         </Col>
-                        <Col span={12}>
-                            <Card title="HUSO - OKRs" bordered={false}>
-                                รายละเอียดผลลัพธ์สำคัญ
-                                HUSO - OKRs ประจำปีงบประมาณ
-                                พ.ศ. 2564
+                        <Col span={12} className="box">
+                            <Card className="box-detail box-detail-color3" title="HUSO - OKRs" bordered={false}>
+                                <Text className='box-detail-text'>รายละเอียดผลลัพธ์สำคัญ<br />
+                                    HUSO - OKRs ประจำปีงบประมาณ
+                                    พ.ศ. 2564</Text>
                             </Card>
                         </Col>
-                        <Col span={12}>
-                            <Card title="ข้อตกลงการปฏิบัติงาน" bordered={false}>
+                        <Col span={12} className="box">
+                            <Card className="box-detail box-detail-color4" title="ข้อตกลงการปฏิบัติงาน" bordered={false}>
 
-                                ข้อตกลงการปฏิบัติงานตามแผยปฏิบัติการคณะ ปีงบประมาณ พ.ศ. 2564
+                                <Text className='box-detail-text'>ข้อตกลงการปฏิบัติงานตามแผยปฏิบัติการคณะ ปีงบประมาณ พ.ศ. 2564</Text>
                             </Card>
                         </Col>
                     </Row>
@@ -132,20 +132,26 @@ const Homepage = () => {
     }
 
     return (
-        <div className="grad1" style={{ padding: "40px 130px" }}>
+        <div className="grad1">
             <Row>
                 <Col span={24} style={{ textAlign: "right" }}>
                     <Space direction="horizontal">
-                        <Text underline>หน้าแรก</Text>
-                        <Text underline>เอกสาร</Text>
+                        <Col onClick={() => { setIsLoggedIn(false) }} style={{ cursor: "pointer" }}>
+                            <Row md={12}><Text className='text-header'>หน้าแรก</Text></Row>
+                            <Row md={12}><Text className={!isLoggedIn ? 'line-color' : 'line-empty'} >&nbsp;</Text></Row>
+                        </Col>
+                        <Col onClick={() => { setIsLoggedIn(true) }} style={{ cursor: "pointer" }}>
+                            <Row md={12}><Text className='text-header'>เอกสาร</Text></Row>
+                            <Row md={12}><Text className={isLoggedIn ? 'line-color' : 'line-empty'}>&nbsp;</Text></Row>
+                        </Col>
                     </Space>
                 </Col>
             </Row>
             <Row>
                 <Col span={24}>
-                    <Card bordered={false} style={{ width: "100%", textAlign: "left", borderRadius: "10px" }}>
-                        <Row>
-                            <Col xs={24} sm={24} md={24} lg={12} style={{ textAlign: "center" }}>
+                    <div className="card-detail" style={{ width: "100%", textAlign: "left", borderRadius: "15px", marginTop: "10px" }}>
+                        <Row className='container-box-left'>
+                            <Col className='box-left' xs={24} sm={24} md={24} lg={12} style={{ textAlign: "center" }}>
                                 <Space direction="vertical">
                                     <Image
                                         src={logo}
@@ -161,12 +167,12 @@ const Homepage = () => {
                                     </Button>
                                 </Space>
                             </Col>
-                            <Col xs={24} sm={24} md={24} lg={12} style={{ textAlign: "left" }}>
+                            <Col className='box-right' xs={24} sm={24} md={24} lg={12} style={{ textAlign: "left" }}>
                                 {setLeftLayout()}
                             </Col>
                         </Row>
 
-                    </Card>
+                    </div>
                 </Col>
             </Row>
         </div>
