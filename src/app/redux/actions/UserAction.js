@@ -39,3 +39,10 @@ export const LoginAction = async (data) => {
   const result = await LoginService(data)
   return result?.data
 }
+
+
+export const LoginSsoAction = async (data) => {
+  const result = {}
+  result.statusOK = true;
+  return result
+}

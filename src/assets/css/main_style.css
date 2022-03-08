@@ -35,6 +35,10 @@ div#root {
 	/* color: #4E5C84; */
 }
 
+.site-layout-sub-header-background{
+	background:#FFFFFF
+}
+
 .grad1 {
 	/* height: 100%; */
 	background-color: red; /* For browsers that do not support gradients */

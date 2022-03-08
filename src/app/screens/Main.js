@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import { Layout, Menu, Image, Row, Col, Typography, Space } from 'antd';
-import { FileTextOutlined, UserOutlined, FolderOpenOutlined, AuditOutlined, AppstoreOutlined, GroupOutlined } from '@ant-design/icons';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
+import { Layout, Menu, Image, Row, Col, Typography, Space, Button } from 'antd';
+import { FileTextOutlined, UserOutlined, FolderOpenOutlined, AuditOutlined, AppstoreOutlined, GroupOutlined, LogoutOutlined } from '@ant-design/icons';
 import logo from "../../assets/images/favicon-32x32.png"
 import Admin from './component/admin/Admin';
 import Dashboard from './component/dashboard/Dashboard';
@@ -9,12 +10,32 @@ import Course from './component/dashboard/Course';
 import Faculty from './component/dashboard/Faculty';
 import User from './component/setting/User';
 import Template from './component/setting/Template';
+import { clearStorege, getStorage } from "../screens/state/localStorage";
+import { FaRegUserCircle } from "react-icons/fa";
+import { ConfirmModalEditText } from "./items/Modal";
 
 const { Text, Link } = Typography;
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 const Main = () => {
+    const navigate = useNavigate();
     const [mycontent, setContent] = useState(<User />)
+    const [profile, setProfile] = useState({})
+
+    const routeChange = () => {
+        clearStorege('token')
+        let path = '/';
+        navigate(path);
+    }
+
+    useEffect(() => {
+        console.log('check token', getStorage('token'))
+        if (!getStorage('token')) {
+            routeChange()
+        } else {
+            setProfile(getStorage('profile'))
+        }
+    }, [])
 
     const onClickMenu = value => {
         // console.log(value);
@@ -35,6 +56,18 @@ const Main = () => {
         }
 
     };
+
+    const logout = () => {
+        ConfirmModalEditText(routeChange, conditionLogout());
+    }
+
+    const conditionLogout = () => {
+        return {
+            title: "Confirm",
+            content: "Are you sure to Logout ?"
+        }
+    }
+    console.log('profile>>', profile)
     return (
         <Layout className="main-layout" style={{ minHeight: '100vh' }}>
             <Sider
@@ -97,7 +130,13 @@ const Main = () => {
                 </Menu>
             </Sider>
             <Layout>
-                <Header className="site-layout-sub-header-background" style={{ width: '100%' }}>
+                <Header className="site-layout-sub-header-background" style={{ width: '100%', textAlign: 'right' }}>
+                    <Space align="start">
+                        <FaRegUserCircle style={{ color: 'orange', marginTop: '20px' }} />
+                        <Text strong> {profile?.full_name}</Text>
+                        <Text className="small-text"> : {profile?.role?.role_name} </Text>
+                        <Button type="link" style={{ color: 'orange', marginTop: '15px' }} onClick={logout} ><LogoutOutlined /></Button>
+                    </Space>
                 </Header>
                 <Content style={{ margin: '0' }}>
                     <div className="site-layout-background" style={{ padding: 24, minHeight: 360 }}>
