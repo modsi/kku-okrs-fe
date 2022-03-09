@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-import React, { useState, useEffect } from 'react';
-=======
-import React, { useState, Fragment } from 'react';
->>>>>>> master
+import React, { useState, Fragment, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import { Card, Row, Col, Typography, Space, Image, Button, Form, Input } from 'antd';
 import logo from "../../assets/images/favicon-96x96.png"
