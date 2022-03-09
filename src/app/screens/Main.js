@@ -19,7 +19,7 @@ const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 const Main = () => {
     const navigate = useNavigate();
-    const [mycontent, setContent] = useState(<User />)
+    const [mycontent, setContent] = useState(null)
     const [profile, setProfile] = useState({})
 
     const routeChange = () => {
@@ -29,11 +29,12 @@ const Main = () => {
     }
 
     useEffect(() => {
-        console.log('check token', getStorage('token'))
+        // console.log('check token', getStorage('token'))        
         if (!getStorage('token')) {
             routeChange()
         } else {
             setProfile(getStorage('profile'))
+            setContent(<User />);
         }
     }, [])
 
