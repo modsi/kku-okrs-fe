@@ -43,9 +43,9 @@ const Homepage = () => {
     const setLeftLayout = () => {
         if (!isLoggedIn) {
             return (
-                <>
-                    <Space direction="vertical" style={{marginTop: "20px"}} >
-                        <Text className="big3-title" >Welcome to E - Project</Text>
+                <div className='box-login'>
+                    <Space direction="vertical" style={{ marginTop: "20px" }} >
+                        <Text className="big3-title" >Welcome to e - Project</Text>
                         <Text className='big7-title'>Login by your Account</Text>
                         <Form
                             form={form}
@@ -62,7 +62,7 @@ const Homepage = () => {
                                         name="username"
                                         rules={[{ required: true, message: 'Please input your username!' }]}
                                     >
-                                        <Input />
+                                        <Input placeholder="please Enter email or Username" />
                                     </Form.Item>
                                 </Col>
                                 <Col className='form-login' span={24} style={{ textAlign: "center" }}>
@@ -71,7 +71,7 @@ const Homepage = () => {
                                         name="password"
                                         rules={[{ required: true, message: 'Please input your password!' }]}
                                     >
-                                        <Input.Password />
+                                        <Input.Password placeholder="please enter password" />
                                     </Form.Item>
                                 </Col>
                                 <Col span={24} style={{ textAlign: "center" }}>
@@ -84,49 +84,55 @@ const Homepage = () => {
                             </Row>
                         </Form>
                     </Space>
-                </>
+                </div>
             )
         } else {
             return (
-                <>
+                <div className="box-document">
                     <Row>
-                        <Col span={24} style={{ textAlign: "left" }}>
+                        <Col span={24} style={{ textAlign: "left", marginTop: "20px" }}>
                             <Space direction="vertical">
                                 <Text className="big3-title" >Welcome to Page Document</Text>
-                                <Text>Click for more detail</Text>
+                                <Text className='more-detail'>Click for More detail</Text>
                             </Space>
                         </Col>
                     </Row>
                     <Row gutter={16} className="container-box">
                         <Col span={12} className="box">
-                            <Card className="box-detail box-detail-color1" title="แผนยุทธศาสตร์" bordered={false}>
-                                <Text className='box-detail-text'>คณะมนุษยศาสตร์และสังคมศาสตร์<br />
-                                    รายละเอียดแผนยุทธศาสตร์ 4 ปี
-                                    (พ.ศ. 2564 - 2567)</Text>
-                            </Card>
+                            <a href='https://hsdoa.kku.ac.th/OKRs/pdf/%E0%B9%81%E0%B8%9C%E0%B8%99%E0%B8%A2%E0%B8%B8%E0%B8%98%E0%B8%A8%E0%B8%B2%E0%B8%AA%E0%B8%95%E0%B8%A3%E0%B9%8C%E0%B8%84%E0%B8%93%E0%B8%B0%E0%B8%A1%E0%B8%99%E0%B8%B8%E0%B8%A9%E0%B8%A2%E0%B8%A8%E0%B8%B2%E0%B8%AA%E0%B8%95%E0%B8%A3%E0%B9%8C%E0%B9%81%E0%B8%A5%E0%B8%B0%E0%B8%AA%E0%B8%B1%E0%B8%87%E0%B8%84%E0%B8%A1%E0%B8%A8%E0%B8%B2%E0%B8%AA%E0%B8%95%E0%B8%A3%E0%B9%8C-4-%E0%B8%9B%E0%B8%B5-%E0%B8%9E.%E0%B8%A8.-2564-2567.pdf' target="_blank">
+                                <Card className="box-detail box-detail-color1" title="แผนยุทธศาสตร์" bordered={false}>
+                                    <Text className='box-detail-text'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;คณะมนุษยศาสตร์และสังคมศาสตร์<br />
+                                        รายละเอียดแผนยุทธศาสตร์ 4 ปี
+                                        (พ.ศ. 2564 - 2567)</Text>
+                                </Card>
+                            </a>
                         </Col>
                         <Col span={12} className="box">
-                            <Card className="box-detail box-detail-color2" title="แผนปฏิบัติการ" bordered={false}>
-                                <Text className='box-detail-text'>รายละเอียดแผนปฏิบัติการ<br />
-                                    ประจำปีงบ
-                                    ประมาณ พ.ศ. 2564</Text>
-                            </Card>
+                            <a href='https://hsdoa.kku.ac.th/OKRs/pdf/%E0%B9%81%E0%B8%9C%E0%B8%99%E0%B8%9B%E0%B8%8F%E0%B8%B4%E0%B8%9A%E0%B8%B1%E0%B8%95%E0%B8%B4%E0%B8%81%E0%B8%B2%E0%B8%A3-%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B8%88%E0%B8%B3%E0%B8%9B%E0%B8%B5%E0%B8%87%E0%B8%9A%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B8%A1%E0%B8%B2%E0%B8%93-%E0%B8%9E.%E0%B8%A8.-2564-%E0%B8%84%E0%B8%93%E0%B8%B0%E0%B8%A1%E0%B8%99%E0%B8%B8%E0%B8%A9%E0%B8%A2%E0%B8%A8%E0%B8%B2%E0%B8%AA%E0%B8%95%E0%B8%A3%E0%B9%8C%E0%B9%81%E0%B8%A5%E0%B8%B0%E0%B8%AA%E0%B8%B1%E0%B8%87%E0%B8%84%E0%B8%A1%E0%B8%A8%E0%B8%B2%E0%B8%AA%E0%B8%95%E0%B8%A3%E0%B9%8C.pdf' target="_blank">
+                                <Card className="box-detail box-detail-color2" title="แผนปฏิบัติการ" bordered={false}>
+                                    <Text className='box-detail-text'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;รายละเอียดแผนปฏิบัติการ<br />
+                                        ประจำปีงบ
+                                        ประมาณ พ.ศ. 2564</Text>
+                                </Card>
+                            </a>
                         </Col>
                         <Col span={12} className="box">
-                            <Card className="box-detail box-detail-color3" title="HUSO - OKRs" bordered={false}>
-                                <Text className='box-detail-text'>รายละเอียดผลลัพธ์สำคัญ<br />
-                                    HUSO - OKRs ประจำปีงบประมาณ
-                                    พ.ศ. 2564</Text>
-                            </Card>
+                            <a href='https://hsdoa.kku.ac.th/OKRs/pdf/%E0%B8%A3%E0%B8%B2%E0%B8%A2%E0%B8%A5%E0%B8%B0%E0%B9%80%E0%B8%AD%E0%B8%B5%E0%B8%A2%E0%B8%94%E0%B8%9C%E0%B8%A5%E0%B8%A5%E0%B8%B1%E0%B8%9E%E0%B8%98%E0%B9%8C%E0%B8%AA%E0%B8%B3%E0%B8%84%E0%B8%B1%E0%B8%8D-HUSO-OKRs-%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B8%88%E0%B8%B3%E0%B8%9B%E0%B8%B5%E0%B8%87%E0%B8%9A%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B8%A1%E0%B8%B2%E0%B8%93-%E0%B8%9E.%E0%B8%A8.-2564.pdf' target="_blank">
+                                <Card className="box-detail box-detail-color3" title="HUSO - OKRs" bordered={false}>
+                                    <Text className='box-detail-text'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;รายละเอียดผลลัพธ์สำคัญ<br />
+                                        HUSO - OKRs ประจำปีงบประมาณ
+                                        พ.ศ. 2564</Text>
+                                </Card>
+                            </a>
                         </Col>
                         <Col span={12} className="box">
                             <Card className="box-detail box-detail-color4" title="ข้อตกลงการปฏิบัติงาน" bordered={false}>
 
-                                <Text className='box-detail-text'>ข้อตกลงการปฏิบัติงานตามแผยปฏิบัติการคณะ ปีงบประมาณ พ.ศ. 2564</Text>
+                                <Text className='box-detail-text'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ข้อตกลงการปฏิบัติงานตามแผยปฏิบัติการคณะ ปีงบประมาณ พ.ศ. 2564</Text>
                             </Card>
                         </Col>
                     </Row>
-                </>
+                </div>
             )
         }
     }
@@ -134,7 +140,7 @@ const Homepage = () => {
     return (
         <div className="grad1">
             <Row>
-                <Col span={24} style={{ textAlign: "right" }}>
+                <Col span={24} style={{ textAlign: "right", marginBottom: "15px" }}>
                     <Space direction="horizontal">
                         <Col onClick={() => { setIsLoggedIn(false) }} style={{ cursor: "pointer" }}>
                             <Row md={12}><Text className='text-header'>หน้าแรก</Text></Row>
@@ -151,14 +157,14 @@ const Homepage = () => {
                 <Col span={24}>
                     <div className="card-detail" style={{ width: "100%", textAlign: "left", borderRadius: "15px", marginTop: "10px" }}>
                         <Row className='container-box-left'>
-                            <Col className='box-left' xs={24} sm={24} md={24} lg={12} style={{ textAlign: "center" }}>
+                            <Col className='box-left' xs={24} sm={24} md={24} lg={13} style={{ textAlign: "center" }}>
                                 <Space direction="vertical">
                                     <Image
                                         src={logo}
                                         preview={false}
                                     />
                                     <br />
-                                    <Text className="big1-title" >ระบบการบริหารและติดตามผลการดำเนินงาน<br />โครงการคณะมนุษยศาสตร์และสังคมศาสตร์<br />(e-Project)</Text>
+                                    <Text className="big1-title" >ระบบการบริหารและติดตามผลการดำเนินงานโครงการคณะมนุษยศาสตร์และสังคมศาสตร์<br />(e-Project)</Text>
                                     <br />
                                     <Text className="big2-title" >Faculty of Humanities and Social Sciences</Text>
                                     <Text className="big2-title" >Khon Kaen University</Text>
@@ -167,7 +173,7 @@ const Homepage = () => {
                                     </Button>
                                 </Space>
                             </Col>
-                            <Col className='box-right' xs={24} sm={24} md={24} lg={12} style={{ textAlign: "left" }}>
+                            <Col className='box-right' xs={24} sm={24} md={24} lg={11} style={{ textAlign: "left" }}>
                                 {setLeftLayout()}
                             </Col>
                         </Row>

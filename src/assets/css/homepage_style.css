@@ -3,10 +3,19 @@
 }
 .box-left {
   background-image: linear-gradient(to right, #fff, #fff8e1);
-  padding: 60px 10px;
+  padding: 60px 40px;
+  border-start-start-radius: 29px;
+  border-end-start-radius: 29px;
 }
 .box-right {
-  padding: 10px 20px;
+  padding: 10px 30px;
+  border-radius: 29px;
+}
+.box-login {
+  animation: fadeIn1 1s ease-in both;
+}
+.box-document {
+  animation: fadeIn2 1s ease-in both;
 }
 .container-box {
   margin-top: 40px;
@@ -21,34 +30,35 @@
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
   height: 200px;
   font-weight: bold;
-  color: #000;
 }
 .box-detail .box-detail-text {
-  font-size: 15px !important;
+  font-size: 16px !important;
+  color: rgba(0, 0, 0, 0.5);
 }
 .box-detail .ant-card-head-title {
-  color: #000;
+  color: rgba(0, 0, 0, 0.5);
   font-weight: bold;
-  font-size: 20px !important;
+  font-size: 19px !important;
+  font-family: "InterBold" !important;
 }
 .box-detail-color1 {
-  background-color: #12c2e9;
+  background-color: #88e0f4;
 }
 .box-detail-color2 {
-  background-color: #30e8bf;
+  background-color: #97f3df;
 }
 .box-detail-color3 {
-  background-color: #fff4e3;
+  background-color: #fff9f1;
 }
 .box-detail-color4 {
-  background-color: #f2a2e4;
+  background-color: #f8d0f1;
 }
 .box-detail .ant-card-head {
   border-bottom: 0px;
 }
 
 .box-detail .ant-card-body {
-  padding: 15px;
+  padding: 5px 15px;
 }
 
 .line-color {
@@ -77,42 +87,115 @@
   font-size: 16px !important;
 }
 .form-login {
-    padding: 20px 70px;
+  padding: 20px 20px;
+  /* font-family: "InterThin" !important;
+  font-size: 12px !important;
+  padding: 12px;
+  color: rgba(34, 43, 69, 0.15); */
 }
 .form-login .ant-input {
   border-radius: 10px;
+  font-family: "InterThin" !important;
+  font-size: 14px !important;
+  padding: 12px;
+  /* color: rgba(34, 43, 69, 0.15); */
+}
+
+.form-login .ant-input-affix-wrapper > input.ant-input {
+  padding: 8px 0px;
 }
 
 .form-login .ant-input-password {
   border-radius: 10px;
 }
 
-@media (max-width: 600px) {
+.form-login .ant-form-item-explain-error {
+  font-family: "InterThin" !important;
+  text-align: left;
+  font-size: 13px !important;
+}
+
+.ant-form-item-label
+  > label.ant-form-item-required:not(.ant-form-item-required-mark-optional)::before {
+  content: "";
+}
+
+.more-detail {
+  font-family: "InteMedium" !important;
+  color: rgba(0, 0, 0, 0.25);
+  font-size: 12px !important;
+}
+
+.container-box-left {
+  border-radius: 20px;
+}
+
+@media (max-width: 1180px) {
   .box-detail .box-detail-text {
-    font-size: 13px !important;
+    font-size: 22px !important;
   }
   .box-detail .ant-card-head-title {
-    font-size: 16px !important;
+    font-size: 28px !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .box-detail .box-detail-text {
+    font-size: 20px !important;
+  }
+  .box-detail .ant-card-head-title {
+    font-size: 20px !important;
   }
   .text-header {
-    font-size: 16px !important;
+    font-size: 20px !important;
   }
   .form-login {
     padding: 0px 0px;
-}
+  }
+  .box-right {
+    padding: 10px 20px;
+  }
+  .more-detail {
+    font-size: 14px !important;
+  }
+  .box-left {
+    padding: 60px 20px;
+  }
 }
 
-@media (max-width: 391px) {
-    .box-detail .box-detail-text {
-      font-size: 10px !important;
-    }
-    .box-detail .ant-card-head-title {
-      font-size: 12px !important;
-    }
-    .text-header {
-      font-size: 12px !important;
-    }
-    .ant-form-item-label > label {
-        font-size: 14px !important;
-      }
+@media (max-width: 400px) {
+  .box-detail .box-detail-text {
+    font-size: 15px !important;
   }
+  .box-detail .ant-card-head-title {
+    font-size: 14px !important;
+  }
+  .text-header {
+    font-size: 17px !important;
+  }
+  .ant-form-item-label > label {
+    font-size: 17px !important;
+  }
+}
+
+@keyframes fadeIn1 {
+	from {
+		opacity: 0;
+		transform: translate3d(0, 10%, 0);
+	}
+	to {
+		opacity: 1;
+		transform: translate3d(0, 0, 0);
+	}
+}
+
+@keyframes fadeIn2 {
+	from {
+		opacity: 0;
+		transform: translate3d(0, 10%, 0);
+	}
+	to {
+		opacity: 1;
+		transform: translate3d(0, 0, 0);
+	}
+}
