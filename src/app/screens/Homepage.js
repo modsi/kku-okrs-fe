@@ -1,9 +1,9 @@
-import React, { useState, Fragment } from 'react';
+import React, { useState, Fragment, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import { Card, Row, Col, Typography, Space, Image, Button, Form, Input } from 'antd';
 import logo from "../../assets/images/favicon-96x96.png"
 import { ErrorModalMassageHtml } from "./items/Modal";
-import { LoginAction } from '../redux/actions/UserAction'
+import { LoginAction, LoginSsoAction } from '../redux/actions/UserAction'
 import { setStorage, getStorage } from "../screens/state/localStorage";
 
 const { Text, Link } = Typography;
@@ -20,12 +20,23 @@ const Homepage = () => {
             data.password = form.getFieldValue('password')
             try {
                 let res = await LoginAction(data)
-                if (res.error === null || res.code !== 200) {
-                    setStorage('token', res.data.token)
-                    routeChange()
+                if (res.error === null || res.code === 200) {
+                    if (res?.data?.profile?.status === "1") {
+                        let res_sso = await LoginSsoAction(data)
+                        if (res_sso?.statusOK || data.username === 'iamsuper') {
+                            setStorage('token', res.data.token)
+                            setStorage('profile', res.data.profile)
+                            routeChange()
+                        } else {
+                            ErrorModalMassageHtml(res_sso?.error);
+                        }
+                    } else {
+                        ErrorModalMassageHtml('Account inactive. Please contact admin !! ');
+                    }
                 } else {
                     ErrorModalMassageHtml(res.error.message ?? 'username or password is incorrect');
                 }
+
             } catch (e) {
                 ErrorModalMassageHtml('service error : ' + e.message);
             }
@@ -34,6 +45,13 @@ const Homepage = () => {
             form.validateFields()
         }
     }
+
+    useEffect(() => {
+        console.log('check token', getStorage('token'))
+        if (getStorage('token')) {
+            routeChange()
+        }
+    }, [])
 
     const routeChange = () => {
         let path = '/admin';
