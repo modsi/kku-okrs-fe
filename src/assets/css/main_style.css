@@ -41,8 +41,8 @@ div#root {
   }
 
 * {
-	/* font-family: 'THSarabun',Helvetica, sans-serif !important; */
-	font-family: 'InterThin', Helvetica, sans-serif !important;
+	font-family: 'THSarabun',Helvetica, sans-serif !important;
+	/* font-family: 'InterThin', Helvetica, sans-serif !important; */
 	font-variant: unset !important;
 	font-size: var(--main-font-size) !important;
 	/* color: #4E5C84; */

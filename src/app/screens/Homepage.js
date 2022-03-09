@@ -21,17 +21,22 @@ const Homepage = () => {
             try {
                 let res = await LoginAction(data)
                 if (res.error === null || res.code === 200) {
-                    let res_sso = await LoginSsoAction(data)
-                    if (res_sso?.statusOK || data.username === 'iamsuper') {
-                        setStorage('token', res.data.token)
-                        setStorage('profile', res.data.profile)
-                        routeChange()
+                    if (res?.data?.profile?.status === "1") {
+                        let res_sso = await LoginSsoAction(data)
+                        if (res_sso?.statusOK || data.username === 'iamsuper') {
+                            setStorage('token', res.data.token)
+                            setStorage('profile', res.data.profile)
+                            routeChange()
+                        } else {
+                            ErrorModalMassageHtml(res_sso?.error);
+                        }
                     } else {
-                        ErrorModalMassageHtml(res_sso?.error);
+                        ErrorModalMassageHtml('Account inactive. Please contact admin !! ');
                     }
                 } else {
                     ErrorModalMassageHtml(res.error.message ?? 'username or password is incorrect');
                 }
+
             } catch (e) {
                 ErrorModalMassageHtml('service error : ' + e.message);
             }
@@ -43,11 +48,11 @@ const Homepage = () => {
 
     useEffect(() => {
         console.log('check token', getStorage('token'))
-        if(getStorage('token')){
+        if (getStorage('token')) {
             routeChange()
         }
     }, [])
-    
+
     const routeChange = () => {
         let path = '/admin';
         navigate(path);
@@ -57,7 +62,7 @@ const Homepage = () => {
         if (!isLoggedIn) {
             return (
                 <>
-                    <Space direction="vertical" style={{marginTop: "20px"}} >
+                    <Space direction="vertical" style={{ marginTop: "20px" }} >
                         <Text className="big3-title" >Welcome to E - Project</Text>
                         <Text className='big7-title'>Login by your Account</Text>
                         <Form
