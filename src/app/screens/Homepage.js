@@ -119,7 +119,7 @@ const Homepage = () => {
                         <Col span={12} className="box">
                             <a href='https://hsdoa.kku.ac.th/OKRs/pdf/%E0%B9%81%E0%B8%9C%E0%B8%99%E0%B8%A2%E0%B8%B8%E0%B8%98%E0%B8%A8%E0%B8%B2%E0%B8%AA%E0%B8%95%E0%B8%A3%E0%B9%8C%E0%B8%84%E0%B8%93%E0%B8%B0%E0%B8%A1%E0%B8%99%E0%B8%B8%E0%B8%A9%E0%B8%A2%E0%B8%A8%E0%B8%B2%E0%B8%AA%E0%B8%95%E0%B8%A3%E0%B9%8C%E0%B9%81%E0%B8%A5%E0%B8%B0%E0%B8%AA%E0%B8%B1%E0%B8%87%E0%B8%84%E0%B8%A1%E0%B8%A8%E0%B8%B2%E0%B8%AA%E0%B8%95%E0%B8%A3%E0%B9%8C-4-%E0%B8%9B%E0%B8%B5-%E0%B8%9E.%E0%B8%A8.-2564-2567.pdf' target="_blank">
                                 <Card className="box-detail box-detail-color1" title="แผนยุทธศาสตร์" bordered={false}>
-                                    <Text className='box-detail-text'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;คณะมนุษยศาสตร์และสังคมศาสตร์<br />
+                                    <Text className='box-detail-text'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;คณะมนุษยศาสตร์และสังคมศาสตร์
                                         รายละเอียดแผนยุทธศาสตร์ 4 ปี
                                         (พ.ศ. 2564 - 2567)</Text>
                                 </Card>
@@ -128,7 +128,7 @@ const Homepage = () => {
                         <Col span={12} className="box">
                             <a href='https://hsdoa.kku.ac.th/OKRs/pdf/%E0%B9%81%E0%B8%9C%E0%B8%99%E0%B8%9B%E0%B8%8F%E0%B8%B4%E0%B8%9A%E0%B8%B1%E0%B8%95%E0%B8%B4%E0%B8%81%E0%B8%B2%E0%B8%A3-%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B8%88%E0%B8%B3%E0%B8%9B%E0%B8%B5%E0%B8%87%E0%B8%9A%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B8%A1%E0%B8%B2%E0%B8%93-%E0%B8%9E.%E0%B8%A8.-2564-%E0%B8%84%E0%B8%93%E0%B8%B0%E0%B8%A1%E0%B8%99%E0%B8%B8%E0%B8%A9%E0%B8%A2%E0%B8%A8%E0%B8%B2%E0%B8%AA%E0%B8%95%E0%B8%A3%E0%B9%8C%E0%B9%81%E0%B8%A5%E0%B8%B0%E0%B8%AA%E0%B8%B1%E0%B8%87%E0%B8%84%E0%B8%A1%E0%B8%A8%E0%B8%B2%E0%B8%AA%E0%B8%95%E0%B8%A3%E0%B9%8C.pdf' target="_blank">
                                 <Card className="box-detail box-detail-color2" title="แผนปฏิบัติการ" bordered={false}>
-                                    <Text className='box-detail-text'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;รายละเอียดแผนปฏิบัติการ<br />
+                                    <Text className='box-detail-text'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;รายละเอียดแผนปฏิบัติการ
                                         ประจำปีงบ
                                         ประมาณ พ.ศ. 2564</Text>
                                 </Card>
@@ -137,7 +137,7 @@ const Homepage = () => {
                         <Col span={12} className="box">
                             <a href='https://hsdoa.kku.ac.th/OKRs/pdf/%E0%B8%A3%E0%B8%B2%E0%B8%A2%E0%B8%A5%E0%B8%B0%E0%B9%80%E0%B8%AD%E0%B8%B5%E0%B8%A2%E0%B8%94%E0%B8%9C%E0%B8%A5%E0%B8%A5%E0%B8%B1%E0%B8%9E%E0%B8%98%E0%B9%8C%E0%B8%AA%E0%B8%B3%E0%B8%84%E0%B8%B1%E0%B8%8D-HUSO-OKRs-%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B8%88%E0%B8%B3%E0%B8%9B%E0%B8%B5%E0%B8%87%E0%B8%9A%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B8%A1%E0%B8%B2%E0%B8%93-%E0%B8%9E.%E0%B8%A8.-2564.pdf' target="_blank">
                                 <Card className="box-detail box-detail-color3" title="HUSO - OKRs" bordered={false}>
-                                    <Text className='box-detail-text'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;รายละเอียดผลลัพธ์สำคัญ<br />
+                                    <Text className='box-detail-text'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;รายละเอียดผลลัพธ์สำคัญ
                                         HUSO - OKRs ประจำปีงบประมาณ
                                         พ.ศ. 2564</Text>
                                 </Card>
