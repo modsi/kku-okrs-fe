@@ -24,12 +24,25 @@ div#root {
 
   @font-face {
 	font-family: 'InterBold';
-	src: url(../fonts/Inter/Inter-Bold.ttf);
+	src: url(../fonts/Kanit/Kanit-Bold.ttf);
+    font-style: normal;
+  }
+
+  @font-face {
+	font-family: 'InterThin';
+	src: url(../fonts/Kanit/Kanit-Light.ttf);
+    font-style: normal;
+  }
+
+  @font-face {
+	font-family: 'InteMedium';
+	src: url(../fonts/Kanit/Kanit-Medium.ttf);
     font-style: normal;
   }
 
 * {
-	font-family: 'THSarabun',Helvetica, sans-serif !important;
+	/* font-family: 'THSarabun',Helvetica, sans-serif !important; */
+	font-family: 'InterThin', Helvetica, sans-serif !important;
 	font-variant: unset !important;
 	font-size: var(--main-font-size) !important;
 	/* color: #4E5C84; */
@@ -41,6 +54,7 @@ div#root {
 
 .grad1 {
 	/* height: 100%; */
+	padding: 40px 130px;
 	background-color: red; /* For browsers that do not support gradients */
 	background-image: linear-gradient(to right,  white, rgb(148, 0, 32) );
   }
@@ -79,7 +93,7 @@ div#root {
 
   .big4-title {
 	font-family: 'InterBold' !important;
-	font-size: 30px !important;
+	font-size: 20px !important;
 	color: #fff;
   }
 
@@ -93,6 +107,10 @@ div#root {
 	font-family: 'THSarabunBold' !important;
 	/* font-size: 18px !important; */
 	color: #fff !important;
+  }
+  .big7-title {
+	color: #ABABAB;
+	font-size: 18px !important;
   }
 
   .nol-button {
@@ -131,8 +149,8 @@ div#root {
 	background-color: red; /* For browsers that do not support gradients */
 	background-image: linear-gradient(to right,  #eb680a, #f7e72b);
 	border-color: -webkit-linear-gradient(#eb680a, #f7e72b);
-	height: 70px;
-	padding: 6px 60px;
+	/* height: 70px; */
+	padding: 3px 60px;
   }
 
   .g-button:hover, .login-button:hover, .g-button:focus, .login-button:focus {
@@ -233,24 +251,64 @@ div#root {
 	  }
   }
 
+  @media (max-width: 820px) {
+	.grad1 {
+		padding: 20px;
+	}
+  }
+
   @media (max-width: 600px) {
+	.grad1 {
+		padding: 5px;
+	  }
 	.big1-title {
-		font-size: 30px !important;
+		font-size: 20px !important;
 	  }
 	
 	  .big2-title {
-		font-size: 28px !important;
+		font-size: 18px !important;
 	  }
 	
 	  .big3-title {
-		font-size: 28px !important;
+		font-size: 18px !important;
 	  }
 	
 	  .big4-title {
-		font-size: 26px !important;
+		font-size: 18px !important;
 	  }
 	
 	  .big5-title {
 		font-size: 14px !important;
+	  }
+	  .big7-title {
+		font-size: 14px !important;
+	  }
+  }
+
+  @media (max-width: 391px) {
+	.grad1 {
+		padding: 5px;
+	  }
+	.big1-title {
+		font-size: 15px !important;
+	  }
+	
+	  .big2-title {
+		font-size: 14px !important;
+	  }
+	
+	  .big3-title {
+		font-size: 14px !important;
+	  }
+	
+	  .big4-title {
+		font-size: 14px !important;
+	  }
+	
+	  .big5-title {
+		font-size: 10px !important;
+	  }
+	  .big7-title {
+		font-size: 10px !important;
 	  }
   }

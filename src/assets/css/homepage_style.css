@@ -1,0 +1,118 @@
+.card-detail {
+  background-color: #fff;
+}
+.box-left {
+  background-image: linear-gradient(to right, #fff, #fff8e1);
+  padding: 60px 10px;
+}
+.box-right {
+  padding: 10px 20px;
+}
+.container-box {
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+.box {
+  margin-top: 20px;
+}
+.box-detail {
+  border-radius: 15px;
+  -webkit-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
+  height: 200px;
+  font-weight: bold;
+  color: #000;
+}
+.box-detail .box-detail-text {
+  font-size: 15px !important;
+}
+.box-detail .ant-card-head-title {
+  color: #000;
+  font-weight: bold;
+  font-size: 20px !important;
+}
+.box-detail-color1 {
+  background-color: #12c2e9;
+}
+.box-detail-color2 {
+  background-color: #30e8bf;
+}
+.box-detail-color3 {
+  background-color: #fff4e3;
+}
+.box-detail-color4 {
+  background-color: #f2a2e4;
+}
+.box-detail .ant-card-head {
+  border-bottom: 0px;
+}
+
+.box-detail .ant-card-body {
+  padding: 15px;
+}
+
+.line-color {
+  width: 100%;
+  height: 4px;
+  padding-left: 10px;
+  background-image: linear-gradient(to right, #fc4a1a, #f7b733);
+}
+.line-empty {
+  width: 100%;
+  height: 4px;
+}
+
+.text-header {
+  width: 100%;
+  color: #fff;
+  font-weight: bold;
+  font-size: 22px !important;
+}
+.ant-btn {
+  height: auto;
+}
+
+.ant-form-item-label > label {
+  font-family: "InteMedium" !important;
+  font-size: 16px !important;
+}
+.form-login {
+    padding: 20px 70px;
+}
+.form-login .ant-input {
+  border-radius: 10px;
+}
+
+.form-login .ant-input-password {
+  border-radius: 10px;
+}
+
+@media (max-width: 600px) {
+  .box-detail .box-detail-text {
+    font-size: 13px !important;
+  }
+  .box-detail .ant-card-head-title {
+    font-size: 16px !important;
+  }
+  .text-header {
+    font-size: 16px !important;
+  }
+  .form-login {
+    padding: 0px 0px;
+}
+}
+
+@media (max-width: 391px) {
+    .box-detail .box-detail-text {
+      font-size: 10px !important;
+    }
+    .box-detail .ant-card-head-title {
+      font-size: 12px !important;
+    }
+    .text-header {
+      font-size: 12px !important;
+    }
+    .ant-form-item-label > label {
+        font-size: 14px !important;
+      }
+  }
