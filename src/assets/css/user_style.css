@@ -75,6 +75,96 @@
     background-color: rgba(0, 0, 0, 0.25);
 }
 
+.userModal .ant-select-single .ant-select-selector .ant-select-selection-item {
+    padding-left: 15px;
+}
+
+.userModal .ant-select-selection-overflow-item {
+    padding-left: 15px;
+}
+
+.form-login .ant-form-item-explain-error {
+    margin-left: 20px;
+    margin-top: 5px;
+}
+
+.nol-button {
+    height: auto;
+}
+
+.custom-btn {
+    padding: 5px 20px 0px 20px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.table-user .ant-table-thead {
+    border-radius: 20px;
+    background-color: rgba(245, 124, 0, 0.8);
+}
+
+.table-user .ant-table-thead .ant-table-cell {
+    color: #fff;
+    /* font-weight: bold; */
+    font-family: "InteMedium" !important;
+    font-size: 13px !important;
+}
+
+.table-user .ant-table.ant-table-small .ant-table-title, .ant-table.ant-table-small .ant-table-footer, .ant-table.ant-table-small .ant-table-thead > tr > th, .ant-table.ant-table-small .ant-table-tbody > tr > td, .ant-table.ant-table-small tfoot > tr > th, .ant-table.ant-table-small tfoot > tr > td {
+    padding: 15px;
+}
+
+.table-user .ant-table-container table > thead > tr:first-child th:first-child {
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+}
+
+.table-user .ant-table-container table > thead > tr:first-child th:last-child {
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+}
+
+.container-user .btn-view {
+    height: auto;
+    padding-bottom: 0px;
+    background: rgba(62, 54, 54, 0.5);
+    border-radius: 10px;
+}
+
+.container-user .btn-view span{
+    color: #fff;
+}
+
+.container-user .ant-pagination-item {
+    background: #fff;
+    border: 0px;
+    border-radius: 10px;
+    padding-top: 3px;
+}
+
+.container-user .ant-pagination-item a{
+    color: #000;
+}
+
+.container-user .ant-pagination-item-active a {
+    color: #fff;
+}
+
+.container-user .ant-pagination-item-active {
+    background: #FFA45C;
+    border: 0px;
+    border-radius: 10px;
+    padding-top: 3px;
+}
+
+.container-user .ant-pagination.mini .ant-pagination-prev, .ant-pagination.mini .ant-pagination-next {
+    margin-right: 20px;
+}
+
+.container-user .ant-pagination.mini .ant-pagination-prev, .ant-pagination.mini .ant-pagination-next {
+    margin-left: 20px;
+}
+
 @media (max-width: 1367px) {
     .userModal .ant-card-body {
         padding: 0px;

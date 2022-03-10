@@ -107,12 +107,13 @@ const User = () => {
                 <div className="text-center">
                     <Button
                         type="link"
-                        className="text-danger"
+                        className="text-danger btn-view"
                         onClick={() =>
                             handleClickEdit(record)
                         }
                     >
-                        <EditOutlined />
+                        <Text>View</Text>
+                        {/* <EditOutlined /> */}
                     </Button>
                 </div>
 
@@ -214,7 +215,7 @@ const User = () => {
                 <Row gutter={24} className="row-inquiry-customer">
                     <Col span={24} style={{ textAlign: "left" }}>
                         <Button
-                            className="nol-button"
+                            className="nol-button custom-btn"
                             onClick={newUser}
                             loading={isLoading}
                         >
@@ -223,6 +224,7 @@ const User = () => {
                     </Col>
                     <Col span={24} style={{ textAlign: "center" }}>
                         <Table
+                            className='table-user'
                             rowKey={(record, index) => record.key}
                             style={{ whiteSpace: 'pre' }}
                             loading={isLoading}
@@ -243,7 +245,7 @@ const User = () => {
                     closable={true}
                     title={addEditTitle}
                     visible={isModalAddEditVisible}
-                    width={1000}
+                    width={900}
                     centered={true}
                     footer={null}
                     className="userModal"
