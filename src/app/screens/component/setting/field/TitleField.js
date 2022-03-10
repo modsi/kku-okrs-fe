@@ -26,9 +26,9 @@ const TitleField = ({ form }) => {
         if (form.getFieldValue('label')) {
             let store = storeTemplate?.components ?? []
             let components = store
-            console.log(store)
+            let max = store ? Math.max(...store.map(({ index }) => index)) : 0;
             let obj = {
-                index: store.length + 1,
+                index: max + 1,
                 type: 'title',
                 value: form.getFieldValue('label'),
                 size: 'long',
