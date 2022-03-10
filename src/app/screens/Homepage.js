@@ -89,7 +89,7 @@ const Homepage = () => {
                                         name="password"
                                         rules={[{ required: true, message: 'Please Enter your password!' }]}
                                     >
-                                        <Input.Password placeholder="please enter password" />
+                                        <Input.Password placeholder="please Enter password" />
                                     </Form.Item>
                                 </Col>
                                 <Col span={24} style={{ textAlign: "center" }}>
