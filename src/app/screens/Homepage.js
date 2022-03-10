@@ -78,7 +78,7 @@ const Homepage = () => {
                                     <Form.Item
                                         label="Email or Username"
                                         name="username"
-                                        rules={[{ required: true, message: 'Please input your username!' }]}
+                                        rules={[{ required: true, message: 'Please Enter your username!' }]}
                                     >
                                         <Input placeholder="please Enter email or Username" />
                                     </Form.Item>
@@ -87,7 +87,7 @@ const Homepage = () => {
                                     <Form.Item
                                         label="Password"
                                         name="password"
-                                        rules={[{ required: true, message: 'Please input your password!' }]}
+                                        rules={[{ required: true, message: 'Please Enter your password!' }]}
                                     >
                                         <Input.Password placeholder="please enter password" />
                                     </Form.Item>

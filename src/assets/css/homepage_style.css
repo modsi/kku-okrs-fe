@@ -66,6 +66,7 @@
   height: 4px;
   padding-left: 10px;
   background-image: linear-gradient(to right, #fc4a1a, #f7b733);
+  border-radius: 5px;
 }
 .line-empty {
   width: 100%;
