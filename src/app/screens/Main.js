@@ -87,7 +87,7 @@ const Main = () => {
                         <Image
                             src={logo}
                         />
-                        <Space direction="vertical" style={{ padding: "5px", gap: "0px" }}>
+                        <Space direction="vertical" style={{ padding: "0px", gap: "0px" }}>
                             <Text strong>E - Project</Text>
                             <Text className="small-text">Faculty of Humanities  and Social Sciences</Text>
                         </Space>

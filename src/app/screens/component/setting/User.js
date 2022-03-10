@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 import { Card, Table, Button, Modal, Form, Row, Col, Input, Radio, Select, Typography, Switch } from 'antd';
-import { EditOutlined, EyeOutlined, SettingOutlined, PlusOutlined } from "@ant-design/icons";
+import { EditOutlined, EyeOutlined, SettingOutlined, PlusOutlined, SearchOutlined } from "@ant-design/icons";
 import { ListInstitutionsAction, ListRolesAction, LIST_INSTITUTIONS, LIST_ROLES } from '../../../redux/actions/ListMasterAction'
 import SetOptionsForSelect, { SetOptionsForSelectSetLable } from '../../items/SetOptionsForSelect'
 import CustomizeTable from '../../items/CustomizeTable'
@@ -211,16 +211,36 @@ const User = () => {
 
     return (
         <div className='container-user'>
-            <Card title={"User"} className="rounded" >
+            <Card title={"User"} className="rounded container-card" >
                 <Row gutter={24} className="row-inquiry-customer">
                     <Col span={24} style={{ textAlign: "left" }}>
-                        <Button
-                            className="nol-button custom-btn"
-                            onClick={newUser}
-                            loading={isLoading}
-                        >
-                            <Text className="big6-title"><PlusOutlined /> Add User</Text>
-                        </Button>
+                        <Row>
+                            <Col xs={24} sm={24} md={24} lg={12} xl={12}>
+                                <Button
+                                    className="nol-button custom-btn"
+                                    onClick={newUser}
+                                    loading={isLoading}
+                                >
+                                    <Text className="big6-title"><PlusOutlined /> Add User</Text>
+                                </Button>
+                            </Col>
+                            <Col xs={24} sm={24} md={24} lg={12} xl={12}>
+                                <div style={{ float: 'right' }}>
+                                    <Row>
+                                        <Col>
+                                            <Input placeholder="Search by name or email" style={{ textAlign: "left", borderTopLeftRadius: "10px", borderBottomLeftRadius: "10px", background: '#F3F6F9', border: '0px' }} size="small" />
+                                        </Col>
+                                        <Col>
+                                            <Button style={{border: "0px", background: "#F3F6F9", borderTopRightRadius: "10px", borderBottomRightRadius: "10px"}}>
+                                            <SearchOutlined />
+                                            </Button>
+                                        </Col>
+                                    </Row>
+                                </div>
+                            </Col>
+                        </Row>
+
+
                     </Col>
                     <Col span={24} style={{ textAlign: "center" }}>
                         <Table
@@ -255,14 +275,14 @@ const User = () => {
                         <Form form={form} {...layout} >
                             <Card loading={isLoading}>
                                 <Row>
-                                    <Col className='form-login' xs={24} sm={24} md={24} lg={12} xl={12}>
+                                    <Col className='form-login form-user' xs={24} sm={24} md={24} lg={12} xl={12}>
                                         <Form.Item
                                             label={"Full Name"} name={"fullName"}
                                             rules={[{ required: true, message: 'Full Name is required!' }]}>
                                             <Input placeholder="Please enter your name" style={{ textAlign: "left" }} size="small" />
                                         </Form.Item>
                                     </Col>
-                                    <Col className='form-login' xs={24} sm={24} md={24} lg={12} xl={12}>
+                                    <Col className='form-login form-user' xs={24} sm={24} md={24} lg={12} xl={12}>
                                         <Form.Item
                                             wrapperCol={{ span: 23 }}
                                             rules={[{ type: 'email', message: 'The input is not valid E-mail!' }, { required: true, message: 'Email is required!' }]}
@@ -272,7 +292,7 @@ const User = () => {
                                     </Col>
                                 </Row>
                                 <Row>
-                                    <Col className='form-login' xs={24} sm={24} md={12} lg={12} xl={12}>
+                                    <Col className='form-login form-user' xs={24} sm={24} md={12} lg={12} xl={12}>
                                         <Form.Item
                                             label={"Role"} name={"role"}
                                             rules={[{ required: true, message: 'Role is required!' }]}>
@@ -285,7 +305,7 @@ const User = () => {
                                             />
                                         </Form.Item>
                                     </Col>
-                                    <Col className='form-login' xs={24} sm={24} md={12} lg={12} xl={12}>
+                                    <Col className='form-login form-user' xs={24} sm={24} md={12} lg={12} xl={12}>
                                         <Form.Item
                                             wrapperCol={{ span: 23 }}
                                             label={"Group"} name={"group"}  >
@@ -302,14 +322,14 @@ const User = () => {
 
                                 </Row>
                                 <Row>
-                                    <Col className='form-login' xs={24} sm={24} md={12} lg={12} xl={12}>
+                                    <Col className='form-login form-user' xs={24} sm={24} md={12} lg={12} xl={12}>
                                         <Form.Item
                                             label={"Username"} name={"username"}
                                             rules={[{ required: true, message: 'Username is required!' }]}>
                                             <Input disabled placeholder="Auto Ganerate" style={{ textAlign: "left" }} size="small" />
                                         </Form.Item>
                                     </Col>
-                                    <Col className='form-login' xs={24} sm={24} md={12} lg={12} xl={12}>
+                                    <Col className='form-login form-user' xs={24} sm={24} md={12} lg={12} xl={12}>
                                         <Form.Item
                                             label={"Status"} name={"status"} valuePropName="checked" >
                                             <Switch className='btn-switch' defaultChecked />

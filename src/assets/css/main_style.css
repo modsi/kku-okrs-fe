@@ -202,6 +202,57 @@ div#root {
   background: #fff;
 }
 
+.ant-menu {
+  padding: 10px;
+}
+
+.ant-menu .ant-menu-item {
+  background: #F3F6F9;
+  /* padding: 15px 0px; */
+}
+
+.ant-menu-vertical .ant-menu-item:not(:last-child), .ant-menu-vertical-left .ant-menu-item:not(:last-child), .ant-menu-vertical-right .ant-menu-item:not(:last-child), .ant-menu-inline .ant-menu-item:not(:last-child) {
+  margin-bottom: 0px;
+}
+
+.ant-menu-vertical .ant-menu-item:first-child, .ant-menu-vertical-left .ant-menu-item:first-child, .ant-menu-vertical-right .ant-menu-item:first-child, .ant-menu-inline .ant-menu-item:first-child {
+  border-top-right-radius: 15px;
+  border-top-left-radius: 15px;
+}
+
+.ant-menu-vertical .ant-menu-item, .ant-menu-vertical-left .ant-menu-item, .ant-menu-vertical-right .ant-menu-item, .ant-menu-inline .ant-menu-item, .ant-menu-vertical .ant-menu-submenu-title, .ant-menu-vertical-left .ant-menu-submenu-title, .ant-menu-vertical-right .ant-menu-submenu-title, .ant-menu-inline .ant-menu-submenu-title {
+  margin-top: 0px;
+}
+
+.ant-menu .ant-menu-item-group-list {
+  border-radius: 10px;
+  background: #F3F6F9;
+}
+
+.ant-menu-vertical .ant-menu-item:last-child, .ant-menu-vertical-left .ant-menu-item:last-child, .ant-menu-vertical-right .ant-menu-item:last-child, .ant-menu-inline .ant-menu-item:last-child {
+  border-bottom-right-radius: 15px;
+  border-bottom-left-radius: 15px;
+}
+
+.ant-menu .anticon {
+  /* color: #071A52; */
+}
+
+.logo .ant-space-item .ant-space .ant-space-item {
+  margin-top: -20px;
+}
+
+.ant-menu .ant-menu-item-selected, .ant-menu-submenu-selected {
+  color: #071A52;
+}
+
+.ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
+  background-color: rgba(7, 26, 82, 0.2);
+}
+.ant-menu-vertical .ant-menu-item::after, .ant-menu-vertical-left .ant-menu-item::after, .ant-menu-vertical-right .ant-menu-item::after, .ant-menu-inline .ant-menu-item::after {
+  border-right: 0px;
+}
+
 .ant-menu-item-selected,
 .ant-menu-submenu-selected {
   color: #eb680a;
@@ -219,10 +270,11 @@ div#root {
 }
 
 .logo {
-  background: #f3f6f9;
+  background: #fff;
   margin: 10px;
   border-radius: 10px;
 }
+
 
 .ant-menu-item-group-title {
   font-family: "InterBold" !important;
