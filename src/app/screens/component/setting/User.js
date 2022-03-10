@@ -172,12 +172,12 @@ const User = () => {
         data.group = form.getFieldValue('group')
         console.log('onFinish >> data is ', data)
         let res = {}
-        if(id){
+        if (id) {
             data.id = id
             data.updated_datetime = moment().format(DATE_FULL)
             res = await UpdateAccAction(data)
-        }else {
-          res = await SaveAccAction(data)
+        } else {
+            res = await SaveAccAction(data)
         }
         if (res.error === null) {
             handleClickCancel();
@@ -209,7 +209,7 @@ const User = () => {
     };
 
     return (
-        <>
+        <div className='container-user'>
             <Card title={"User"} className="rounded" >
                 <Row gutter={24} className="row-inquiry-customer">
                     <Col span={24} style={{ textAlign: "left" }}>
@@ -243,77 +243,81 @@ const User = () => {
                     closable={true}
                     title={addEditTitle}
                     visible={isModalAddEditVisible}
-                    width={"70%"}
+                    width={1000}
                     centered={true}
                     footer={null}
+                    className="userModal"
                     onCancel={handleClickCancel}
                 >
                     <>
                         <Form form={form} {...layout} >
                             <Card loading={isLoading}>
                                 <Row>
-                                    <Col xs={24} sm={24} md={24} lg={12} xl={12}>
+                                    <Col className='form-login' xs={24} sm={24} md={24} lg={12} xl={12}>
                                         <Form.Item
                                             label={"Full Name"} name={"fullName"}
                                             rules={[{ required: true, message: 'Full Name is required!' }]}>
-                                            <Input style={{ textAlign: "left" }} size="small" />
+                                            <Input placeholder="Please enter your name" style={{ textAlign: "left" }} size="small" />
                                         </Form.Item>
                                     </Col>
-                                    <Col xs={24} sm={24} md={24} lg={12} xl={12}>
+                                    <Col className='form-login' xs={24} sm={24} md={24} lg={12} xl={12}>
                                         <Form.Item
+                                            wrapperCol={{ span: 23 }}
                                             rules={[{ type: 'email', message: 'The input is not valid E-mail!' }, { required: true, message: 'Email is required!' }]}
                                             label={"Email"} name={"email"}  >
-                                            <Input style={{ textAlign: "left" }} size="small" onChange={setUsername} />
+                                            <Input placeholder="Please enter your name" style={{ textAlign: "left" }} size="small" onChange={setUsername} />
                                         </Form.Item>
                                     </Col>
                                 </Row>
                                 <Row>
-                                    <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+                                    <Col className='form-login' xs={24} sm={24} md={12} lg={12} xl={12}>
                                         <Form.Item
                                             label={"Role"} name={"role"}
                                             rules={[{ required: true, message: 'Role is required!' }]}>
                                             <Select
                                                 options={SetOptionsForSelect({ label: 'role_name', value: 'id', data: listRoles })}
-                                                placeholder="Please select"
+                                                placeholder="-Please select from dropdown-"
                                                 // onChange={handleChange}
                                                 size="middle"
                                                 style={{ width: '100%' }}
                                             />
                                         </Form.Item>
                                     </Col>
-                                    <Col xs={24} sm={24} md={12} lg={8} xl={10}>
-                                        <Form.Item
-                                            label={"Username"} name={"username"}
-                                            rules={[{ required: true, message: 'Username is required!' }]}>
-                                            <Input style={{ textAlign: "left" }} size="small" />
-                                        </Form.Item>
-                                    </Col>
-                                    <Col xs={24} sm={24} md={12} lg={4} xl={2}>
-                                        <Form.Item
-                                            label={"Status"} name={"status"} valuePropName="checked" >
-                                            <Switch defaultChecked />
-                                        </Form.Item>
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                                    <Col className='form-login' xs={24} sm={24} md={12} lg={12} xl={12}>
                                         <Form.Item
                                             wrapperCol={{ span: 23 }}
                                             label={"Group"} name={"group"}  >
                                             <Select
                                                 options={SetOptionsForSelect({ label: 'groupname', value: 'groupid', data: listInstitutions })}
                                                 mode="multiple"
-                                                placeholder="Please select"
+                                                placeholder="-Please select from dropdown-"
                                                 // onChange={handleChange}
                                                 size="large"
                                                 style={{ width: '100%' }}
                                             />
                                         </Form.Item>
                                     </Col>
+
+                                </Row>
+                                <Row>
+                                    <Col className='form-login' xs={24} sm={24} md={12} lg={12} xl={12}>
+                                        <Form.Item
+                                            label={"Username"} name={"username"}
+                                            rules={[{ required: true, message: 'Username is required!' }]}>
+                                            <Input disabled placeholder="Auto Ganerate" style={{ textAlign: "left" }} size="small" />
+                                        </Form.Item>
+                                    </Col>
+                                    <Col className='form-login' xs={24} sm={24} md={12} lg={12} xl={12}>
+                                        <Form.Item
+                                            label={"Status"} name={"status"} valuePropName="checked" >
+                                            <Switch className='btn-switch' defaultChecked />
+                                        </Form.Item>
+                                    </Col>
                                 </Row>
                                 <Row gutter={24} className="row-inquiry-customer">
                                     <Col span={24} style={{ textAlign: "center" }}>
                                         <Button
+                                            className='btn-event btn-color-cancel'
                                             style={{ margin: "0 8px" }}
                                             onClick={() => {
                                                 handleClickCancel();
@@ -323,6 +327,7 @@ const User = () => {
                                             ยกเลิก
                                         </Button>
                                         <Button
+                                            className='btn-event btn-color-ok'
                                             type="primary"
                                             danger
                                             htmlType="submit"
@@ -338,7 +343,7 @@ const User = () => {
                     </>
                 </Modal>
             </div>
-        </>
+        </div>
 
     )
 }

@@ -1,0 +1,94 @@
+.ant-modal-wrap .userModal {
+    width: 100%;
+}
+.userModal .ant-modal-content {
+    border-radius: 20px;
+    padding: 15px;
+}
+
+.userModal .ant-modal-header {
+    border-radius: 20px;
+    border-bottom: 0px;
+}
+
+.userModal .ant-card-bordered {
+    border: 0px;
+}
+
+.userModal .ant-form-item-label
+  > label.ant-form-item-required:not(.ant-form-item-required-mark-optional)::before {
+  content: "";
+}
+
+.userModal .ant-select:not(.ant-select-customize-input) .ant-select-selector {
+    border-radius: 10px;
+}
+
+.userModal .ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
+    height: auto;
+    padding: 8px 0px;
+}
+
+.userModal .ant-select-selection-placeholder {
+    padding-left: 18px;
+}
+
+.userModal .ant-select-single.ant-select-show-arrow .ant-select-selection-placeholder {
+    padding-left: 18px;
+}
+
+.userModal .ant-select-arrow {
+    padding-right: 20px;
+}
+
+.userModal .btn-switch {
+    margin-left: 70px;
+    background-color: green;
+}
+
+.userModal .ant-select-selector {
+    /* border-radius: 10px; */
+  font-family: "InterThin" !important;
+  font-size: 14px !important;
+  padding: 8px 0px;
+}
+
+.userModal .btn-event {
+    padding: 5px 30px;
+    height: auto;
+    border-radius: 20px;
+    border: 0px;
+    color: #fff;
+    font-family: "InterBold" !important;
+    font-weight: bold;
+}
+
+.userModal .btn-event span {
+    font-size: 24px !important;
+}
+
+.userModal .btn-color-ok {
+    background-color: rgba(245, 124, 0, 0.7);
+}
+
+.userModal .btn-color-cancel {
+    background-color: rgba(0, 0, 0, 0.25);
+}
+
+@media (max-width: 1367px) {
+    .userModal .ant-card-body {
+        padding: 0px;
+    }
+  }
+  
+  @media (max-width: 1180px) {
+
+  }
+  
+  @media (max-width: 600px) {
+ 
+  }
+  
+  @media (max-width: 400px) {
+
+  }
