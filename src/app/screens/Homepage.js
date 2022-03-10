@@ -181,8 +181,8 @@ const Homepage = () => {
                                         src={logo}
                                         preview={false}
                                     />
-                                    <br />
                                     <Text className="big1-title" >ระบบการบริหารและติดตามผลการดำเนินงานโครงการคณะมนุษยศาสตร์และสังคมศาสตร์<br />(e-Project)</Text>
+                                    <br />
                                     <br />
                                     <Text className="big2-title" >Faculty of Humanities and Social Sciences</Text>
                                     <Text className="big2-title" >Khon Kaen University</Text>

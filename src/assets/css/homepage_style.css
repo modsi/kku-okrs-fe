@@ -3,7 +3,7 @@
 }
 .box-left {
   background-image: linear-gradient(to right, #fff, #fff8e1);
-  padding: 60px 40px;
+  padding: 40px;
   border-start-start-radius: 29px;
   border-end-start-radius: 29px;
 }
@@ -28,7 +28,7 @@
   border-radius: 15px;
   -webkit-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
-  height: 200px;
+  height: 170px;
   font-weight: bold;
 }
 .box-detail .box-detail-text {
@@ -130,7 +130,28 @@
   border-radius: 20px;
 }
 
+@media (max-width: 1367px) {
+  .container-box {
+    margin-top: 20px;
+  }
+  .box-detail .box-detail-text {
+    font-size: 16px !important;
+  }
+  .box-detail .ant-card-head-title {
+    font-size: 17px !important;
+  }
+  .text-header {
+    font-size: 18px !important;
+  }
+  .ant-form-item-label > label {
+    font-size: 18px !important;
+  }
+}
+
 @media (max-width: 1180px) {
+  .box-detail {
+    height: 200px;
+  }
   .box-detail .box-detail-text {
     font-size: 22px !important;
   }

@@ -57,6 +57,7 @@ div#root {
   padding: 40px 130px;
   background-color: red; /* For browsers that do not support gradients */
   background-image: linear-gradient(to right, white, rgb(148, 0, 32));
+  overflow-y: hidden;
 }
 
 .small-text {
@@ -80,6 +81,7 @@ div#root {
   background: linear-gradient(to right, #eb680a, #eb9046);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  margin-bottom: 20px;
 }
 
 .big2-title {
@@ -279,6 +281,27 @@ div#root {
 @media (min-width: 1500px) {
   .grad1 {
     height: 100%;
+  }
+}
+
+@media (max-width: 1367px) {
+  .big1-title {
+    font-size: 22px !important;
+  }
+  .big2-title {
+    font-size: 18px !important;
+  }
+  .big3-title {
+    font-size: 20px !important;
+  }
+  .big4-title {
+    font-size: 16px !important;
+  }
+  .big5-title {
+    font-size: 16px !important;
+  }
+  .big7-title {
+    font-size: 10px !important;
   }
 }
 
