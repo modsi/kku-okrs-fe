@@ -19,6 +19,8 @@ import DayField from './field/DayField'
 import DateTimeField from './field/DateTimeField'
 import RangeDateField from './field/RangeDateField'
 import UploadField from './field/UploadField'
+import { LIST_TYPE_TEPM, LIST_FIELD_TEPM, ListFieldMasterTemplateAction } from '../../../redux/actions/ListMasterAction'
+import SetOptionsForSelect, { SetOptionsForSelectSetLable } from '../../items/SetOptionsForSelect'
 
 const { Text, Link } = Typography;
 const ConfigTemplate = () => {
@@ -29,6 +31,8 @@ const ConfigTemplate = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [showConfigPage, setShowConfigPage] = useState(false);
     const [isModalAddEditVisible, setIsModalAddEditVisible] = useState(false);
+    const listType = useSelector(state => state?.main?.[LIST_TYPE_TEPM])
+    const listField = useSelector(state => state?.main?.[LIST_FIELD_TEPM])
     const [addEditTitle, setAddEditTitle] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const storeTemplate = useSelector(state => state?.storeSearchReducer?.[STORE_TEMPLATE])
@@ -124,6 +128,28 @@ const ConfigTemplate = () => {
         handleClickCancel()
     }, [storeTemplate])
 
+    useEffect(() => {
+        if (listType) {
+            form.setFieldsValue({ ['templateType']: listType[0].id })
+            handleListMaster(listType[0].id)
+        }
+    }, [listType])
+
+    const handleTypeChange = (e) => {
+        handleListMaster(e.target.value)
+    }
+
+    async function handleListMaster(typeId) {
+        dispatch(await ListFieldMasterTemplateAction(typeId))
+    }
+
+    useEffect(() => {
+        if (listField) {
+            let obj = {}
+            setTemplate({ ...obj, templateName: form.getFieldValue('templateName') ?? null })
+        }
+    }, [listField])
+
     return (
         <>
             <Card title={"Create Template"} className="rounded" >
@@ -142,12 +168,13 @@ const ConfigTemplate = () => {
                                     </Form.Item>
                                 </Col>
                                 <Col xs={24} sm={24} md={24} lg={12} xl={12}>
-                                    <Form.Item name="group">
-                                        <Radio.Group>
-                                            <Radio value="1">แบบแผนที่ 1</Radio>
-                                            <Radio value="2">แบบแผนที่ 2</Radio>
-                                            <Radio value="3">แบบพิเศษ</Radio>
-                                        </Radio.Group>
+                                    <Form.Item name="templateType">
+                                        <Radio.Group
+                                            size="small"
+                                            options={SetOptionsForSelect({ label: 'name', value: 'id', data: listType })}
+                                            value={1}
+                                            onChange={handleTypeChange}
+                                        />
                                     </Form.Item>
                                 </Col>
                             </Row>

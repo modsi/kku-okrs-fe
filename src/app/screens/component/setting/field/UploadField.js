@@ -1,9 +1,10 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from "react-router-dom";
-import { Card, Row, Col, Button, Typography, Table, Form, Input, Radio, Space, Image, Switch } from 'antd';
+import { Card, Row, Col, Button, Typography, Table, Form, Input, Radio, Space, Image, Switch, Upload, message } from 'antd';
 import logo from "../../../../../assets/images/favicon-96x96.png"
 import { STORE_TEMPLATE, StoreTemplateAction } from "../../../../redux/actions/StoreSearchAction"
+import { UploadOutlined } from '@ant-design/icons';
 
 const { Text, Link } = Typography;
 const UploadField = ({ form }) => {
@@ -18,23 +19,23 @@ const UploadField = ({ form }) => {
 
     const formItemLayout =
         formLayout === 'horizontal'
-        ? {
-            labelCol: {
-                span: 4,
-            },
-            wrapperCol: {
-                span: 20,
-            },
-            labelAlign: "left"
-        }
-        : {
-            labelCol: {
-                span: 24,
-            },
-            wrapperCol: {
-                span: 24,
+            ? {
+                labelCol: {
+                    span: 8,
+                },
+                wrapperCol: {
+                    span: 16,
+                },
+                labelAlign: "left"
             }
-        };
+            : {
+                labelCol: {
+                    span: 24,
+                },
+                wrapperCol: {
+                    span: 24,
+                }
+            };
 
     const layout = {
         labelCol: { span: 24 },
@@ -51,12 +52,12 @@ const UploadField = ({ form }) => {
         if (form.getFieldValue('label') && form.getFieldValue('labelPosition') && form.getFieldValue('size')) {
             let store = storeTemplate?.components ?? []
             let components = store
-            console.log(store)
+            let max = store ? Math.max(...store.map(({ index }) => index)) : 0;
             let obj = {
-                index: store.length + 1,
+                index: max + 1,
                 labelPosition: form.getFieldValue('labelPosition'),
-                type: 'input',
-                key: 'input_' + (store.length + 1),
+                type: 'upload',
+                key: 'input_' + (max + 1),
                 label: form.getFieldValue('label'),
                 size: form.getFieldValue('size') === 2 ? 'long' : 'short',
                 align: "left"
@@ -75,6 +76,24 @@ const UploadField = ({ form }) => {
     const onFormLayoutChange = (e) => {
         setFormLayout(e.target.value);
     };
+
+    const props = {
+        name: 'file',
+        action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
+        headers: {
+          authorization: 'authorization-text',
+        },
+        onChange(info) {
+          if (info.file.status !== 'uploading') {
+            console.log(info.file, info.fileList);
+          }
+          if (info.file.status === 'done') {
+            message.success(`${info.file.name} file uploaded successfully`);
+          } else if (info.file.status === 'error') {
+            message.error(`${info.file.name} file upload failed.`);
+          }
+        },
+      };
 
     return (
         <>
@@ -132,8 +151,9 @@ const UploadField = ({ form }) => {
                                                 // name="key"
                                                 // rules={[{ required: required ? true : false, message: 'Please input ' + title }]}
                                                 >
-                                                    <Input />
-
+                                                    <Upload {...props}>
+                                                        <Button icon={<UploadOutlined />}>Click to Upload</Button>
+                                                    </Upload>
                                                 </Form.Item>
                                             </Form>
                                         </Col>

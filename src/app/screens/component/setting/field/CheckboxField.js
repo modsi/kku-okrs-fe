@@ -23,10 +23,10 @@ const CheckboxField = ({ form }) => {
         formLayout === 'horizontal'
             ? {
                 labelCol: {
-                    span: 4,
+                    span: 8,
                 },
                 wrapperCol: {
-                    span: 20,
+                    span: 16,
                 },
                 labelAlign: "left"
             }
@@ -54,12 +54,12 @@ const CheckboxField = ({ form }) => {
         if (form.getFieldValue('label') && form.getFieldValue('labelPosition') && form.getFieldValue('size')) {
             let store = storeTemplate?.components ?? []
             let components = store
-            console.log(store)
+            let max = store ? Math.max(...store.map(({ index }) => index)) : 0;
             let obj = {
-                index: store.length + 1,
+                index: max + 1,
                 labelPosition: form.getFieldValue('labelPosition'),
                 type: 'checkbox',
-                key: 'input_' + (store.length + 1),
+                key: 'input_' + (max+1),
                 label: form.getFieldValue('label'),
                 size: form.getFieldValue('size') === 2 ? 'long' : 'short',
                 options: options,

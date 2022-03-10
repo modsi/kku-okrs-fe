@@ -5,6 +5,7 @@ const API_KKU = `https://api.kku.ac.th/v2`
 const API_ENDPOINT = `http://128.199.225.180/app/api`
 const USER_URL = `${API_ENDPOINT}/users`
 const MANAGE_URL = `${API_ENDPOINT}/manage`
+const TEMPLATE__URL = `${API_ENDPOINT}/templates`
 
 export const ListInstitutions = async () => {
     return await get(`${MANAGE_URL}/institution`)    
@@ -12,6 +13,14 @@ export const ListInstitutions = async () => {
 
 export const ListRoles = async () => {
     return await get(`${MANAGE_URL}/role`)
+}
+
+export const ListTypeTemplate = async () => {
+    return await get(`${TEMPLATE__URL}/type_template`)
+}
+
+export const ListFieldMasterTemplate = async (typeId) => {
+    return await get(`${TEMPLATE__URL}/list_template?typeId=${typeId}`)
 }
 
 export const SaveAccountService = async (data = {}) => {

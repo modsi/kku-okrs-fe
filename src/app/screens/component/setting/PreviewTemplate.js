@@ -1,12 +1,13 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from "react-router-dom";
-import { Card, Row, Col, Button, Typography, Table, Form, Input, Radio, Space, Image, InputNumber, Checkbox, Select, DatePicker } from 'antd';
-import { DeleteFilled } from "@ant-design/icons";
+import { Card, Row, Col, Button, Typography, Table, Form, Input, Radio, Space, Image, InputNumber, Checkbox, Select, DatePicker, Upload, message } from 'antd';
+import { DeleteFilled, UploadOutlined } from "@ant-design/icons";
 import { DATE_FULL, DATE_NORMAL } from '../../../utils/Elements'
 import moment from 'moment';
 import logo from "../../../../assets/images/favicon-96x96.png"
 import { STORE_TEMPLATE, StoreTemplateAction } from "../../../redux/actions/StoreSearchAction"
+
 
 const { Text, Link } = Typography;
 const { RangePicker } = DatePicker;
@@ -46,6 +47,24 @@ const PreviewTemplate = () => {
         dispatch(await StoreTemplateAction(data))
     }
 
+    const propsUpload = {
+        name: 'file',
+        action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
+        headers: {
+            authorization: 'authorization-text',
+        },
+        onChange(info) {
+            if (info.file.status !== 'uploading') {
+                console.log(info.file, info.fileList);
+            }
+            if (info.file.status === 'done') {
+                message.success(`${info.file.name} file uploaded successfully`);
+            } else if (info.file.status === 'error') {
+                message.error(`${info.file.name} file upload failed.`);
+            }
+        },
+    };
+
     const setLayoutTemplate = () => {
         let listField = []
         storeTemplate?.components?.map((item) => {
@@ -54,10 +73,10 @@ const PreviewTemplate = () => {
                 item.labelPosition === 'horizontal'
                     ? {
                         labelCol: {
-                            span: 4,
+                            span: 8,
                         },
                         wrapperCol: {
-                            span: 20,
+                            span: 16,
                         },
                         labelAlign: "left"
                     }
@@ -76,7 +95,7 @@ const PreviewTemplate = () => {
                             <Col xs={24} sm={24} md={2} lg={2} xl={2} >
                                 <Button
                                     type="link"
-                                    style={{ padding: '0px' }}
+                                    style={{ padding: '0px', color: 'red'}}
                                     onClick={() =>
                                         remove(item.index)
                                     }
@@ -118,8 +137,12 @@ const PreviewTemplate = () => {
                                                                 : item.type === 'date_time' ?
                                                                     (<DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />)
                                                                     : item.type === 'range_date' ?
-                                                                        ( <RangePicker />)
-                                                                        : (<Input />)
+                                                                        (<RangePicker />)
+                                                                        : item.type === 'upload' ?
+                                                                            (<Upload {...propsUpload}>
+                                                                                <Button icon={<UploadOutlined />}>Click to Upload</Button>
+                                                                            </Upload>)
+                                                                            : (<Input />)
                                     }
                                     {/* </Space> */}
                                 </Form.Item>
