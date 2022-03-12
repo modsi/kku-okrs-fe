@@ -32,11 +32,11 @@
   font-weight: bold;
 }
 .box-detail .box-detail-text {
-  font-size: 16px !important;
+  font-size: 14px !important;
   color: rgba(0, 0, 0, 0.5);
 }
 .box-detail .ant-card-head-title {
-  color: rgba(0, 0, 0, 0.5);
+  color: rgba(0, 0, 0, 0.4);
   font-weight: bold;
   font-size: 19px !important;
   font-family: "InterBold" !important;
@@ -77,7 +77,7 @@
   width: 100%;
   color: #fff;
   font-weight: bold;
-  font-size: 22px !important;
+  font-size: 18px !important;
 }
 .grad1 .ant-btn {
   height: auto;
@@ -86,14 +86,21 @@
 .grad1 .ant-form-item-label > label {
   font-family: "InteMedium" !important;
   font-size: 16px !important;
+  color: rgba(0, 0, 0, 0.5);
 }
 .form-login {
-  padding: 20px 20px;
+  margin-top: 10px;
+  padding: 0px 20px;
   /* font-family: "InterThin" !important;
   font-size: 12px !important;
   padding: 12px;
   color: rgba(34, 43, 69, 0.15); */
 }
+
+.form-login-password {
+  padding-top: 0px;
+}
+
 .form-login .ant-input {
   border-radius: 10px;
   font-family: "InterThin" !important;
@@ -136,7 +143,7 @@
     margin-top: 20px;
   }
   .box-detail .box-detail-text {
-    font-size: 16px !important;
+    font-size: 14px !important;
   }
   .box-detail .ant-card-head-title {
     font-size: 17px !important;
@@ -154,16 +161,17 @@
     height: 200px;
   }
   .box-detail .box-detail-text {
-    font-size: 22px !important;
+    font-size: 16px !important;
   }
   .box-detail .ant-card-head-title {
     font-size: 28px !important;
   }
 }
 
+
 @media (max-width: 600px) {
   .box-detail .box-detail-text {
-    font-size: 20px !important;
+    font-size: 14px !important;
   }
   .box-detail .ant-card-head-title {
     font-size: 20px !important;
@@ -187,7 +195,7 @@
 
 @media (max-width: 400px) {
   .box-detail .box-detail-text {
-    font-size: 15px !important;
+    font-size: 13px !important;
   }
   .box-detail .ant-card-head-title {
     font-size: 14px !important;

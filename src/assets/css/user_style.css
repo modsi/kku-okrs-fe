@@ -39,11 +39,21 @@
 
 .userModal .ant-select-arrow {
     padding-right: 20px;
+    /* font-size: 16px; */
+}
+
+.userModal .ant-select-arrow .ant-select-suffix {
+    /* font-size: 16px; */
+    /* font-weight: bold; */
 }
 
 .userModal .btn-switch {
     margin-left: 70px;
-    background-color: green;
+    /* background-color: green; */
+}
+
+.userModal .ant-switch-checked {
+    /* background-color: rgba(245, 124, 0, 0.7); */
 }
 
 .userModal .ant-select-selector {
@@ -61,13 +71,18 @@
     color: #fff;
     font-family: "InterBold" !important;
     font-weight: bold;
+    margin: 0px 20px;
 }
 
 .userModal .btn-event span {
-    font-size: 24px !important;
+    font-size: 16px !important;
 }
 
 .userModal .btn-color-ok {
+    background-color: rgba(245, 124, 0, 0.7);
+}
+
+.userModal .btn-color-ok:hover {
     background-color: rgba(245, 124, 0, 0.7);
 }
 
@@ -93,9 +108,10 @@
 }
 
 .custom-btn {
-    padding: 5px 20px 0px 20px;
+    /* padding: 5px 20px 0px 20px; */
     border-radius: 10px;
     margin-bottom: 10px;
+    background-color: rgba(62, 54, 54, 0.5);;
 }
 
 .table-user .ant-table-thead {
@@ -107,7 +123,11 @@
     color: #fff;
     /* font-weight: bold; */
     font-family: "InteMedium" !important;
-    font-size: 13px !important;
+    font-size: 17px !important;
+}
+
+.table-user .ant-table-tbody .ant-table-cell {
+    color: rgba(0, 0, 0, 0.5);
 }
 
 .table-user .ant-table.ant-table-small .ant-table-title, .ant-table.ant-table-small .ant-table-footer, .ant-table.ant-table-small .ant-table-thead > tr > th, .ant-table.ant-table-small .ant-table-tbody > tr > td, .ant-table.ant-table-small tfoot > tr > th, .ant-table.ant-table-small tfoot > tr > td {
@@ -116,6 +136,11 @@
 
 .container-card {
     border-radius: 20px;
+}
+
+.ant-modal-confirm-btns .ant-btn-primary {
+    background-color: rgba(245, 124, 0, 0.8);
+    border: 0px;
 }
 
 .table-user .ant-table-container table > thead > tr:first-child th:first-child {
@@ -127,6 +152,18 @@
     border-top-right-radius: 15px;
     border-bottom-right-radius: 15px;
 }
+
+.container-user .ant-card-head {
+    border-bottom: 0px;
+  }
+
+.container-user .ant-card-head-title {
+    padding: 20px 0px 0px 10px;
+  }
+
+  .container-user .custom-add-user {
+      padding-top: 3px;
+  }
 
 .container-user .btn-view {
     height: auto;
@@ -170,11 +207,32 @@
 }
 
 .form-user {
-    padding: 5px 0px;
+    padding: 0px;
+    /* font-size: 18px; */
+}
+
+.userModal .ant-modal-body {
+    padding: 0px 20px;
+}
+
+.userModal .ant-card-body .ant-row {
+    padding: 0px;
 }
 
 .ant-modal-content {
     border-radius: 15px;
+}
+
+.container-user .form-search {
+    text-align: left;
+    /* border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px; */
+    border-radius: 10px;
+    background: #F3F6F9;
+    border: 0px;
+    padding: 5px 15px 5px 15px;
+    /* width: 400px; */
+    font-size: 14px !important;
 }
 
 @media (max-width: 1367px) {

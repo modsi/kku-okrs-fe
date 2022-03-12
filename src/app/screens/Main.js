@@ -14,6 +14,9 @@ import { clearStorege, getStorage } from "../screens/state/localStorage";
 import { FaRegUserCircle } from "react-icons/fa";
 import { ConfirmModalEditText } from "./items/Modal";
 
+import logoProfile from "../../assets/images/icon/pixlr-bg-result.png";
+import logoLogOut from "../../assets/images/icon/log-out.png";
+
 const { Text, Link } = Typography;
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -83,13 +86,15 @@ const Main = () => {
                 }}
             >
                 <div className="logo">
-                    <Space direction="horizontal">
+                    <Space direction="horizontal" style={{marginTop: '10px'}}>
+                        &nbsp;
                         <Image
                             src={logo}
+                            style={{width: '40px'}}
                         />
-                        <Space direction="vertical" style={{ padding: "0px", gap: "0px" }}>
-                            <Text strong>E - Project</Text>
-                            <Text className="small-text">Faculty of Humanities  and Social Sciences</Text>
+                        <Space direction="vertical" style={{ padding: "0px", gap: "2px" }}>
+                            <Text strong>e - Project</Text>
+                            <Text className="small-text" style={{ fontWeight: 'bold', color: 'rgba(0, 0, 0, 0.5)' }}>Faculty of Humanities  and Social Sciences</Text>
                         </Space>
                     </Space>
                 </div>
@@ -131,12 +136,19 @@ const Main = () => {
                 </Menu>
             </Sider>
             <Layout>
-                <Header className="site-layout-sub-header-background" style={{ width: '100%', textAlign: 'right' }}>
-                    <Space align="start">
-                        <FaRegUserCircle style={{ color: 'orange', marginTop: '20px' }} />
-                        <Text strong> {profile?.full_name}</Text>
-                        <Text className="small-text"> : {profile?.role?.role_name} </Text>
-                        <Button type="link" style={{ color: 'orange', marginTop: '15px' }} onClick={logout} ><LogoutOutlined /></Button>
+                <Header className="site-layout-sub-header-background custom-layout-header">
+                    <Space align="start" style={{backgroundColor: '#F3F6F9', borderRadius: '10px', marginRight: '25px'}}>
+                        {/* <FaRegUserCircle style={{ color: 'orange', marginTop: '20px' }} /> */}
+                        <Image src={logoProfile} className="custom-image-profile" preview={false} />
+                        <Space direction="vertical" style={{ padding: "0px", gap: "0px" }}>
+                            <Text strong style={{color: 'rgba(0, 0, 0, 0.5)'}}> {profile?.full_name}</Text>
+                            <Text className="small-text" style={{textAlign: 'left', color: 'rgba(0, 0, 0, 0.5)'}}> {profile?.role?.role_name} </Text>
+                        </Space>
+
+                        <Button type="link" style={{ color: 'orange', marginTop: '15px' }} onClick={logout} >
+                            {/* <LogoutOutlined /> */}
+                            <Image src={logoLogOut} className="custom-image-logout" preview={false} />
+                        </Button>
                     </Space>
                 </Header>
                 <Content style={{ margin: '0' }}>
@@ -144,7 +156,7 @@ const Main = () => {
                         {mycontent}
                     </div>
                 </Content>
-                <Footer style={{ textAlign: 'center' }}>HUSO-KKU ©2022 Faculty of Humanities and Social Sciences</Footer>
+                <Footer style={{ textAlign: 'center', color: 'rgba(0, 0, 0, 0.5)' }}>HUSO-KKU ©2022 Faculty of Humanities and Social Sciences</Footer>
             </Layout>
         </Layout>
     )

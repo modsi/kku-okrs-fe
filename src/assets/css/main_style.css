@@ -1,7 +1,7 @@
 :root {
-  --large-font-size: 24px !important;
-  --main-font-size: 20px !important;
-  --secondary-font-size: 18px !important;
+  --large-font-size: 20px !important;
+  --main-font-size: 16px !important;
+  --secondary-font-size: 14px !important;
 }
 /* ================ */
 div#root {
@@ -11,32 +11,32 @@ div#root {
 @font-face {
   font-family: "THSarabun";
   src: local("THSarabun"),
-    url(../fonts/THSarabunNew/THSarabunNew.ttf) format("truetype");
+    url(../fonts/IBM_Plex_Sans_Thai/IBMPlexSansThai-Light.ttf) format("truetype");
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
   font-family: "THSarabunBold";
-  src: url(../fonts/THSarabunNew/THSarabunNewBold.ttf);
+  src: url(../fonts/IBM_Plex_Sans_Thai/IBMPlexSansThai-Bold.ttf);
   font-style: Bold;
 }
 
 @font-face {
   font-family: "InterBold";
-  src: url(../fonts/Inter/Inter-Bold.ttf);
+  src: url(../fonts/IBM_Plex_Sans_Thai/IBMPlexSansThai-Bold.ttf);
   font-style: normal;
 }
 
 @font-face {
   font-family: "InterThin";
-  src: url(../fonts/Inter/Inter-Light.ttf);
+  src: url(../fonts/IBM_Plex_Sans_Thai/IBMPlexSansThai-Light.ttf);
   font-style: normal;
 }
 
 @font-face {
   font-family: "InteMedium";
-  src: url(../fonts/Inter/Inter-Medium.ttf);
+  src: url(../fonts/IBM_Plex_Sans_Thai/IBMPlexSansThai-Medium.ttf);
   font-style: normal;
 }
 
@@ -45,7 +45,7 @@ div#root {
   /* font-family: "InterThin", Helvetica, sans-serif !important; */
   font-variant: unset !important;
   font-size: var(--main-font-size) !important;
-  /* color: #4E5C84; */
+  /* color: rgba(0, 0, 0, 0.5); */
 }
 
 .site-layout-sub-header-background{
@@ -61,7 +61,7 @@ div#root {
 }
 
 .small-text {
-  font-size: 14px !important;
+  font-size: 11px !important;
 }
 
 .template-text,
@@ -172,7 +172,7 @@ div#root {
   background-image: linear-gradient(to right, #eb680a, #f7e72b);
   border-color: -webkit-linear-gradient(#eb680a, #f7e72b);
   /* height: 70px; */
-  padding: 3px 60px;
+  padding: 3px 40px;
   margin-top: 20px;
 }
 
@@ -194,7 +194,8 @@ div#root {
   background-image: linear-gradient(to right, #eb680a, #f7e72b);
   border-color: -webkit-linear-gradient(#eb680a, #f7e72b);
   height: 50px;
-  padding: 4px 70px;
+  padding: 4px 40px;
+  margin-top: 40px;
 }
 
 .site-layout .site-layout-background,
@@ -204,6 +205,7 @@ div#root {
 
 .ant-menu {
   padding: 10px;
+  color: rgba(0, 0, 0, 0.5);
 }
 
 .ant-menu .ant-menu-item {
@@ -224,6 +226,10 @@ div#root {
   margin-top: 0px;
 }
 
+.ant-menu .ant-menu-item-group {
+  margin-bottom: 15px;
+}
+
 .ant-menu .ant-menu-item-group-list {
   border-radius: 10px;
   background: #F3F6F9;
@@ -238,16 +244,30 @@ div#root {
   /* color: #071A52; */
 }
 
+.ant-menu .anticon {
+  /* color: #071A52; */
+}
+
 .logo .ant-space-item .ant-space .ant-space-item {
-  margin-top: -20px;
+  margin-top: -5px;
 }
 
 .ant-menu .ant-menu-item-selected, .ant-menu-submenu-selected {
-  color: #071A52;
+  /* color: #071A52;  */
+  color: rgba(245, 124, 0, 0.8);
+}
+
+.ant-menu .ant-menu-title-content {
+  font-weight: bold;
+}
+
+.ant-menu .ant-menu-item-selected .ant-menu-title-content {
+  color: rgba(245, 124, 0, 0.8);
+  font-weight: bold;
 }
 
 .ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
-  background-color: rgba(7, 26, 82, 0.2);
+  background-color: rgba(0, 0, 0, 0.25);
 }
 .ant-menu-vertical .ant-menu-item::after, .ant-menu-vertical-left .ant-menu-item::after, .ant-menu-vertical-right .ant-menu-item::after, .ant-menu-inline .ant-menu-item::after {
   border-right: 0px;
@@ -258,10 +278,13 @@ div#root {
   color: #eb680a;
 }
 
-.ant-menu-item-active,
-.ant-menu-submenu-active {
-  color: #c95502;
-  background: #f5e1d4;
+/* .ant-menu-item-active:hover {
+  color: rgba(245, 124, 0, 0.8);
+} */
+
+.ant-menu-item-active:hover span {
+  color: rgba(245, 124, 0, 0.8);
+  /* background: #f5e1d4; */
 }
 
 .ant-menu-item-selected:hover,
@@ -273,35 +296,37 @@ div#root {
   background: #fff;
   margin: 10px;
   border-radius: 10px;
+  margin-left: 20px;
 }
 
 
 .ant-menu-item-group-title {
   font-family: "InterBold" !important;
   font-size: 16px !important;
-  color: #4e5c84;
+  color: rgba(0, 0, 0, 0.5);
 }
 
 .ant-menu-title-content {
-  color: #4e5c84;
+  color: rgba(0, 0, 0, 0.5);
+  font-size: 14px !important;
 }
 
 .ant-card-head-title {
   font-family: "InterBold" !important;
   font-size: 24px !important;
-  color: #4e5c84bf;
+  color: rgba(0, 0, 0, 0.5);
 }
 
 .ant-modal-title {
   font-family: "InterBold" !important;
   font-size: 18px !important;
-  color: #4e5c84bf;
+  color: rgba(0, 0, 0, 0.5);
 }
 
 .ant-form-item-label > label {
   font-family: "InterBold" !important;
   font-size: 14px !important;
-  color: #4e5c84bf;
+  color: rgba(0, 0, 0, 0.5);
 }
 .ant-table-small .ant-table-thead > tr > th {
   background: rgb(245 125 1 / 55%);
@@ -329,6 +354,28 @@ div#root {
 .dynamic-delete-button[disabled] {
   cursor: not-allowed;
   opacity: 0.5;
+}
+
+.custom-layout-header {
+  width: 100%;
+  text-align: right; 
+  padding: 10px 0px 80px 0px;
+}
+
+.custom-layout-header .ant-space-vertical {
+  margin-top: 30px; 
+}
+
+.custom-layout-header .ant-space-item {
+  line-height: 10px;
+  text-align: left;
+}
+.custom-image-profile {
+  width: 70px;
+}
+
+.custom-image-logout {
+  width: 35px;
 }
 
 @media (min-width: 1500px) {

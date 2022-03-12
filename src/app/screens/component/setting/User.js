@@ -94,7 +94,7 @@ const User = () => {
         {
             title: 'Last Active',
             dataIndex: 'lastLogin',
-            align: 'center',
+            align: 'left',
             width: 80,
             render: (_, record) => record?.last_login !== null ? moment(record.last_login).format(DATE_FULL) : null
         },
@@ -112,7 +112,7 @@ const User = () => {
                             handleClickEdit(record)
                         }
                     >
-                        <Text>View</Text>
+                        <Text>view</Text>
                         {/* <EditOutlined /> */}
                     </Button>
                 </div>
@@ -213,7 +213,7 @@ const User = () => {
         <div className='container-user'>
             <Card title={"User"} className="rounded container-card" >
                 <Row gutter={24} className="row-inquiry-customer">
-                    <Col span={24} style={{ textAlign: "left" }}>
+                    <Col span={24} style={{ textAlign: "left",marginBottom: '5px' }}>
                         <Row>
                             <Col xs={24} sm={24} md={24} lg={12} xl={12}>
                                 <Button
@@ -221,20 +221,20 @@ const User = () => {
                                     onClick={newUser}
                                     loading={isLoading}
                                 >
-                                    <Text className="big6-title"><PlusOutlined /> Add User</Text>
+                                    <Text className="big6-title custom-add-user"><PlusOutlined /> Add User</Text>
                                 </Button>
                             </Col>
                             <Col xs={24} sm={24} md={24} lg={12} xl={12}>
                                 <div style={{ float: 'right' }}>
                                     <Row>
                                         <Col>
-                                            <Input placeholder="Search by name or email" style={{ textAlign: "left", borderTopLeftRadius: "10px", borderBottomLeftRadius: "10px", background: '#F3F6F9', border: '0px' }} size="small" />
+                                            <Input className='form-search' placeholder="Search by name or email" size="small" />
                                         </Col>
-                                        <Col>
+                                        {/* <Col>
                                             <Button style={{border: "0px", background: "#F3F6F9", borderTopRightRadius: "10px", borderBottomRightRadius: "10px"}}>
                                             <SearchOutlined />
                                             </Button>
-                                        </Col>
+                                        </Col> */}
                                     </Row>
                                 </div>
                             </Col>
