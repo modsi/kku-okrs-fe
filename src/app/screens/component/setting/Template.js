@@ -8,6 +8,8 @@ import moment from 'moment';
 import ConfigTemplate from './ConfigTemplate'
 import { tem1, tem2 } from '../../../../template-mock'
 import SettingTemplate from './SettingTemplate'
+import { ListTypeTemplateAction, LIST_TYPE_TEPM } from '../../../redux/actions/ListMasterAction'
+
 const { Text, Link } = Typography;
 const Template = () => {
     const navigate = useNavigate();
@@ -21,6 +23,7 @@ const Template = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [dataSource, setDataSource] = useState([])
     const [data, setData] = useState([])
+    const listType = useSelector(state => state?.main?.[LIST_TYPE_TEPM])
 
     const routeChange = () => {
         let path = '/admin/addTempalte';
@@ -114,7 +117,12 @@ const Template = () => {
         ar.push(tem1)
         ar.push(tem2)
         setDataSource(ar)
+        handleListMaster()
     }, [])
+
+    async function handleListMaster() {
+        dispatch(await ListTypeTemplateAction())
+    }
 
     return (
         <>

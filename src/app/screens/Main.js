@@ -71,7 +71,7 @@ const Main = () => {
             content: "Are you sure to Logout ?"
         }
     }
-    console.log('profile>>', profile)
+    // console.log('profile>>', profile)
     return (
         <Layout className="main-layout" style={{ minHeight: '100vh' }}>
             <Sider
