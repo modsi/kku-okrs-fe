@@ -73,12 +73,12 @@ const PreviewTemplate = () => {
                 item.labelPosition === 'horizontal'
                     ? {
                         labelCol: {
-                            span: 8,
+                            span: 6,
                         },
                         wrapperCol: {
-                            span: 16,
+                            span: 18,
                         },
-                        labelAlign: "left"
+                        labelAlign: "right"
                     }
                     : {
                         labelCol: {
@@ -95,7 +95,8 @@ const PreviewTemplate = () => {
                             <Col xs={24} sm={24} md={2} lg={2} xl={2} >
                                 <Button
                                     type="link"
-                                    style={{ padding: '0px', color: 'red'}}
+                                    disabled={item.required === 1 ? true : false}
+                                    style={{ padding: '0px', color: item.required === 1 ? 'gray' :'red' }}
                                     onClick={() =>
                                         remove(item.index)
                                     }

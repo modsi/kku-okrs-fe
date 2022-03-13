@@ -6,7 +6,9 @@ export const httpUtils = {
 	get,
 	postFormData,
 	postUpload,
-	patch
+	patch,
+	postTokenKku,
+	postLoginKku
 };
 
 function getHeaders(headersOption) {
@@ -131,7 +133,7 @@ function postUpload(url, payload = {}, headersOption) {
 
 			};
 			//console.log("options", options);
-			const response =  axios(options)
+			const response = axios(options)
 				.then(response => {
 					return response;
 				});
@@ -179,6 +181,77 @@ function postFormData(url, payload = {}) {
 
 			};
 			console.log("options", options);
+			const response = await axios(options)
+				.then(response => {
+					return response;
+				});
+			return response
+		}
+		return call();
+	} catch (err) {
+		console.error(err);
+		throw err;
+	}
+};
+
+
+function postTokenKku(url, payload = {}, headersOption, responseType = 'application/json') {
+	try {
+		let objheaders = {
+			'headers': {
+				"Accept": "application/json",
+				"Content-Type": "application/json",
+				"grant_type": `client_credentials`,
+				"client_id": `c8lchcqfoqmlnrj7pg60`,
+				"client_secret": `4b6dc97d-452c-47d2-b237-2c07f62f1241`,
+				"Access-Control-Allow-Origin": "*",
+				...headersOption
+			}
+		}
+
+		const call = async () => {
+			const headers = objheaders;
+			const options = {
+				method: 'POST',
+				url,
+				...headers,
+				data: JSON.stringify(payload),
+				responseType: responseType,
+			};
+			const response = await axios(options)
+				.then(response => {
+					return response;
+				});
+			return response
+		}
+		return call();
+	} catch (err) {
+		console.error(err);
+		throw err;
+	}
+};
+
+function postLoginKku(url, payload = {},token,  headersOption, responseType = 'application/json') {
+	try {
+		let objheaders = {
+			'headers': {
+				"Accept": "application/json",
+				"Content-Type": "application/json",				
+				"Authorization": "Bearer " + token,
+				"Access-Control-Allow-Origin": "*",
+				...headersOption
+			}
+		}
+
+		const call = async () => {
+			const headers = objheaders;
+			const options = {
+				method: 'POST',
+				url,
+				...headers,
+				data: JSON.stringify(payload),
+				responseType: responseType,
+			};
 			const response = await axios(options)
 				.then(response => {
 					return response;

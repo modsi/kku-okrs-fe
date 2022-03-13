@@ -1,6 +1,6 @@
 import { httpUtils } from '../utils/HttpUtils'
 
-const { get, post, patch } = httpUtils
+const { get, post, patch, postTokenKku, postLoginKku } = httpUtils
 const API_KKU = `https://api.kku.ac.th/v2`
 const API_ENDPOINT = `http://128.199.225.180/app/api`
 const USER_URL = `${API_ENDPOINT}/users`
@@ -37,4 +37,20 @@ export const LoginService = async (data = {}) => {
 
 export const UpdateAccountService = async (data = {}) => {
     return await patch(`${USER_URL}/update`, data)
+}
+
+export const GetAccessToken = async () => {
+    return await postTokenKku(`${API_KKU}/oauth/token`)
+}
+
+export const LoginKkuService = async (data = {}, token) => {
+    return await postLoginKku(`${API_KKU}/ldap/email/${data?.username}/auth`, data, token)
+}
+
+export const SaveTemplateService = async (data = {}) => {
+    return await post(`${TEMPLATE__URL}/create_component_template`, data)
+}
+
+export const GetTemplateService = async(data = {})=>{
+    return await get(`${TEMPLATE__URL}/list_template?templateName=${data?.str ?? ''}&limit=${data?.size}&offset=${data?.page}`)
 }

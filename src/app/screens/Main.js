@@ -25,7 +25,7 @@ const Main = () => {
     const [mycontent, setContent] = useState(null)
     const [profile, setProfile] = useState({})
 
-    const routeChange = () => {
+    async function routeChange() {
         clearStorege('token')
         let path = '/';
         navigate(path);
@@ -61,8 +61,8 @@ const Main = () => {
 
     };
 
-    const logout = () => {
-        ConfirmModalEditText(routeChange, conditionLogout());
+    const logout = async() => {
+       ConfirmModalEditText(routeChange, conditionLogout());
     }
 
     const conditionLogout = () => {

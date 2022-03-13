@@ -17,8 +17,8 @@ const SettingTemplate = ({ data }) => {
 
     useEffect(() => {
         let d = []
-        data?.components?.map(component => {
-            let comp = { ...component }
+        data?.component?.map(c => {
+            let comp = { ...c }
             d.push(comp)
         })
         setDataSource(d)
@@ -81,13 +81,13 @@ const SettingTemplate = ({ data }) => {
         }
     }
 
-    console.log('data >> ', data)
+    // console.log('data , dataSource >> ', data, dataSource)
     return (
         <>
             <Card title={"การกำหนดสิทธิ์ Role & Permission"} className="rounded" >
                 <Row gutter={24}>
                     <Col span={12} style={{ textAlign: "left" }}>
-                        <Text strong>{data.type === 1 ? "แบบรายงานที่ 1" : data.type === 2 ? "แบบรายงานที่ 2" : "แบบรายงานพิเศษ"}</Text>
+                        <Text strong>{data.type_id === 1 ? "แบบรายงานที่ 1" : "แบบรายงานที่ 2" }</Text>
                     </Col>
                     <Col span={12} style={{ textAlign: "right" }}>
                         {!isEdit ?
@@ -117,7 +117,7 @@ const SettingTemplate = ({ data }) => {
                     </Col>
                     <Col span={24} style={{ textAlign: "center" }}>
                         <Table
-                            className="bank-th"
+                            className='table-user'
                             rowKey={(record, index) => record.key}
                             style={{ whiteSpace: 'pre' }}
                             scroll={{ x: 'max-content' }}

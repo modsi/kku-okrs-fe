@@ -66,19 +66,19 @@ export const ConfirmModal = (type, func) => {
 };
 
 export const ConfirmModalEditText = (func, args) => {
-  console.log(`confirm render`);
-  console.log("textOptions", args);
+  // console.log(`confirm render`);
+  // console.log("textOptions", args);
   Modal.confirm({
     title: <p>{args.title}</p>,
     centered: true,
     content: <p>{args.content}</p>,
-    onOk: () => new Promise((resolve, reject) => {
-      func()
+    onOk: () => new Promise((resolve, reject) => {     
+      func() 
       setTimeout(() => {
         resolve(false)
         return false;
-      }, 1000);
-    }).catch(() => console.log('Oops errors!')),
+      }, 1000);      
+    }).catch((errors) => console.log('Oops errors!', errors)),
   });
 };
 

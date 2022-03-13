@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from "react-router-dom";
-import { Card, Row, Col, Button, Typography, Table, Form, PageHeader } from 'antd';
+import { Card, Row, Col, Button, Typography, Table, Form, PageHeader, Input } from 'antd';
 import { EditOutlined, EyeOutlined, SettingOutlined, PlusOutlined, FileSearchOutlined } from "@ant-design/icons";
 import { DATE_FULL, DATE_NORMAL } from '../../../utils/Elements'
 import moment from 'moment';
@@ -9,6 +9,7 @@ import ConfigTemplate from './ConfigTemplate'
 import { tem1, tem2 } from '../../../../template-mock'
 import SettingTemplate from './SettingTemplate'
 import { ListTypeTemplateAction, LIST_TYPE_TEPM } from '../../../redux/actions/ListMasterAction'
+import { LIST_TEMPLATES, ListTemplateAction } from '../../../redux/actions/TemplateAction'
 
 const { Text, Link } = Typography;
 const Template = () => {
@@ -21,14 +22,11 @@ const Template = () => {
     const [isModalAddEditVisible, setIsModalAddEditVisible] = useState(false);
     const [addEditTitle, setAddEditTitle] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
-    const [dataSource, setDataSource] = useState([])
+    // const [dataSource, setDataSource] = useState([])
     const [data, setData] = useState([])
     const listType = useSelector(state => state?.main?.[LIST_TYPE_TEPM])
+    const dataSource = useSelector(state => state?.main?.[LIST_TEMPLATES])
 
-    const routeChange = () => {
-        let path = '/admin/addTempalte';
-        navigate(path);
-    }
 
     const columns = [
         {
@@ -40,10 +38,10 @@ const Template = () => {
         },
         {
             title: 'Template Name',
-            dataIndex: 'templateName',
+            dataIndex: 'template_name',
             align: 'left',
             width: 80,
-            render: (_, record) => record?.templateName
+            render: (_, record) => record?.template_name
         },
         {
             title: 'Type',
@@ -78,7 +76,15 @@ const Template = () => {
             dataIndex: 'status',
             align: 'center',
             width: 80,
-            render: (_, record) => record?.status === 1 ? 'active' : 'disabled',
+            // render: (_, record) => record?.status === 1 ? 'พร้อมใช้งาน' : 'ยังไม่พร้อมใช้งาน',
+            render: (_, record) => {
+                return {
+                    props: {
+                        style: { color: record?.status === 1 ? 'green' : 'red' }
+                    },
+                    children: record?.status === 1 ? 'พร้อมใช้งาน' : 'ยังไม่พร้อมใช้งาน'
+                };
+            }
         },
         {
             title: 'Action',
@@ -86,18 +92,29 @@ const Template = () => {
             align: 'center',
             width: 100,
             render: (record) =>
+                // <div className="text-center">
+                //     <Button
+                //         type="link"
+                //         className="text-danger"
+                //         onClick={() =>
+                //             handleClickEdit(record)
+                //         }
+                //     >
+                //         <FileSearchOutlined />
+                //     </Button>
+                // </div>
                 <div className="text-center">
                     <Button
                         type="link"
-                        className="text-danger"
+                        className="text-danger btn-view"
                         onClick={() =>
                             handleClickEdit(record)
                         }
                     >
-                        <FileSearchOutlined />
+                        <Text>view</Text>
+                        {/* <EditOutlined /> */}
                     </Button>
                 </div>
-
         },
     ];
 
@@ -113,17 +130,19 @@ const Template = () => {
     };
 
     useEffect(() => {
-        let ar = []
-        ar.push(tem1)
-        ar.push(tem2)
-        setDataSource(ar)
         handleListMaster()
+        listTemplate({ str: "" })
     }, [])
 
     async function handleListMaster() {
         dispatch(await ListTypeTemplateAction())
     }
 
+    async function listTemplate(data) {
+        dispatch(await ListTemplateAction(data))
+    }
+
+    console.log(dataSource)
     return (
         <>
             {showConfigPage ? (
@@ -145,9 +164,9 @@ const Template = () => {
                     <SettingTemplate data={data} />
                 </>
             ) : (
-                <Card title={"List Template"} className="rounded" >
+                <Card title={"List Template"} className="rounded  container-card" >
                     <Row gutter={24} className="row-inquiry-customer">
-                        <Col span={24} style={{ textAlign: "left" }} >
+                        <Col xs={24} sm={24} md={24} lg={12} xl={12} style={{ textAlign: "left" }} >
                             <Button
                                 className="nol-button"
                                 onClick={() => setShowConfigPage(true)}
@@ -155,16 +174,31 @@ const Template = () => {
                             >
                                 <Text className="big6-title"><PlusOutlined /> Add Template</Text>
                             </Button>
-                        </Col >
+                        </Col>
+                        <Col xs={24} sm={24} md={24} lg={12} xl={12}>
+                            <div style={{ float: 'right' }}>
+                                <Row>
+                                    <Col>
+                                        <Input className='form-search' placeholder="Search by template name" size="small" />
+                                    </Col>
+                                    {/* <Col>
+                                            <Button style={{border: "0px", background: "#F3F6F9", borderTopRightRadius: "10px", borderBottomRightRadius: "10px"}}>
+                                            <SearchOutlined />
+                                            </Button>
+                                        </Col> */}
+                                </Row>
+                            </div>
+                        </Col>
                         <Col span={24} style={{ textAlign: "center" }}>
                             <Table
+                                className='table-user'
                                 rowKey={(record, index) => record.key}
                                 style={{ whiteSpace: 'pre' }}
                                 loading={isLoading}
                                 scroll={{ x: 'max-content' }}
                                 size="small"
                                 bordered={false}
-                                dataSource={dataSource}
+                                dataSource={dataSource?.result}
                                 onChange={handleTableChange}
                                 pagination={true}
                                 pageSize={10}

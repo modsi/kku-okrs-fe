@@ -21,9 +21,11 @@ import RangeDateField from './field/RangeDateField'
 import UploadField from './field/UploadField'
 import { LIST_TYPE_TEPM, LIST_FIELD_TEPM, ListFieldMasterTemplateAction } from '../../../redux/actions/ListMasterAction'
 import SetOptionsForSelect, { SetOptionsForSelectSetLable } from '../../items/SetOptionsForSelect'
+import { ConfirmModalEditText, SuccessModal, ErrorModalMassageHtml } from "../../items/Modal";
+import { SaveTempateAction } from '../../../redux/actions/TemplateAction'
 
 const { Text, Link } = Typography;
-const ConfigTemplate = () => {
+const ConfigTemplate = ({ id }) => {
     const navigate = useNavigate();
     const dispatch = useDispatch()
     const [form] = Form.useForm();
@@ -145,10 +147,60 @@ const ConfigTemplate = () => {
 
     useEffect(() => {
         if (listField) {
-            let obj = {}
-            setTemplate({ ...obj, templateName: form.getFieldValue('templateName') ?? null })
+            let components = []
+            // console.log('listField >> ', listField)
+            listField.sort((a, b) => parseInt(a.priority ?? 0) > parseInt(b.priority ?? 0) ? 1 : -1).map(item => {
+                // console.log('item >> ', item)
+                let obj = {
+                    required: parseInt(item.required ?? 0),
+                    index: item.priority,
+                    ...item.properties
+                }
+                components.push(obj)
+            })
+            setTemplate({ ...storeTemplate, components: components })
+            // setTemplate({ ...obj, templateName: form.getFieldValue('templateName') ?? null })
         }
     }, [listField])
+
+    const saveTemplate = () => {
+        if (form.getFieldValue('templateName') && form.getFieldValue('templateType')) {
+            ConfirmModalEditText(onFinish, conditionSave());
+        } else {
+            form.validateFields()
+        }
+    }
+
+    const conditionSave = () => {
+        return {
+            title: "Confirm",
+            content: "Are you sure you want to save ?"
+        }
+    }
+
+    async function onFinish() {
+        setIsLoading(true)
+        let store = storeTemplate?.components ?? []
+        let data = {}
+        data.type_id = form.getFieldValue('templateType')
+        data.name = form.getFieldValue('templateName')
+        data.component = store
+        console.log('onFinish >> data is ', data)
+        let res = {}
+        if (id) {
+            data.id = id
+            data.updated_datetime = moment().format(DATE_FULL)
+            // res = await UpdateAccAction(data)
+        } else {
+            res = await SaveTempateAction(data)
+        }
+        if (res.error === null) {
+            SuccessModal("Success");
+        } else {
+            ErrorModalMassageHtml(res.error.message);
+        }
+        setIsLoading(false)
+    }
 
     return (
         <>
@@ -164,11 +216,14 @@ const ConfigTemplate = () => {
                                     <Form.Item
                                         name={"templateName"}
                                         rules={[{ required: true, message: 'Name is required!' }]}>
-                                        <Input style={{ textAlign: "left" }} placeholder="Enter Template Name" onChange={setTemplateName} />
+                                        <Input style={{ textAlign: "left" }}
+                                            placeholder="Enter Template Name"
+                                            // onChange={setTemplateName}
+                                        />
                                     </Form.Item>
                                 </Col>
                                 <Col xs={24} sm={24} md={24} lg={12} xl={12}>
-                                    <Form.Item name="templateType">
+                                    <Form.Item name="templateType" rules={[{ required: true, message: 'TemplateType is required!' }]}>
                                         <Radio.Group
                                             size="small"
                                             options={SetOptionsForSelect({ label: 'name', value: 'id', data: listType })}
@@ -183,7 +238,7 @@ const ConfigTemplate = () => {
                 </Row>
                 <Row gutter={24}>
                     <Col xs={24} sm={24} md={8} lg={6} xl={4}>
-                        <Button type="primary" loading={isLoading} danger style={{ width: '100%' }}>Save</Button>
+                        <Button type="primary" loading={isLoading} danger style={{ width: '100%' }} onClick={saveTemplate} >Save</Button>
                         <Button type="primary" style={{ width: '100%', textAlign: "left" }} onClick={setTitleField} ><FaIndent style={{ paddingRight: '3px' }} /> Title</Button>
                         <Button type="primary" style={{ width: '100%', textAlign: "left" }} onClick={setTextField}><FaAdn style={{ paddingRight: '3px' }} /> Text Field</Button>
                         <Button type="primary" style={{ width: '100%', textAlign: "left" }} onClick={setTextAreaField}><FaAdversal style={{ paddingRight: '3px' }} /> Text Area</Button>

@@ -1,4 +1,4 @@
-import { SaveAccountService, GetAccountService, LoginService, UpdateAccountService } from '../../services/MainService'
+import { SaveAccountService, GetAccountService, LoginService, UpdateAccountService, GetAccessToken, LoginKkuService } from '../../services/MainService'
 import { Payload } from '../../utils/Payload'
 
 
@@ -21,7 +21,7 @@ export const listAccountAction = async (data = {}) => {
       size: 1000000
     }
     const result = await GetAccountService(onSearch)
-    console.log('GetAccountService >> result', result)
+    // console.log('GetAccountService >> result', result)
     const params = {
       [LLIST_ACCOUNT]: {
         result: result?.data?.data,
@@ -43,6 +43,25 @@ export const LoginAction = async (data) => {
 
 export const LoginSsoAction = async (data) => {
   const result = {}
-  result.statusOK = true;
+  try {
+    const resToken = await GetAccessToken()
+    console.log('resToken >> ', resToken)
+    if (resToken?.data?.statusOK) {
+      let token = resToken?.data?.data?.accessToken
+      const resLogin = await LoginKkuService(data, token)
+      if (resLogin?.data?.statusOK) {
+        result.statusOK = true;
+      } else {
+        result.statusOK = false;
+        result.error = resToken;
+      }
+    } else {
+      result.statusOK = false;
+      result.error = resToken;
+    }
+  } catch (err) {
+    result.statusOK = false;
+    result.error = err.message + ' Cannot access to api.kku.ac.th';
+  }
   return result
 }

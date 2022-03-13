@@ -1,5 +1,6 @@
 export const tem1 = {
-  templateName: 'templateName1',
+  id:1,
+  template_name: 'templateName1',
   type: 1,
   createdBy: 'sasina.mod',
   updateBy: 'sasina.mod',
@@ -101,7 +102,8 @@ export const tem1 = {
 };
 
 export const tem2 = {
-  templateName: 'templateName2',
+  id:2,
+  template_name: 'templateName2',
   type: 2,
   createdBy: 'sasina.mod',
   updateBy: 'sasina.mod',

@@ -13,7 +13,7 @@ const Homepage = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false)
 
     const checkLogin = async () => {
-        console.log(form.getFieldValue())
+        // console.log(form.getFieldValue())
         if (form.getFieldValue('username') && form.getFieldValue('password')) {
             let data = {}
             data.username = form.getFieldValue('username')
@@ -47,7 +47,7 @@ const Homepage = () => {
     }
 
     useEffect(() => {
-        console.log('check token', getStorage('token'))
+        // console.log('check token', getStorage('token'))
         if (getStorage('token')) {
             routeChange()
         }

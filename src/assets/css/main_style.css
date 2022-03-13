@@ -167,6 +167,17 @@ div#root {
   border-color: #fff;
 }
 
+.ggar-button {
+  background: transparent;
+  color: #eb680a;
+  height: auto !important;
+}
+
+.ggar-button:hover,
+.ggar-button:focus {
+  color: #f1a873;
+}
+
 .g-button {
   background-color: red; /* For browsers that do not support gradients */
   background-image: linear-gradient(to right, #eb680a, #f7e72b);
@@ -377,6 +388,48 @@ div#root {
 .custom-image-logout {
   width: 35px;
 }
+
+.ant-form-item-label {
+    white-space: normal;
+}
+
+.card-m-tem > .ant-modal-content, .card-m-tem > .ant-modal-content > .ant-modal-header {
+  background: #C4C4C4;
+}
+
+.card-m-tem > .ant-modal-content > .ant-modal-header {
+  border-radius: 15px 15px 0 0;
+}
+
+
+.card-m-tem  .btn-event span {
+  font-size: 16px !important;
+}
+
+.card-m-tem  .btn-color-ok {
+  background-color: rgba(245, 124, 0, 0.7);
+}
+
+.card-m-tem  .btn-color-ok:hover {
+  background-color: rgba(245, 124, 0, 0.7);
+}
+
+.card-m-tem  .btn-color-cancel {
+  background-color: rgba(0, 0, 0, 0.25);
+}
+
+.card-m-tem .btn-event {
+  padding: 5px 30px;
+  height: auto;
+  border-radius: 20px;
+  border: 0px;
+  color: #fff;
+  font-family: "InterBold" !important;
+  font-weight: bold;
+  margin: 0px 20px;
+}
+
+
 
 @media (min-width: 1500px) {
   .grad1 {
