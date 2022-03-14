@@ -130,7 +130,7 @@ div#root {
 .nol-button {
   background-color: #3e363680;
   border-color: #fff;
-  border-radius: 5px;
+  border-radius: 10px;
 }
 
 .nol-button:hover,
@@ -142,7 +142,8 @@ div#root {
 .pre-button {
   background-color: #f77904;
   border-color: #fff;
-  border-radius: 5px;
+  border-radius: 10px;
+  height: auto;
 }
 
 .pre-button:hover,
@@ -198,6 +199,11 @@ div#root {
   ); /* For browsers that do not support gradients */
   background-image: linear-gradient(to right, #f7e72b, #eb680a);
   border-color: #f7e72b;
+}
+
+.step-dot {
+width: 100%;
+display: inline;
 }
 
 .login-button {
@@ -397,7 +403,8 @@ div#root {
   background: #C4C4C4;
 }
 
-.card-m-tem > .ant-modal-content > .ant-modal-header {
+/* .card-m-tem >  */
+.ant-modal-content > .ant-modal-header {
   border-radius: 15px 15px 0 0;
 }
 

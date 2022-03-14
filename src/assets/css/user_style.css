@@ -116,7 +116,7 @@
 
 .table-user .ant-table-thead {
     border-radius: 20px;
-    background-color: rgb(250, 184, 116);
+    background: rgb(245 125 1);
 }
 
 .table-user .ant-table-thead .ant-table-cell {

@@ -116,7 +116,8 @@ const TextAreaField = ({ form }) => {
                                     </Col>
                                     <Col xs={24} sm={24} md={24} lg={8} xl={8}>
                                         <Form.Item
-                                            label={"Max Length"} name={"maxLength"} rules={[{ required: true, message: 'Please input Max Length!' }]}>
+                                            label={"Max Length"} name={"maxLength"}// rules={[{ required: true, message: 'Please input Max Length!' }]}
+                                            >
                                             <InputNumber min={1} defaultValue={100} onChange={(value) => { setMaxLength(value) }} />
                                         </Form.Item>
                                     </Col>

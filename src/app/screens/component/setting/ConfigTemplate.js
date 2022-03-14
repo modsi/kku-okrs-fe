@@ -149,16 +149,16 @@ const ConfigTemplate = ({ id }) => {
         if (listField) {
             let components = []
             // console.log('listField >> ', listField)
-            listField.sort((a, b) => parseInt(a.priority ?? 0) > parseInt(b.priority ?? 0) ? 1 : -1).map(item => {
-                // console.log('item >> ', item)
-                let obj = {
-                    required: parseInt(item.required ?? 0),
-                    index: item.priority,
-                    ...item.properties
-                }
-                components.push(obj)
-            })
-            setTemplate({ ...storeTemplate, components: components })
+            // listField.sort((a, b) => parseInt(a.priority ?? 0) > parseInt(b.priority ?? 0) ? 1 : -1).map(item => {
+            //     // console.log('item >> ', item)
+            //     let obj = {
+            //         required: parseInt(item.required ?? 0),
+            //         index: item.priority,
+            //         ...item.properties
+            //     }
+            //     components.push(obj)
+            // })
+            // setTemplate({ ...storeTemplate, components: components })
             // setTemplate({ ...obj, templateName: form.getFieldValue('templateName') ?? null })
         }
     }, [listField])
@@ -204,63 +204,66 @@ const ConfigTemplate = ({ id }) => {
 
     return (
         <>
-            <Card title={"Create Template"} className="rounded" >
-                <Row gutter={24}>
-                    <Col span={24} style={{ textAlign: "left" }}>
-                        <Form
-                            {...layout}
-                            form={form}
-                        >
-                            <Row>
-                                <Col xs={24} sm={24} md={24} lg={12} xl={12}>
-                                    <Form.Item
-                                        name={"templateName"}
-                                        rules={[{ required: true, message: 'Name is required!' }]}>
-                                        <Input style={{ textAlign: "left" }}
-                                            placeholder="Enter Template Name"
+            <div className='container-user'>
+                <Card title={"Create Template"} className="rounded" >
+                    <Row gutter={24}>
+                        <Col span={24} style={{ textAlign: "left" }}>
+                            <Form
+                                {...layout}
+                                form={form}
+                            >
+                                <Row>
+                                    <Col xs={24} sm={24} md={24} lg={12} xl={12}>
+                                        <Form.Item
+                                            name={"templateName"}
+                                            rules={[{ required: true, message: 'Name is required!' }]}>
+                                            <Input style={{ textAlign: "left" }}
+                                                placeholder="Enter Template Name"
                                             // onChange={setTemplateName}
-                                        />
-                                    </Form.Item>
-                                </Col>
-                                <Col xs={24} sm={24} md={24} lg={12} xl={12}>
-                                    <Form.Item name="templateType" rules={[{ required: true, message: 'TemplateType is required!' }]}>
-                                        <Radio.Group
-                                            size="small"
-                                            options={SetOptionsForSelect({ label: 'name', value: 'id', data: listType })}
-                                            value={1}
-                                            onChange={handleTypeChange}
-                                        />
-                                    </Form.Item>
-                                </Col>
-                            </Row>
-                        </Form>
-                    </Col>
-                </Row>
-                <Row gutter={24}>
-                    <Col xs={24} sm={24} md={8} lg={6} xl={4}>
-                        <Button type="primary" loading={isLoading} danger style={{ width: '100%' }} onClick={saveTemplate} >Save</Button>
-                        <Button type="primary" style={{ width: '100%', textAlign: "left" }} onClick={setTitleField} ><FaIndent style={{ paddingRight: '3px' }} /> Title</Button>
-                        <Button type="primary" style={{ width: '100%', textAlign: "left" }} onClick={setTextField}><FaAdn style={{ paddingRight: '3px' }} /> Text Field</Button>
-                        <Button type="primary" style={{ width: '100%', textAlign: "left" }} onClick={setTextAreaField}><FaAdversal style={{ paddingRight: '3px' }} /> Text Area</Button>
-                        <Button type="primary" style={{ width: '100%', textAlign: "left" }} onClick={setNumberField}><FaCalculator style={{ paddingRight: '3px' }} /> Number</Button>
-                        <Button type="primary" style={{ width: '100%', textAlign: "left" }} onClick={setCheckboxField}><FaCheckSquare style={{ paddingRight: '3px' }} /> Checkbox</Button>
-                        <Button type="primary" style={{ width: '100%', textAlign: "left" }} onClick={setSelectField}><FaList style={{ paddingRight: '3px' }} /> Select</Button>
-                        <Button type="primary" style={{ width: '100%', textAlign: "left" }} onClick={setRadioField}><FaRecordVinyl style={{ paddingRight: '3px' }} /> Radio</Button>
-                        <Button type="primary" style={{ width: '100%', textAlign: "left" }}><FaMailBulk style={{ paddingRight: '3px' }} /> Email</Button>
-                        <Button type="primary" style={{ width: '100%', textAlign: "left" }}><FaLink style={{ paddingRight: '3px' }} /> Url</Button>
-                        <Button type="primary" style={{ width: '100%', textAlign: "left" }}><FaPhoneAlt style={{ paddingRight: '3px' }} /> Phone</Button>
-                        <Button type="primary" style={{ width: '100%', textAlign: "left" }} onClick={setDayField}><FaCalendarDay style={{ paddingRight: '3px' }} /> Day</Button>
-                        <Button type="primary" style={{ width: '100%', textAlign: "left" }} onClick={setDateTimeField}><FaCalendarAlt style={{ paddingRight: '3px' }} /> Date/Time</Button>
-                        <Button type="primary" style={{ width: '100%', textAlign: "left" }} onClick={setRangeDateField}><FaCalendarAlt style={{ paddingRight: '3px' }} /> Range Date</Button>
-                        <Button type="primary" style={{ width: '100%', textAlign: "left" }}><FaBuromobelexperte style={{ paddingRight: '3px' }} /> Table</Button>
-                        <Button type="primary" style={{ width: '100%', textAlign: "left" }} onClick={setUploadField}><FaFileUpload style={{ paddingRight: '3px' }} /> Upload</Button>
-                    </Col>
-                    <Col xs={24} sm={24} md={16} lg={18} xl={20}>
-                        <PreviewTemplate />
-                    </Col>
-                </Row>
-            </Card>
-
+                                            />
+                                        </Form.Item>
+                                    </Col>
+                                    <Col xs={24} sm={24} md={24} lg={10} xl={10}>
+                                        <Form.Item name="templateType" rules={[{ required: true, message: 'TemplateType is required!' }]}>
+                                            <Radio.Group
+                                                size="small"
+                                                options={SetOptionsForSelect({ label: 'name', value: 'id', data: listType })}
+                                                value={1}
+                                                onChange={handleTypeChange}
+                                            />
+                                        </Form.Item>
+                                    </Col>
+                                    <Col xs={24} sm={24} md={8} lg={2} xl={2} style={{ textAlign: "right" }}>
+                                        <Button type="primary" loading={isLoading} danger style={{ width: '100%', background: "green", borderColor: "green" }} onClick={saveTemplate} >Save</Button>
+                                    </Col>
+                                </Row>
+                            </Form>
+                        </Col>
+                    </Row>
+                    <Row gutter={24}>
+                        <Col xs={24} sm={24} md={8} lg={6} xl={4}>
+                            <Button type="primary" style={{ width: '100%', textAlign: "left", borderRadius: '0px'}} onClick={setTitleField} ><FaIndent style={{ paddingRight: '3px', marginRight: '5px' }} />  Title</Button>
+                            <Button type="primary" style={{ width: '100%', textAlign: "left", borderRadius: '0px'}} onClick={setTextField}><FaAdn style={{ paddingRight: '3px', marginRight: '5px' }} />  Text Field</Button>
+                            <Button type="primary" style={{ width: '100%', textAlign: "left", borderRadius: '0px'}} onClick={setTextAreaField}><FaAdversal style={{ paddingRight: '3px', marginRight: '5px' }} />  Text Area</Button>
+                            <Button type="primary" style={{ width: '100%', textAlign: "left", borderRadius: '0px'}} onClick={setNumberField}><FaCalculator style={{ paddingRight: '3px', marginRight: '5px' }} />  Number</Button>
+                            <Button type="primary" style={{ width: '100%', textAlign: "left", borderRadius: '0px'}} onClick={setCheckboxField}><FaCheckSquare style={{ paddingRight: '3px', marginRight: '5px' }} />  Checkbox</Button>
+                            <Button type="primary" style={{ width: '100%', textAlign: "left", borderRadius: '0px'}} onClick={setSelectField}><FaList style={{ paddingRight: '3px', marginRight: '5px' }} />  Select</Button>
+                            <Button type="primary" style={{ width: '100%', textAlign: "left", borderRadius: '0px'}} onClick={setRadioField}><FaRecordVinyl style={{ paddingRight: '3px', marginRight: '5px' }} />  Radio</Button>
+                            <Button type="primary" style={{ width: '100%', textAlign: "left", borderRadius: '0px'}}><FaMailBulk style={{ paddingRight: '3px', marginRight: '5px' }} />  Email</Button>
+                            <Button type="primary" style={{ width: '100%', textAlign: "left", borderRadius: '0px'}}><FaLink style={{ paddingRight: '3px', marginRight: '5px' }} />  Url</Button>
+                            <Button type="primary" style={{ width: '100%', textAlign: "left", borderRadius: '0px'}}><FaPhoneAlt style={{ paddingRight: '3px', marginRight: '5px' }} />  Phone</Button>
+                            <Button type="primary" style={{ width: '100%', textAlign: "left", borderRadius: '0px'}} onClick={setDayField}><FaCalendarDay style={{ paddingRight: '3px', marginRight: '5px' }} />  Day</Button>
+                            <Button type="primary" style={{ width: '100%', textAlign: "left", borderRadius: '0px'}} onClick={setDateTimeField}><FaCalendarAlt style={{ paddingRight: '3px', marginRight: '5px' }} />  Date/Time</Button>
+                            <Button type="primary" style={{ width: '100%', textAlign: "left", borderRadius: '0px'}} onClick={setRangeDateField}><FaCalendarAlt style={{ paddingRight: '3px', marginRight: '5px' }} />  Range Date</Button>
+                            <Button type="primary" style={{ width: '100%', textAlign: "left", borderRadius: '0px'}}><FaBuromobelexperte style={{ paddingRight: '3px', marginRight: '5px' }} />  Table</Button>
+                            <Button type="primary" style={{ width: '100%', textAlign: "left", borderRadius: '0px'}} onClick={setUploadField}><FaFileUpload style={{ paddingRight: '3px', marginRight: '5px' }} />  Upload</Button>
+                        </Col>
+                        <Col xs={24} sm={24} md={16} lg={18} xl={20}>
+                            <PreviewTemplate />
+                        </Col>
+                    </Row>
+                </Card>
+            </div>
             <div>
                 <Modal
                     closable={true}

@@ -48,28 +48,28 @@ const Template = () => {
             dataIndex: 'type',
             align: 'left',
             width: 80,
-            render: (_, record) => record?.type === 1 ? 'แบบแผนที่ 1' : 'แบบแผนที่ 2'
+            render: (_, record) => record?.type_name
         },
         {
             title: 'Created By',
-            dataIndex: 'createdBy',
+            dataIndex: 'createname',
             align: 'left',
             width: 80,
-            render: (_, record) => record?.createdBy
+            render: (_, record) => record?.createname
         },
         {
             title: 'Update By',
-            dataIndex: 'updateBy',
+            dataIndex: 'updatename',
             align: 'left',
             width: 80,
-            render: (_, record) => record?.updateBy
+            render: (_, record) => record?.updatename !== "" ? record?.updatename : '-'
         },
         {
             title: 'Last Update',
-            dataIndex: 'status',
+            dataIndex: 'updatedate',
             align: 'center',
             width: 80,
-            render: (_, record) => record?.lastUpdate
+            render: (_, record) => record?.updatedate
         },
         {
             title: 'Status',
@@ -164,48 +164,50 @@ const Template = () => {
                     <SettingTemplate data={data} />
                 </>
             ) : (
-                <Card title={"List Template"} className="rounded  container-card" >
-                    <Row gutter={24} className="row-inquiry-customer">
-                        <Col xs={24} sm={24} md={24} lg={12} xl={12} style={{ textAlign: "left" }} >
-                            <Button
-                                className="nol-button"
-                                onClick={() => setShowConfigPage(true)}
-                                loading={isLoading}
-                            >
-                                <Text className="big6-title"><PlusOutlined /> Add Template</Text>
-                            </Button>
-                        </Col>
-                        <Col xs={24} sm={24} md={24} lg={12} xl={12}>
-                            <div style={{ float: 'right' }}>
-                                <Row>
-                                    <Col>
-                                        <Input className='form-search' placeholder="Search by template name" size="small" />
-                                    </Col>
-                                    {/* <Col>
+                <div className='container-user'>
+                    <Card title={"List Template"} className="rounded container-card">
+                        <Row gutter={24} className="row-inquiry-customer">
+                            <Col xs={24} sm={24} md={24} lg={12} xl={12} style={{ textAlign: "left" }} >
+                                <Button
+                                    className="nol-button custom-btn"
+                                    onClick={() => setShowConfigPage(true)}
+                                    loading={isLoading}
+                                >
+                                    <Text className="big6-title custom-add-user"><PlusOutlined /> Add Template</Text>
+                                </Button>
+                            </Col>
+                            <Col xs={24} sm={24} md={24} lg={12} xl={12}>
+                                <div style={{ float: 'right' }}>
+                                    <Row>
+                                        <Col>
+                                            <Input className='form-search' placeholder="Search by template name" size="small" />
+                                        </Col>
+                                        {/* <Col>
                                             <Button style={{border: "0px", background: "#F3F6F9", borderTopRightRadius: "10px", borderBottomRightRadius: "10px"}}>
                                             <SearchOutlined />
                                             </Button>
                                         </Col> */}
-                                </Row>
-                            </div>
-                        </Col>
-                        <Col span={24} style={{ textAlign: "center" }}>
-                            <Table
-                                className='table-user'
-                                rowKey={(record, index) => record.key}
-                                style={{ whiteSpace: 'pre' }}
-                                loading={isLoading}
-                                scroll={{ x: 'max-content' }}
-                                size="small"
-                                bordered={false}
-                                dataSource={dataSource?.result}
-                                onChange={handleTableChange}
-                                pagination={true}
-                                pageSize={10}
-                                columns={columns} />
-                        </Col>
-                    </Row >
-                </Card >
+                                    </Row>
+                                </div>
+                            </Col>
+                            <Col span={24} style={{ textAlign: "center" }}>
+                                <Table
+                                    className='table-user'
+                                    rowKey={(record, index) => record.key}
+                                    style={{ whiteSpace: 'pre' }}
+                                    loading={isLoading}
+                                    scroll={{ x: 'max-content' }}
+                                    size="small"
+                                    bordered={false}
+                                    dataSource={dataSource?.result}
+                                    onChange={handleTableChange}
+                                    pagination={true}
+                                    pageSize={10}
+                                    columns={columns} />
+                            </Col>
+                        </Row >
+                    </Card >
+                </div>
             )}
         </>
     )
