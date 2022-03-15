@@ -320,11 +320,22 @@ const User = () => {
                                             />
                                         </Form.Item>
                                     </Col>
+                                    <Col className='form-login form-user' xs={24} sm={24} md={12} lg={12} xl={12}>
+                                        <Form.Item
+                                            wrapperCol={{ span: 23 }}
+                                            label={"Username"} name={"username"}
+                                            rules={[{ required: true, message: 'Username is required!' }]}>
+                                            <Input disabled placeholder="Auto Ganerate" style={{ textAlign: "left" }} size="small" />
+                                        </Form.Item>
+                                    </Col>
+
+
+                                </Row>
+                                <Row>
                                     {
                                         showGroup ? (
                                             <Col className='form-login form-user' xs={24} sm={24} md={12} lg={12} xl={12}>
                                                 <Form.Item
-                                                    wrapperCol={{ span: 23 }}
                                                     label={"Group"} name={"group"}  >
                                                     <Select
                                                         options={SetOptionsForSelect({ label: 'groupname', value: 'groupid', data: listInstitutions })}
@@ -336,18 +347,8 @@ const User = () => {
                                                     />
                                                 </Form.Item>
                                             </Col>
-                                        ): null
+                                        ) : null
                                     }
-
-                                </Row>
-                                <Row>
-                                    <Col className='form-login form-user' xs={24} sm={24} md={12} lg={12} xl={12}>
-                                        <Form.Item
-                                            label={"Username"} name={"username"}
-                                            rules={[{ required: true, message: 'Username is required!' }]}>
-                                            <Input disabled placeholder="Auto Ganerate" style={{ textAlign: "left" }} size="small" />
-                                        </Form.Item>
-                                    </Col>
                                     <Col className='form-login form-user' xs={24} sm={24} md={12} lg={12} xl={12}>
                                         <Form.Item
                                             label={"Status"} name={"status"} valuePropName="checked" >
