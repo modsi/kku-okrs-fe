@@ -23,6 +23,7 @@ const User = () => {
     const [addEditTitle, setAddEditTitle] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [id, setId] = useState(null);
+    const [showGroup, setShowGroup] = useState(false);
     const layout = {
         labelCol: { span: 24 },
         wrapperCol: { span: 22 },
@@ -138,6 +139,8 @@ const User = () => {
             group: ag
         });
 
+        handleChangeRole();
+
     }
 
     const newUser = async () => {
@@ -209,11 +212,25 @@ const User = () => {
         setCurrentPage(pagination.current)
     };
 
+    const handleChangeRole = () => {
+        console.log(form.getFieldValue('role'))
+        let getRole = form.getFieldValue('role');
+        if (getRole != 5) {
+            form.setFieldsValue({
+                group: [],
+            });
+            setShowGroup(false);
+        } else {
+            setShowGroup(true);
+        }
+
+    }
+
     return (
         <div className='container-user'>
             <Card title={"User"} className="rounded container-card" >
                 <Row gutter={24} className="row-inquiry-customer">
-                    <Col span={24} style={{ textAlign: "left",marginBottom: '5px' }}>
+                    <Col span={24} style={{ textAlign: "left", marginBottom: '5px' }}>
                         <Row>
                             <Col xs={24} sm={24} md={24} lg={12} xl={12}>
                                 <Button
@@ -239,8 +256,6 @@ const User = () => {
                                 </div>
                             </Col>
                         </Row>
-
-
                     </Col>
                     <Col span={24} style={{ textAlign: "center" }}>
                         <Table
@@ -299,26 +314,30 @@ const User = () => {
                                             <Select
                                                 options={SetOptionsForSelect({ label: 'role_name', value: 'id', data: listRoles })}
                                                 placeholder="-Please select from dropdown-"
-                                                // onChange={handleChange}
+                                                onChange={handleChangeRole}
                                                 size="middle"
                                                 style={{ width: '100%' }}
                                             />
                                         </Form.Item>
                                     </Col>
-                                    <Col className='form-login form-user' xs={24} sm={24} md={12} lg={12} xl={12}>
-                                        <Form.Item
-                                            wrapperCol={{ span: 23 }}
-                                            label={"Group"} name={"group"}  >
-                                            <Select
-                                                options={SetOptionsForSelect({ label: 'groupname', value: 'groupid', data: listInstitutions })}
-                                                mode="multiple"
-                                                placeholder="-Please select from dropdown-"
-                                                // onChange={handleChange}
-                                                size="large"
-                                                style={{ width: '100%' }}
-                                            />
-                                        </Form.Item>
-                                    </Col>
+                                    {
+                                        showGroup ? (
+                                            <Col className='form-login form-user' xs={24} sm={24} md={12} lg={12} xl={12}>
+                                                <Form.Item
+                                                    wrapperCol={{ span: 23 }}
+                                                    label={"Group"} name={"group"}  >
+                                                    <Select
+                                                        options={SetOptionsForSelect({ label: 'groupname', value: 'groupid', data: listInstitutions })}
+                                                        mode="multiple"
+                                                        placeholder="-Please select from dropdown-"
+                                                        // onChange={handleChange}
+                                                        size="large"
+                                                        style={{ width: '100%' }}
+                                                    />
+                                                </Form.Item>
+                                            </Col>
+                                        ): null
+                                    }
 
                                 </Row>
                                 <Row>
