@@ -8,6 +8,7 @@ import Dashboard from './component/dashboard/Dashboard';
 import Institution from './component/dashboard/Institution';
 import Course from './component/dashboard/Course';
 import Faculty from './component/dashboard/Faculty';
+import History from './component/dataHistory/History';
 import User from './component/setting/User';
 import Template from './component/setting/Template';
 import { clearStorege, getStorage } from "../screens/state/localStorage";
@@ -57,6 +58,8 @@ const Main = () => {
             setContent(<User />);
         } else if (value.key === '7') {
             setContent(<Template />);
+        } else if (value.key === '8') {
+            setContent(<History />);
         }
 
     };
