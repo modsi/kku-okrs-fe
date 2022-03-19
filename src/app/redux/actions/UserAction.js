@@ -49,6 +49,7 @@ export const LoginSsoAction = async (data) => {
     if (resToken?.data?.statusOK) {
       let token = resToken?.data?.data?.accessToken
       const resLogin = await LoginKkuService(data, token)
+      console.log('resLogin >> ', resLogin)
       if (resLogin?.data?.statusOK) {
         result.statusOK = true;
       } else {

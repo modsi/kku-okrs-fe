@@ -24,6 +24,7 @@
     "redux-thunk": "^2.4.1",
     "web-vitals": "^2.1.2"
   },
+  "homepage": "https://hsdoa.kku.ac.th/e-Project/kku-okrs-fe/",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
