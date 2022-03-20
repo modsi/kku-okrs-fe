@@ -4,10 +4,10 @@ import { Layout, Menu, Image, Row, Col, Typography, Space, Button } from 'antd';
 import { FileTextOutlined, UserOutlined, FolderOpenOutlined, AuditOutlined, AppstoreOutlined, GroupOutlined, LogoutOutlined } from '@ant-design/icons';
 import logo from "../../assets/images/favicon-32x32.png"
 import Admin from './component/admin/Admin';
-import Dashboard from './component/dashboard/Dashboard';
-import Institution from './component/dashboard/Institution';
-import Course from './component/dashboard/Course';
-import Faculty from './component/dashboard/Faculty';
+// import Dashboard from './component/dashboard/Dashboard';
+// import Institution from './component/dashboard/Institution';
+// import Course from './component/dashboard/Course';
+// import Faculty from './component/dashboard/Faculty';
 import History from './component/dataHistory/History';
 import User from './component/setting/User';
 import Template from './component/setting/Template';
@@ -44,13 +44,14 @@ const Main = () => {
 
     const onClickMenu = value => {
         // console.log(value);
-        if (value.key === '1') {
-            setContent(<Dashboard />);
-        } else if (value.key === '2') {
-            setContent(<Faculty />);
-        } else  if (value.key === '4') {
-            setContent(<Institution />);
-        } else if (value.key === '3') {
+        // if (value.key === '1') {
+        //     setContent(<Dashboard />);
+        // } else if (value.key === '2') {
+        //     setContent(<Faculty />);
+        // } else  if (value.key === '4') {
+        //     setContent(<Institution />);
+        // } else 
+        if (value.key === '3') {
             setContent(<Admin />);
         } else if (value.key === '6') {
             setContent(<User />);
