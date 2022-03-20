@@ -44,15 +44,13 @@ const Main = () => {
 
     const onClickMenu = value => {
         // console.log(value);
-        // if (value.key === '7') {
-        //     setContent(<Admin />);
-        // } else if (value.key === '1') {
-        //     setContent(<Dashboard />);
-        // } else if (value.key === '2') {
-        //     setContent(<Faculty />);
-        // } else  if (value.key === '4') {
-        //     setContent(<Institution />);
-        if (value.key === '3') {
+        if (value.key === '1') {
+            setContent(<Dashboard />);
+        } else if (value.key === '2') {
+            setContent(<Faculty />);
+        } else  if (value.key === '4') {
+            setContent(<Institution />);
+        } else if (value.key === '3') {
             setContent(<Admin />);
         } else if (value.key === '6') {
             setContent(<User />);

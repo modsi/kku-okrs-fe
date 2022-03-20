@@ -114,6 +114,14 @@
     background-color: rgba(62, 54, 54, 0.5);;
 }
 
+.table-user .ant-table-container {
+    border-radius: 20px;
+}
+
+.table-user table {
+    border-radius: 20px;
+}
+
 .table-user .ant-table-thead {
     border-radius: 20px;
     background: rgb(245 125 1);

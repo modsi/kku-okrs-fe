@@ -1,0 +1,21 @@
+.container-faculty {
+    background-color: #f0f2f5;
+}
+.box-table {
+    border-radius: 15px;
+}
+.box-table .ant-card-head {
+    /* border: 0px;
+    background-color: #fff; */
+}
+.text-plots {
+    font-family: "InterBold" !important;
+    font-size: 60px !important;
+    color: #FC1A1A;
+}
+
+.unit-text-plots {
+    font-family: "InterBold" !important;
+    font-size: 20px !important;
+    color: #F57C00;
+}

@@ -1,0 +1,90 @@
+.plots-grap {
+    border-radius: 15px;
+}
+
+.head-plots {
+    font-family: "InterBold" !important;
+    font-size: 21px !important;
+    color: rgba(34, 43, 69, 0.7);
+}
+
+.head-plots-second {
+    font-family: "InterBold" !important;
+    font-size: 16px !important;
+    color: rgba(34, 43, 69, 0.7);
+}
+
+.plots-grap .text-legend {
+    font-family: "InterBold" !important;
+    font-size: 15px !important;
+}
+.plots-grap .center-box {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  text-align: center;
+  width: 100%;
+}
+
+.plots-grap .end-box {
+  margin: 0;
+  position: absolute;
+  top: 90%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  text-align: center;
+  /* width: 100%; */
+}
+
+.plots-grap .custom-button {
+    padding: 5px 20px;
+    height: auto;
+    border-radius: 15px;
+    color: white;
+    border: 0px;
+}
+
+.plots-grap .custom-button span {
+    font-size: 14px !important;
+}
+
+
+.custom-table-dashboard .ant-table-thead .ant-table-cell {
+    color: #fff;
+    /* font-weight: bold; */
+    font-family: "InteMedium" !important;
+    font-size: 14px !important;
+}
+
+.custom-table-dashboard .ant-table.ant-table-small .ant-table-title, .ant-table.ant-table-small .ant-table-footer, .ant-table.ant-table-small .ant-table-thead > tr > th, .ant-table.ant-table-small .ant-table-tbody > tr > td, .ant-table.ant-table-small tfoot > tr > th, .ant-table.ant-table-small tfoot > tr > td {
+    padding: 10px 0px;
+}
+
+.end-box-mobile {
+    display: none;
+}
+
+.box-plols {
+    text-align: center;
+}
+
+@media (max-width: 600px) {
+    .box-plols-detail {
+        margin-top: 30px;
+    }
+    .box-plols {
+        margin-top: 35px;
+    }
+    .end-box {
+        display: none;
+    }
+    .end-box-mobile {
+        display: block;
+    }
+    .box-plan {
+        margin-top: 15px;
+    }
+}
+
