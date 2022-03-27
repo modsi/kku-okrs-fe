@@ -69,11 +69,11 @@ const Homepage = () => {
                             <Row>
                                 <Col className='form-login' span={24} style={{ textAlign: "center" }}>
                                     <Form.Item
-                                        label="Email or Username"
+                                        label="Email"
                                         name="username"
-                                        rules={[{ required: true, message: 'Please enter your username!' }]}
+                                        rules={[{ type: 'email', message: 'The input is not valid E-mail!' },{ required: true, message: 'Please enter your Email!' }]}
                                     >
-                                        <Input placeholder="Please enter email or username" />
+                                        <Input placeholder="Please enter email." />
                                     </Form.Item>
                                 </Col>
                                 <Col className='form-login form-login-password' span={24} style={{ textAlign: "center" }}>
