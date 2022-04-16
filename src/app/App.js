@@ -7,7 +7,7 @@ import Main from './screens/Main';
 
 function App() {
   return (
-    <Router basename={'/e-Project/kku-okrs-fe'}>
+    <Router>
       <Provider store={store}>
         <Routes>
           <Route  path="/" element={<Homepage/>} />
