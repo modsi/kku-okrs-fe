@@ -1,9 +1,14 @@
-import { SaveTemplateService, GetTemplateService } from '../../services/MainService'
+import { SaveTemplateService, GetTemplateService, UpdateTemplateService } from '../../services/MainService'
 import { Payload } from '../../utils/Payload'
 
 
 export const SaveTempateAction = async (data) => {
   const result = await SaveTemplateService(data)
+  return result?.data
+}
+
+export const UpdateTempateAction = async (data) => {
+  const result = await UpdateTemplateService(data)
   return result?.data
 }
 

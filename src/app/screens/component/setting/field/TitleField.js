@@ -32,7 +32,7 @@ const TitleField = ({ form }) => {
                 id: uuidv4(),
                 index: max + 1,
                 type: 'title',
-                value: form.getFieldValue('label'),
+                label: form.getFieldValue('label'),
                 size: 'long',
                 align: "left"
             }

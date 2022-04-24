@@ -25,9 +25,10 @@ import { LIST_TYPE_TEPM, LIST_FIELD_TEPM, ListFieldMasterTemplateAction } from '
 import SetOptionsForSelect, { SetOptionsForSelectSetLable } from '../../items/SetOptionsForSelect'
 import { ConfirmModalEditText, SuccessModal, ErrorModalMassageHtml } from "../../items/Modal";
 import { SaveTempateAction } from '../../../redux/actions/TemplateAction'
+import { LIST_TEMPLATES, ListTemplateAction } from '../../../redux/actions/TemplateAction'
 
 const { Text, Link } = Typography;
-const ConfigTemplate = ({ id }) => {
+const ConfigTemplate = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch()
     const [form] = Form.useForm();
@@ -41,6 +42,7 @@ const ConfigTemplate = ({ id }) => {
     const [currentPage, setCurrentPage] = useState(1);
     const storeTemplate = useSelector(state => state?.storeSearchReducer?.[STORE_TEMPLATE])
     const [fieldContent, setFieldContent] = useState(null)
+    const [templateId, setTemplateId] = useState(null);
 
     const layout = {
         labelCol: { span: 24 },
@@ -142,25 +144,36 @@ const ConfigTemplate = ({ id }) => {
 
     useEffect(() => {
         handleClickCancel()
+        if (storeTemplate?.templateId) {
+            setTemplateId(storeTemplate?.templateId)
+            form.setFieldsValue(
+                {
+                    ['templateType']: storeTemplate.templateType
+                    , ['templateName']: storeTemplate.templateName
+                })
+        }
     }, [storeTemplate])
 
     useEffect(() => {
-        if (listType) {
+        if (listType && !templateId) {
+            console.log('useEffect - > listType')
             form.setFieldsValue({ ['templateType']: listType[0].id })
             handleListMaster(listType[0].id)
         }
     }, [listType])
 
     useEffect(() => {
-        if (listField) {
+        // console.log('useEffect - > listField', templateId)
+        if (listField && !templateId) {
+            // console.log('useEffect - > listField')
             let components = []
             listField.map((field, index) => {
                 let obj = {
                     id: field.id,
                     index: parseInt(field.priority ?? 1),
-                    required : field.required && parseInt(field.required) === 1 ? true : false,  
-                    key : field.key,    
-                    label : field.label,               
+                    required: field.required && parseInt(field.required) === 1 ? true : false,
+                    key: field.key,
+                    label: field.label,
                 }
                 Object.assign(obj, field.properties)
                 components.push(obj)
@@ -168,10 +181,6 @@ const ConfigTemplate = ({ id }) => {
             setTemplate({ ...storeTemplate, components: components })
         }
     }, [listField])
-
-    async function setTemplate(data) {
-        dispatch(await StoreTemplateAction(data))
-    }
 
     const handleTypeChange = (e) => {
         handleListMaster(e.target.value)
@@ -205,8 +214,8 @@ const ConfigTemplate = ({ id }) => {
         data.component = store
         console.log('onFinish >> data is ', data)
         let res = {}
-        if (id) {
-            data.id = id
+        if (templateId) {
+            data.id = templateId
             data.updated_datetime = moment().format(DATE_FULL)
             // res = await UpdateAccAction(data)
         } else {
@@ -214,16 +223,21 @@ const ConfigTemplate = ({ id }) => {
         }
         if (res.error === null) {
             SuccessModal("Success");
+            listTemplate({ str: "" })
         } else {
             ErrorModalMassageHtml(res.error.message);
         }
         setIsLoading(false)
     }
 
+    async function listTemplate(data) {
+        dispatch(await ListTemplateAction(data))
+    }
+
     return (
         <>
             <div className='container-user'>
-                <Card title={"Create Template"} className="rounded" >
+                <Card title={(templateId ? "View" : "Create") + " Template"} className="rounded" >
                     <Row gutter={24}>
                         <Col span={24} style={{ textAlign: "left" }}>
                             <Form
@@ -236,6 +250,7 @@ const ConfigTemplate = ({ id }) => {
                                             name={"templateName"}
                                             rules={[{ required: true, message: 'Name is required!' }]}>
                                             <Input style={{ textAlign: "left" }}
+                                                disabled={templateId ? true : false}
                                                 placeholder="Enter Template Name"
                                             // onChange={setTemplateName}
                                             />
@@ -244,6 +259,7 @@ const ConfigTemplate = ({ id }) => {
                                     <Col xs={24} sm={24} md={24} lg={10} xl={10}>
                                         <Form.Item name="templateType" rules={[{ required: true, message: 'TemplateType is required!' }]}>
                                             <Radio.Group
+                                                disabled={templateId ? true : false}
                                                 size="small"
                                                 options={SetOptionsForSelect({ label: 'name', value: 'id', data: listType })}
                                                 value={1}
@@ -252,7 +268,9 @@ const ConfigTemplate = ({ id }) => {
                                         </Form.Item>
                                     </Col>
                                     <Col xs={24} sm={24} md={8} lg={2} xl={2} style={{ textAlign: "right" }}>
-                                        <Button type="primary" loading={isLoading} danger style={{ width: '100%', background: "green", borderColor: "green" }} onClick={saveTemplate} >Save</Button>
+                                        {templateId ? null :
+                                            <Button type="primary" loading={isLoading} danger style={{ width: '100%', background: "green", borderColor: "green" }} onClick={saveTemplate} >Save</Button>
+                                        }
                                     </Col>
                                 </Row>
                             </Form>
@@ -260,19 +278,19 @@ const ConfigTemplate = ({ id }) => {
                     </Row>
                     <Row gutter={24}>
                         <Col xs={24} sm={24} md={8} lg={6} xl={4}>
-                            <Button type="primary" style={{ width: '100%', textAlign: "left", borderRadius: '0px' }} onClick={setTitleField} ><FaIndent style={{ paddingRight: '3px', marginRight: '5px' }} />  Title</Button>
-                            <Button type="primary" style={{ width: '100%', textAlign: "left", borderRadius: '0px' }} onClick={setTextField}><FaAdn style={{ paddingRight: '3px', marginRight: '5px' }} />  Text Field</Button>
-                            <Button type="primary" style={{ width: '100%', textAlign: "left", borderRadius: '0px' }} onClick={setTextAreaField}><FaAdversal style={{ paddingRight: '3px', marginRight: '5px' }} />  Text Area</Button>
-                            <Button type="primary" style={{ width: '100%', textAlign: "left", borderRadius: '0px' }} onClick={setNumberField}><FaCalculator style={{ paddingRight: '3px', marginRight: '5px' }} />  Number</Button>
-                            <Button type="primary" style={{ width: '100%', textAlign: "left", borderRadius: '0px' }} onClick={setCheckboxField}><FaCheckSquare style={{ paddingRight: '3px', marginRight: '5px' }} />  Checkbox</Button>
-                            <Button type="primary" style={{ width: '100%', textAlign: "left", borderRadius: '0px' }} onClick={setSelectField}><FaList style={{ paddingRight: '3px', marginRight: '5px' }} />  Select</Button>
-                            <Button type="primary" style={{ width: '100%', textAlign: "left", borderRadius: '0px' }} onClick={setRadioField}><FaRecordVinyl style={{ paddingRight: '3px', marginRight: '5px' }} />  Radio</Button>
+                            <Button type="primary" style={{ width: '100%', textAlign: "left", borderRadius: '0px' }} disabled={templateId ? true : false} onClick={setTitleField} ><FaIndent style={{ paddingRight: '3px', marginRight: '5px' }} />  Title</Button>
+                            <Button type="primary" style={{ width: '100%', textAlign: "left", borderRadius: '0px' }} disabled={templateId ? true : false} onClick={setTextField}><FaAdn style={{ paddingRight: '3px', marginRight: '5px' }} />  Text Field</Button>
+                            <Button type="primary" style={{ width: '100%', textAlign: "left", borderRadius: '0px' }} disabled={templateId ? true : false} onClick={setTextAreaField}><FaAdversal style={{ paddingRight: '3px', marginRight: '5px' }} />  Text Area</Button>
+                            <Button type="primary" style={{ width: '100%', textAlign: "left", borderRadius: '0px' }} disabled={templateId ? true : false} onClick={setNumberField}><FaCalculator style={{ paddingRight: '3px', marginRight: '5px' }} />  Number</Button>
+                            <Button type="primary" style={{ width: '100%', textAlign: "left", borderRadius: '0px' }} disabled={templateId ? true : false} onClick={setCheckboxField}><FaCheckSquare style={{ paddingRight: '3px', marginRight: '5px' }} />  Checkbox</Button>
+                            <Button type="primary" style={{ width: '100%', textAlign: "left", borderRadius: '0px' }} disabled={templateId ? true : false} onClick={setSelectField}><FaList style={{ paddingRight: '3px', marginRight: '5px' }} />  Select</Button>
+                            <Button type="primary" style={{ width: '100%', textAlign: "left", borderRadius: '0px' }} disabled={templateId ? true : false} onClick={setRadioField}><FaRecordVinyl style={{ paddingRight: '3px', marginRight: '5px' }} />  Radio</Button>
                             {/* <Button type="primary" style={{ width: '100%', textAlign: "left", borderRadius: '0px'}} onClick={setEmailField}><FaMailBulk style={{ paddingRight: '3px', marginRight: '5px' }} />  Email</Button> */}
-                            <Button type="primary" style={{ width: '100%', textAlign: "left", borderRadius: '0px' }} onClick={setDayField}><FaCalendarDay style={{ paddingRight: '3px', marginRight: '5px' }} />  Day</Button>
-                            <Button type="primary" style={{ width: '100%', textAlign: "left", borderRadius: '0px' }} onClick={setDateTimeField}><FaCalendarAlt style={{ paddingRight: '3px', marginRight: '5px' }} />  Date/Time</Button>
-                            <Button type="primary" style={{ width: '100%', textAlign: "left", borderRadius: '0px' }} onClick={setRangeDateField}><FaCalendarAlt style={{ paddingRight: '3px', marginRight: '5px' }} />  Range Date</Button>
-                            <Button type="primary" style={{ width: '100%', textAlign: "left", borderRadius: '0px' }} onClick={setTableField}><FaBuromobelexperte style={{ paddingRight: '3px', marginRight: '5px' }} />  Table</Button>
-                            <Button type="primary" style={{ width: '100%', textAlign: "left", borderRadius: '0px' }} onClick={setUploadField}><FaFileUpload style={{ paddingRight: '3px', marginRight: '5px' }} />  Upload</Button>
+                            <Button type="primary" style={{ width: '100%', textAlign: "left", borderRadius: '0px' }} disabled={templateId ? true : false} onClick={setDayField}><FaCalendarDay style={{ paddingRight: '3px', marginRight: '5px' }} />  Day</Button>
+                            <Button type="primary" style={{ width: '100%', textAlign: "left", borderRadius: '0px' }} disabled={templateId ? true : false} onClick={setDateTimeField}><FaCalendarAlt style={{ paddingRight: '3px', marginRight: '5px' }} />  Date/Time</Button>
+                            <Button type="primary" style={{ width: '100%', textAlign: "left", borderRadius: '0px' }} disabled={templateId ? true : false} onClick={setRangeDateField}><FaCalendarAlt style={{ paddingRight: '3px', marginRight: '5px' }} />  Range Date</Button>
+                            <Button type="primary" style={{ width: '100%', textAlign: "left", borderRadius: '0px' }} disabled={templateId ? true : false} onClick={setTableField}><FaBuromobelexperte style={{ paddingRight: '3px', marginRight: '5px' }} />  Table</Button>
+                            <Button type="primary" style={{ width: '100%', textAlign: "left", borderRadius: '0px' }} disabled={templateId ? true : false} onClick={setUploadField}><FaFileUpload style={{ paddingRight: '3px', marginRight: '5px' }} />  Upload</Button>
                         </Col>
                         <Col xs={24} sm={24} md={16} lg={18} xl={20}>
                             <PreviewTemplate />
