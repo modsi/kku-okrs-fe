@@ -6,7 +6,7 @@ import PieFull from './_component/PieFull';
 import { useDispatch, useSelector } from 'react-redux'
 import { LIST_DASHBOARD, ListDashboardTwoAction } from '../../../redux/actions/DashboardAction'
 
-const Institution = () => {
+const Dashboard2 = () => {
 
     const dispatch = useDispatch()
     const storeListDashboard = useSelector(state => state?.main?.[LIST_DASHBOARD])
@@ -69,31 +69,16 @@ const Institution = () => {
         },
         {
             title: 'ดำเนินการแล้ว',
-            dataIndex: 'username',
-            key: 'username',
+            dataIndex: 'complete',
+            key: 'complete',
             align: 'center',
             width: 80,
         },
-        {
-            title: 'ยังไม่ดำเนินการ',
-            dataIndex: 'role',
-            key: 'role',
-            align: 'center',
-            width: 80,
-        },
-        {
-            title: 'งบประมาณทั้งหมด',
-            dataIndex: 'status',
-            key: 'status',
-            align: 'center',
-            fixed: 'right',
-            width: 80,
-        }
         ,
         {
             title: 'งบประมาณที่ใช้',
-            dataIndex: 'status',
-            key: 'status',
+            dataIndex: 'budget_2',
+            key: 'budget_2',
             align: 'center',
             fixed: 'right',
             width: 80,
@@ -101,8 +86,8 @@ const Institution = () => {
         ,
         {
             title: 'งบประมาณคงเหลือ',
-            dataIndex: 'status',
-            key: 'status',
+            dataIndex: 'budget_3',
+            key: 'budget_3',
             align: 'center',
             fixed: 'right',
             width: 80,
@@ -191,7 +176,7 @@ const Institution = () => {
         <>
             {
                 fetchData && (
-                    <div className='container-institution'>
+                    <div className='container-dashboard2'>
                         <div style={{ padding: '20px 15px 10px 15px' }}>
                             <span className="head-plots" style={{ margin: "10px 0px" }}>ประเด็นยุทธศาสตร์คณะ (ภาพรวมคณะ)</span>
                         </div>
@@ -340,4 +325,4 @@ const Institution = () => {
         </>
     )
 }
-export default Institution;
+export default Dashboard2;

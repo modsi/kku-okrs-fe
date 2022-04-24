@@ -2,10 +2,11 @@ import { httpUtils } from '../utils/HttpUtils'
 
 const { get, post, patch, postTokenKku, postLoginKku } = httpUtils
 const API_KKU = `https://api.kku.ac.th/v2`
-const API_ENDPOINT = `http://128.199.225.180/app/api`
+const API_ENDPOINT = `http://localhost:8080/api`
 const USER_URL = `${API_ENDPOINT}/users`
 const MANAGE_URL = `${API_ENDPOINT}/manage`
 const TEMPLATE__URL = `${API_ENDPOINT}/templates`
+const DASHBOARD_URL = `${API_ENDPOINT}/dashboard`
 
 export const ListInstitutions = async () => {
     return await get(`${MANAGE_URL}/institution`)    
@@ -53,4 +54,12 @@ export const SaveTemplateService = async (data = {}) => {
 
 export const GetTemplateService = async(data = {})=>{
     return await get(`${TEMPLATE__URL}/list_template?templateName=${data?.str ?? ''}&limit=${data?.size}&offset=${data?.page}`)
+}
+
+export const GetDashboardOne = async () => {
+    return await get(`${DASHBOARD_URL}/dashboardOne`)
+}
+
+export const GetDashboardTwo = async () => {
+    return await get(`${DASHBOARD_URL}/dashboardTwo`)
 }

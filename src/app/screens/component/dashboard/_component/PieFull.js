@@ -19,7 +19,9 @@ const PieFull = (props) => {
     innerRadius = false,
     unit = '%',
     text = false,
-    pie = true
+    pie = true,
+    brk = false,
+    helfData = false
   } = props;
 
   const [showAll, setShowAll] = useState(false);
@@ -61,7 +63,7 @@ const PieFull = (props) => {
     statistic: false,
   };
   return (
-    <Card className="rounded plots-grap" style={{ width: '100%', background: `${backgroundColor}` }}>
+    <Card className="rounded plots-grap" style={{ width: '100%', background: `${backgroundColor}`, height: helfData ? '100%' : 'auto' }}>
       {
         titleFirst != '' ? (
           <span className="head-plots">{titleFirst}</span>
@@ -70,19 +72,41 @@ const PieFull = (props) => {
         )
       }
       <Row lg={24} className="box-plols-detail">
-        <Col xs={24} sm={24} md={showAll ? 8 : 12} lg={showAll ? 8 : 12}>
-          <div className="center-box">
+        <Col xs={24} sm={24} md={showAll ? 8 : helfData ? 24 : 12} lg={showAll ? 8 : helfData ? 24 : 12}>
+          <Row xs={24} sm={24} md={24} lg={24} className={helfData ? "" : "center-box"} style={{ marginTop: helfData ? '20px' : '0px' }}>
             {
               data.map((items, gIndex) => {
                 return (
-                  <div>
-                    <span className="text-legend" style={{ color: !dataTextColor ? '#000' : dataTextColor[gIndex] }}>{items.type} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{items.value} &nbsp;&nbsp;{unit}</span>
-                  </div>
+                  <>
+                  <Col xs={helfData ? 11 : 24} sm={helfData ? 11 : 24} md={helfData ? 11 : 24}>
+                    {
+                      brk ? (
+                        <div style={{marginLeft: '20px'}}>
+                          <div>
+                            <span className="text-legend" style={{ color: !dataTextColor ? '#000' : dataTextColor[gIndex] }}>{items.type} </span>
+                          </div>
+                          <div style={{marginTop: '50px'}}>
+                            <span className="text-legend text-legend-big" style={{ color: !dataTextColor ? '#000' : dataTextColor[gIndex], paddingTop: '20px' }}>{items.value}</span>
+                            <span className="text-legend" style={{ color: !dataTextColor ? '#000' : dataTextColor[gIndex] }}>&nbsp;&nbsp;{unit} </span>
+                          </div>
+                        </div>
+                      ) : (
+                        <span className="text-legend" style={{ color: !dataTextColor ? '#000' : dataTextColor[gIndex] }}>{items.type} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{items.value} &nbsp;&nbsp;{unit}</span>
+                      )
+                    }
+                  </Col>
+                  {
+                    gIndex == 0 && (
+                      <Col md={1} style={{borderLeft: '3px solid #4E5C8480'}}></Col>
+                    )
+                  }
+                  </>
+                  
                 )
 
               })
             }
-          </div>
+          </Row>
 
           {
             showRefresh && (

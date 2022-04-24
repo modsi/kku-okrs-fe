@@ -2,6 +2,10 @@
     border-radius: 15px;
 }
 
+.plots-grap .ant-card-body {
+    height: 100%;
+}
+
 .head-plots {
     font-family: "InterBold" !important;
     font-size: 21px !important;
@@ -18,6 +22,9 @@
     font-family: "InterBold" !important;
     font-size: 15px !important;
 }
+.plots-grap .text-legend-big {
+    font-size: 27px !important;
+}
 .plots-grap .center-box {
   margin: 0;
   position: absolute;
@@ -26,6 +33,7 @@
   transform: translateY(-50%);
   text-align: center;
   width: 100%;
+  /* margin-top: 20px; */
 }
 
 .plots-grap .end-box {
@@ -58,6 +66,12 @@
     font-size: 14px !important;
 }
 
+.custom-table-dashboard .ant-table-tbody .ant-table-cell {
+    font-family: "InteMedium" !important;
+    font-size: 13px !important;
+    padding-left: 10px;
+}
+
 .custom-table-dashboard .ant-table.ant-table-small .ant-table-title, .ant-table.ant-table-small .ant-table-footer, .ant-table.ant-table-small .ant-table-thead > tr > th, .ant-table.ant-table-small .ant-table-tbody > tr > td, .ant-table.ant-table-small tfoot > tr > th, .ant-table.ant-table-small tfoot > tr > td {
     padding: 10px 0px;
 }
@@ -69,6 +83,10 @@
 .box-plols {
     text-align: center;
 }
+
+/* .box-plols-detail {
+    height: 100%;
+} */
 
 @media (max-width: 600px) {
     .box-plols-detail {

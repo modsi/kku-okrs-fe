@@ -1,6 +1,7 @@
 import { LIST_INSTITUTIONS, LIST_ROLES, LIST_TYPE_TEPM, LIST_FIELD_TEPM } from '../actions/ListMasterAction'
 import { LLIST_ACCOUNT } from '../actions/UserAction'
 import {LIST_TEMPLATES} from '../actions/TemplateAction'
+import { LIST_DASHBOARD } from '../actions/DashboardAction';
 
 const initialsState = {
     [LIST_TEMPLATES]: null, 
@@ -9,6 +10,8 @@ const initialsState = {
     [LIST_INSTITUTIONS]: null,
     [LIST_ROLES]: null,  
     [LLIST_ACCOUNT]  : null,
+    [LIST_DASHBOARD] : null
+    
 };
 
 // eslint-disable-next-line import/no-anonymous-default-export
@@ -20,6 +23,7 @@ export default (state = initialsState, { type, payload }) => {
         case LLIST_ACCOUNT: 
         case LIST_INSTITUTIONS:
         case LIST_ROLES:
+        case LIST_DASHBOARD:
             return {
                 ...state,
                 ...payload
