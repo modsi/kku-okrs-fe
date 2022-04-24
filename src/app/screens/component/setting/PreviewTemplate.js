@@ -71,7 +71,7 @@ const PreviewTemplate = () => {
         // console.log('Event Type', e.type);
         // console.log({ e, data });
         // console.log(data?.node.id);
-        console.log(data?.y);
+        // console.log(data?.y);
         if (data?.y !== 0) {
             let c = Math.round(data?.y / 100)
             // console.log(c);
@@ -112,7 +112,7 @@ const PreviewTemplate = () => {
             components.sort((a, b) => (a.index > b.index) ? 1 : -1)
         }
         components?.map((currentItem) => {
-            let size = currentItem.size === 'long' ? 23 : 11
+            let size = currentItem.size === 'long' ? 24 : 12
             const formItemLayout =
                 currentItem.isSubTitle ? {
                     labelCol: {
@@ -134,7 +134,6 @@ const PreviewTemplate = () => {
             let field = (
                 <>
                     <Col xs={24} sm={24} md={size} lg={size} xl={size} style={{ textAlign: currentItem.align ?? "left" }}>
-
                         <Draggable
                             axis='y'
                             position={{ x: 0, y: 0 }}
@@ -146,8 +145,8 @@ const PreviewTemplate = () => {
                                         <Col xs={24} sm={24} md={2} lg={2} xl={2} >
                                             <Button
                                                 type="link"
-                                                disabled={currentItem.required === 1 ? true : false}
-                                                style={{ padding: '0px', color: currentItem.required === 1 ? 'gray' : 'red' }}
+                                                disabled={currentItem.required ? true : false}
+                                                style={{ padding: '0px', color: currentItem.required ? 'gray' : 'red' }}
                                                 onClick={() =>
                                                     remove(currentItem.id)
                                                 }
@@ -156,51 +155,56 @@ const PreviewTemplate = () => {
                                             </Button>
                                         </Col>
                                         <Col xs={24} sm={24} md={22} lg={22} xl={22} >
-                                            <Form.Item
-                                                className="template-text"
-                                                labelAlign='left'
-                                                labelWrap='true'
-                                                {...formItemLayout}
-                                                layout={currentItem.labelPosition ?? 'vertical'}
-                                                label={currentItem.label}
-                                                name={currentItem.key}
-                                                rules={[{ required: currentItem.required ? true : false, message: 'Please input ' + currentItem?.label }]}
-                                            >
-                                                {currentItem.type === 'title' ?
-                                                    (<Text strong>{currentItem?.value}</Text>)
-                                                    : currentItem.type === 'textArea' ?
-                                                        (<Input.TextArea showCount maxLength={currentItem.maxLength} />)
-                                                        : currentItem.type === 'inputNumber' ?
-                                                            (<InputNumber min={currentItem.min} max={currentItem.max} />)
-                                                            : currentItem.type === 'checkbox' ?
-                                                                (<Checkbox.Group options={currentItem.options} />)
-                                                                : currentItem.type === 'select' ?
-                                                                    (<Select
-                                                                        mode={currentItem.mode}
-                                                                        placeholder="Please select"
-                                                                        style={{ width: '100%' }}
-                                                                        options={currentItem.options}
-                                                                    />)
-                                                                    : currentItem.type === 'radio' ?
-                                                                        (<Radio.Group
+                                            {currentItem.type === 'table' ?
+                                                <>
+                                                    <Text>{currentItem.label}</Text>
+                                                    {setTableContent(currentItem.columns, currentItem.rows)}
+                                                </>
+                                                : currentItem.type === 'title' ?
+                                                    (<Text style={currentItem.isSubTitle ? { paddingLeft: '50px' } : {}}>{currentItem?.label}</Text>)
+                                                    : (<Form.Item
+                                                        className="template-text"
+                                                        labelAlign='left'
+                                                        labelWrap='true'
+                                                        {...formItemLayout}
+                                                        layout={currentItem.labelPosition ?? 'vertical'}
+                                                        label={currentItem.label}
+                                                        name={currentItem.key}
+                                                        // rules={[{ required: currentItem.required ? true : false, message: 'Please input ' + currentItem?.label }]}
+                                                    >
+                                                        {currentItem.type === 'textArea' ?
+                                                            (<Input.TextArea showCount maxLength={currentItem.maxLength} />)
+                                                            : currentItem.type === 'inputNumber' ?
+                                                                (<InputNumber min={currentItem.min} max={currentItem.max} />)
+                                                                : currentItem.type === 'checkbox' ?
+                                                                    (<Checkbox.Group options={currentItem.options} />)
+                                                                    : currentItem.type === 'select' ?
+                                                                        (<Select
+                                                                            mode={currentItem.mode}
+                                                                            placeholder="Please select"
+                                                                            style={{ width: '100%' }}
                                                                             options={currentItem.options}
                                                                         />)
-                                                                        : currentItem.type === 'day' ?
-                                                                            (<DatePicker />)
-                                                                            : currentItem.type === 'date_time' ?
-                                                                                (<DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />)
-                                                                                : currentItem.type === 'range_date' ?
-                                                                                    (<RangePicker />)
-                                                                                    : currentItem.type === 'upload' ?
-                                                                                        (<Upload {...propsUpload}>
-                                                                                            <Button icon={<UploadOutlined />}>Click to Upload</Button>
-                                                                                        </Upload>)
-                                                                                        // : currentItem.type === 'email' ?
-                                                                                            // (<Input placeholder="Please enter email." onChange={(e) => form.validateFields()} />)
+                                                                        : currentItem.type === 'radio' ?
+                                                                            (<Radio.Group
+                                                                                options={currentItem.options}
+                                                                            />)
+                                                                            : currentItem.type === 'day' ?
+                                                                                (<DatePicker />)
+                                                                                : currentItem.type === 'date_time' ?
+                                                                                    (<DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />)
+                                                                                    : currentItem.type === 'range_date' ?
+                                                                                        (<RangePicker />)
+                                                                                        : currentItem.type === 'upload' ?
+                                                                                            (<Upload {...propsUpload}>
+                                                                                                <Button icon={<UploadOutlined />}>Click to Upload</Button>
+                                                                                            </Upload>)
+                                                                                            // : currentItem.type === 'email' ?
+                                                                                            // (<Input placeholder="Please enter email." onChange={(e) => form.validateFields()} />)                                                                                        
                                                                                             : (<Input />)
-                                                }
-                                            </Form.Item>
-
+                                                        }
+                                                    </Form.Item>
+                                                    )}
                                         </Col>
                                     </Row>
                                 </Card.Grid>
@@ -212,6 +216,82 @@ const PreviewTemplate = () => {
             listField.push(field)
         })
         setListField(listField)
+    }
+
+    const setTableContent = (options, row) => {
+        let dataSource = []
+        let columns = []
+        options?.sort((a, b) => (a.index > b.index) ? 1 : -1)
+        options.map((item, index) => {
+            let col = {
+                title: item.colLabel ?? 'column label',
+                dataIndex: item.colKey ?? ("colKey" + item.index),
+                key: item.colKey ?? ("colKey" + item.index),
+            }
+            columns.push(col);
+        })
+
+        for (let i = 0; i < row; i++) {
+            let d = {}
+            d.key = i
+            d.index = i + 1
+            columns.map((c) => {
+                Object.assign(d, { [c.dataIndex]: null })
+            });
+            dataSource.push(d)
+        }
+
+        const EditableCell = ({
+            dataIndex,
+            index,
+            record,
+            ...restProps
+        }) => {
+            // console.log(dataIndex,record,index)
+            return (
+                <td {...restProps} style={{ padding: '2px' }}>
+                    <Form.Item
+                        name={dataIndex + '_' + record?.index}
+                        style={{ margin: 0, padding: 0 }}
+                    >
+                        <Input
+                            style={{ width: '100%', textAlign: "left" }}
+                            size="small"
+                        />
+
+                    </Form.Item>
+
+                </td>
+            );
+        };
+
+
+        const mergedColumns = columns.map(col => {
+            return {
+                ...col,
+                onCell: (record, index) => ({
+                    record,
+                    index,
+                    dataIndex: col.dataIndex,
+                }),
+            };
+        });
+
+        return (
+            <>
+                <Table
+                    dataSource={dataSource}
+                    columns={mergedColumns}
+                    pagination={false}
+                    components={{
+                        body: {
+                            cell: EditableCell,
+                        },
+                    }}
+                    bordered
+                />
+            </>
+        )
     }
     return (
         <>
@@ -232,7 +312,7 @@ const PreviewTemplate = () => {
                             </Row>
                             <Row>
                                 <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-                                    <Text strong>{storeTemplate?.templateName}</Text>
+                                    <Text strong>--- Report Name ---</Text>
                                 </Col>
                             </Row>
                             <Row>

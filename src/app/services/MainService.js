@@ -2,8 +2,8 @@ import { httpUtils } from '../utils/HttpUtils'
 
 const { get, post, patch, postTokenKku, postLoginKku } = httpUtils
 const API_KKU = `https://api.kku.ac.th/v2`
-// const API_ENDPOINT = `http://128.199.225.180/app/api`
-const API_ENDPOINT = `https://e-project.kku.ac.th/api`
+const API_ENDPOINT = `http://localhost:8080/api`
+// const API_ENDPOINT = `https://e-project.kku.ac.th/api`
 const USER_URL = `${API_ENDPOINT}/users`
 const MANAGE_URL = `${API_ENDPOINT}/manage`
 const TEMPLATE__URL = `${API_ENDPOINT}/templates`
@@ -21,7 +21,7 @@ export const ListTypeTemplate = async () => {
 }
 
 export const ListFieldMasterTemplate = async (typeId) => {
-    return await get(`${TEMPLATE__URL}/list_template?typeId=${typeId}`)
+    return await get(`${TEMPLATE__URL}/list_template_master?typeId=${typeId}`)
 }
 
 export const SaveAccountService = async (data = {}) => {
