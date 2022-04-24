@@ -226,6 +226,13 @@ const User = () => {
 
     }
 
+    const seachUser = (e) => {
+        // console.log('seachUser', e.target.value)
+        // if (e.target.value) {
+            listAccount({ str: e.target.value })
+        // }
+    }
+
     return (
         <div className='container-user'>
             <Card title={"User"} className="rounded container-card" >
@@ -245,7 +252,7 @@ const User = () => {
                                 <div style={{ float: 'right' }}>
                                     <Row>
                                         <Col>
-                                            <Input className='form-search' placeholder="Search by name or email" size="small" />
+                                            <Input className='form-search' placeholder="Search by name or email" size="small" onPressEnter={seachUser} />
                                         </Col>
                                         {/* <Col>
                                             <Button style={{border: "0px", background: "#F3F6F9", borderTopRightRadius: "10px", borderBottomRightRadius: "10px"}}>

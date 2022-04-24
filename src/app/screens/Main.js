@@ -55,7 +55,7 @@ const Main = () => {
             setContent(<Faculty title={'ผลการดำเนินงานสาขาวิชา (ศูนย์ต่างๆ)'} />);
         } else if (value.key === '2-4') {
             setContent(<Faculty title={'ผลการดำเนินงานสาขาวิชา (ศูนย์ต่างๆ)'} />);
-        } else  if (value.key === '4') {
+        } else if (value.key === '4') {
             setContent(<Institution />);
         } else if (value.key === '3') {
             setContent(<Admin />);
@@ -69,8 +69,8 @@ const Main = () => {
 
     };
 
-    const logout = async() => {
-       ConfirmModalEditText(routeChange, conditionLogout());
+    const logout = async () => {
+        ConfirmModalEditText(routeChange, conditionLogout());
     }
 
     const conditionLogout = () => {
@@ -94,11 +94,11 @@ const Main = () => {
                 }}
             >
                 <div className="logo">
-                    <Space direction="horizontal" style={{marginTop: '10px'}}>
+                    <Space direction="horizontal" style={{ marginTop: '10px' }}>
                         &nbsp;
                         <Image
                             src={logo}
-                            style={{width: '40px'}}
+                            style={{ width: '40px' }}
                         />
                         <Space direction="vertical" style={{ padding: "0px", gap: "2px" }}>
                             <Text strong>e - Project</Text>
@@ -108,7 +108,7 @@ const Main = () => {
                 </div>
                 <Menu theme="light" mode="inline" defaultSelectedKeys={['6']} onClick={onClickMenu}>
                     <Menu.ItemGroup title='General'>
-                        <Menu.Item key="1" icon={<AppstoreOutlined />}>
+                        <Menu.Item key="1" icon={<AppstoreOutlined />} >
                             Dashboard 1 - แผนปฏิบัติการ
                         </Menu.Item>
                         <SubMenu key="sub2" icon={<AppstoreOutlined />} title="Dashboard 2 - ผลการดำเนินงานของคณะ">
@@ -117,43 +117,44 @@ const Main = () => {
                             <Menu.Item key="2-3">สาขาวิชา</Menu.Item>
                             <Menu.Item key="2-4">ศูนย์</Menu.Item>
                         </SubMenu>
-                        <Menu.Item key="3" icon={<AuditOutlined />}>
-                            Manage Template
-                        </Menu.Item>
-                        <Menu.Item key="4" icon={<FileTextOutlined />}>
-                            Report Form 1
-                        </Menu.Item>
-                        <Menu.Item key="5" icon={<FileTextOutlined />}>
-                            Report Form 2
-                        </Menu.Item>
+                        {profile?.role?.priority < 4 ?
+                            <Menu.Item key="3" icon={<AuditOutlined />}>
+                                Manage Template
+                            </Menu.Item>
+                            :
+                            <>
+                                <Menu.Item key="4" icon={<FileTextOutlined />}>
+                                    Report Form 1
+                                </Menu.Item>
+                                <Menu.Item key="5" icon={<FileTextOutlined />}>
+                                    Report Form 2
+                                </Menu.Item>
+                            </>
+                        }
                         <Menu.Item key="8" icon={<FolderOpenOutlined />}>
                             Data History
                         </Menu.Item>
                     </Menu.ItemGroup>
-                    <Menu.ItemGroup title='Management'>
-                        <Menu.Item key="6" icon={<UserOutlined />}>
-                            User
-                        </Menu.Item>
-                        <Menu.Item key="7" icon={<GroupOutlined />}>
-                            Template
-                        </Menu.Item>
-                        {/* <SubMenu key="sub1" icon={<MailOutlined />} title="Navigation One">
-                            <Menu.Item key="5">Option 1</Menu.Item>
-                            <Menu.Item key="6">Option 2</Menu.Item>
-                            <Menu.Item key="7">Option 3</Menu.Item>
-                            <Menu.Item key="8">Option 4</Menu.Item>
-                        </SubMenu> */}
-                    </Menu.ItemGroup>
+                    {profile?.role?.priority < 2 ?
+                        <Menu.ItemGroup title='Management'>
+                            <Menu.Item key="6" icon={<UserOutlined />}>
+                                User
+                            </Menu.Item>
+                            <Menu.Item key="7" icon={<GroupOutlined />}>
+                                Template
+                            </Menu.Item>
+                        </Menu.ItemGroup>
+                        : null}
                 </Menu>
             </Sider>
             <Layout>
                 <Header className="site-layout-sub-header-background custom-layout-header">
-                    <Space align="start" style={{backgroundColor: '#F3F6F9', borderRadius: '10px', marginRight: '25px'}}>
+                    <Space align="start" style={{ backgroundColor: '#F3F6F9', borderRadius: '10px', marginRight: '25px' }}>
                         {/* <FaRegUserCircle style={{ color: 'orange', marginTop: '20px' }} /> */}
                         <Image src={logoProfile} className="custom-image-profile" preview={false} />
                         <Space direction="vertical" style={{ padding: "0px", gap: "0px" }}>
-                            <Text strong style={{color: 'rgba(0, 0, 0, 0.5)'}}> {profile?.full_name}</Text>
-                            <Text className="small-text" style={{textAlign: 'left', color: 'rgba(0, 0, 0, 0.5)'}}> {profile?.role?.role_name} </Text>
+                            <Text strong style={{ color: 'rgba(0, 0, 0, 0.5)' }}> {profile?.full_name}</Text>
+                            <Text className="small-text" style={{ textAlign: 'left', color: 'rgba(0, 0, 0, 0.5)' }}> {profile?.role?.role_name} </Text>
                         </Space>
 
                         <Button type="link" style={{ color: 'orange', marginTop: '15px' }} onClick={logout} >

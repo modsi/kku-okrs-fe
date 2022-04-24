@@ -13,7 +13,6 @@ const Homepage = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false)
 
     const checkLogin = async () => {
-        // console.log(form.getFieldValue())
         if (form.getFieldValue('username') && form.getFieldValue('password')) {
             let data = {}
             data.username = form.getFieldValue('username')
@@ -22,16 +21,11 @@ const Homepage = () => {
                 let res = await LoginAction(data)
                 if (res.error === null || res.code === 200) {
                     if (res?.data?.profile?.status === "1") {
-                        let res_sso = await LoginSsoAction(data)
-                        if (res_sso?.statusOK || data.username === 'iamsuper') {
                             setStorage('token', res.data.token)
                             setStorage('profile', res.data.profile)
                             routeChange()
-                        } else {
-                            ErrorModalMassageHtml(res_sso?.error);
-                        }
                     } else {
-                        ErrorModalMassageHtml('Account inactive. Please contact admin !! ');
+                        ErrorModalMassageHtml(res.error.message ?? 'Account inactive. Please contact admin !! ');
                     }
                 } else {
                     ErrorModalMassageHtml(res.error.message ?? 'username or password is incorrect');
@@ -47,7 +41,6 @@ const Homepage = () => {
     }
 
     useEffect(() => {
-        // console.log('check token', getStorage('token'))
         if (getStorage('token')) {
             routeChange()
         }
@@ -76,11 +69,11 @@ const Homepage = () => {
                             <Row>
                                 <Col className='form-login' span={24} style={{ textAlign: "center" }}>
                                     <Form.Item
-                                        label="Email or Username"
+                                        label="Email"
                                         name="username"
-                                        rules={[{ required: true, message: 'Please enter your username!' }]}
+                                        rules={[{ type: 'email', message: 'The input is not valid E-mail!' },{ required: true, message: 'Please enter your Email!' }]}
                                     >
-                                        <Input placeholder="Please enter email or username" />
+                                        <Input placeholder="Please enter email." />
                                     </Form.Item>
                                 </Col>
                                 <Col className='form-login form-login-password' span={24} style={{ textAlign: "center" }}>
