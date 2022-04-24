@@ -1,9 +1,10 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from "react-router-dom";
-import { Card, Row, Col, Button, Typography, Table, Form, Input, Radio, Space, Image, Switch, DatePicker } from 'antd';
+import { Card, Row, Col, Button, Typography, Table, Form, Input, Radio, Space, Image, Switch, DatePicker, Checkbox } from 'antd';
 import logo from "../../../../../assets/images/favicon-96x96.png"
 import { STORE_TEMPLATE, StoreTemplateAction } from "../../../../redux/actions/StoreSearchAction"
+import { v4 as uuidv4 } from "uuid";
 
 const { Text, Link } = Typography;
 const { RangePicker } = DatePicker;
@@ -49,15 +50,16 @@ const RangeDateField = ({ form }) => {
 
     const onSubmit = async () => {
         // console.log(form.getFieldValue())    
-        if (form.getFieldValue('label') && form.getFieldValue('labelPosition') && form.getFieldValue('size')) {
+        if (form.getFieldValue('label') && form.getFieldValue('size') && form.getFieldValue('key')) {
             let store = storeTemplate?.components ?? []
             let components = store
-            let max = store ? Math.max(...store.map(({ index }) => index)) : 0;
+            let max = store.length > 0 ? Math.max(...store.map(({ index }) => index)) : 0;
             let obj = {
+                id: uuidv4(),
                 index: max + 1,
-                labelPosition: form.getFieldValue('labelPosition'),
+                labelPosition: "vertical",
                 type: 'range_date',
-                key: 'input_' + (max+1),
+                key: form.getFieldValue('key'),
                 label: form.getFieldValue('label'),
                 size: form.getFieldValue('size') === 2 ? 'long' : 'short',
                 align: "left"
@@ -68,6 +70,7 @@ const RangeDateField = ({ form }) => {
             setSize(2)
             setFormLayout('vertical')
             setTemplate({ ...storeTemplate, components: components })
+            form2.resetFields();
         } else {
             form.validateFields()
         }
@@ -94,7 +97,16 @@ const RangeDateField = ({ form }) => {
                                             <Input placeholder="Label Text Field" onChange={(e) => { setTitle(e.target.value) }} />
                                         </Form.Item>
                                     </Col>
-                                    <Col xs={24} sm={24} md={24} lg={12} xl={12}>
+                                    <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                                        <Form.Item
+                                            label="Key"
+                                            name="key"
+                                            rules={[{ required: true, message: 'Please input Key!' }]}
+                                        >
+                                            <Input onChange={(e) => { form.setFieldsValue({ ['key']: e.target.value }); }} />
+                                        </Form.Item>
+                                    </Col>
+                                    {/* <Col xs={24} sm={24} md={24} lg={12} xl={12}>
                                         <Form.Item
                                             label={"Label Position"} name={"labelPosition"} rules={[{ required: true, message: 'Please input Label Position!' }]}>
                                             <Radio.Group onChange={onFormLayoutChange} value={formLayout} >
@@ -102,7 +114,7 @@ const RangeDateField = ({ form }) => {
                                                 <Radio value="horizontal">Left</Radio>
                                             </Radio.Group>
                                         </Form.Item>
-                                    </Col>
+                                    </Col> */}
                                     <Col xs={24} sm={24} md={24} lg={12} xl={12}>
                                         <Form.Item
                                             label={"Size"} name={"size"} rules={[{ required: true, message: 'Please input Size!' }]}>
@@ -110,6 +122,14 @@ const RangeDateField = ({ form }) => {
                                                 <Radio value={1}>short</Radio>
                                                 <Radio value={2}>long</Radio>
                                             </Radio.Group>
+                                        </Form.Item>
+                                    </Col>
+                                    <Col xs={24} sm={24} md={24} lg={12} xl={12}>
+                                        <Form.Item
+                                            name={"isSubTitle"}>
+                                            <Checkbox onChange={(e) => { form.setFieldsValue({ ['isSubTitle']: e.target.checked }); }}>
+                                                Is sub Title
+                                            </Checkbox>
                                         </Form.Item>
                                     </Col>
                                 </Row>

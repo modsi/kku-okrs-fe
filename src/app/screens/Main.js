@@ -34,12 +34,12 @@ const Main = () => {
 
     useEffect(() => {
         // console.log('check token', getStorage('token'))        
-        if (!getStorage('token')) {
-            routeChange()
-        } else {
+        // if (!getStorage('token')) {
+        //     routeChange()
+        // } else {
             setProfile(getStorage('profile'))
             setContent(<User />);
-        }
+        // }
     }, [])
 
     const onClickMenu = value => {

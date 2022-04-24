@@ -19,6 +19,7 @@ import DayField from './field/DayField'
 import DateTimeField from './field/DateTimeField'
 import RangeDateField from './field/RangeDateField'
 import UploadField from './field/UploadField'
+import EmailField from './field/EmailField'
 import { LIST_TYPE_TEPM, LIST_FIELD_TEPM, ListFieldMasterTemplateAction } from '../../../redux/actions/ListMasterAction'
 import SetOptionsForSelect, { SetOptionsForSelectSetLable } from '../../items/SetOptionsForSelect'
 import { ConfirmModalEditText, SuccessModal, ErrorModalMassageHtml } from "../../items/Modal";
@@ -126,6 +127,12 @@ const ConfigTemplate = ({ id }) => {
         setFieldContent(<UploadField form={formField} />)
     }
 
+    const setEmailField = () => {
+        setIsModalAddEditVisible(true);
+        setAddEditTitle("Email Field Component")
+        setFieldContent(<EmailField form={formField} />)
+    }
+
     useEffect(() => {
         handleClickCancel()
     }, [storeTemplate])
@@ -144,24 +151,6 @@ const ConfigTemplate = ({ id }) => {
     async function handleListMaster(typeId) {
         dispatch(await ListFieldMasterTemplateAction(typeId))
     }
-
-    useEffect(() => {
-        if (listField) {
-            let components = []
-            // console.log('listField >> ', listField)
-            // listField.sort((a, b) => parseInt(a.priority ?? 0) > parseInt(b.priority ?? 0) ? 1 : -1).map(item => {
-            //     // console.log('item >> ', item)
-            //     let obj = {
-            //         required: parseInt(item.required ?? 0),
-            //         index: item.priority,
-            //         ...item.properties
-            //     }
-            //     components.push(obj)
-            // })
-            // setTemplate({ ...storeTemplate, components: components })
-            // setTemplate({ ...obj, templateName: form.getFieldValue('templateName') ?? null })
-        }
-    }, [listField])
 
     const saveTemplate = () => {
         if (form.getFieldValue('templateName') && form.getFieldValue('templateType')) {
@@ -249,9 +238,7 @@ const ConfigTemplate = ({ id }) => {
                             <Button type="primary" style={{ width: '100%', textAlign: "left", borderRadius: '0px'}} onClick={setCheckboxField}><FaCheckSquare style={{ paddingRight: '3px', marginRight: '5px' }} />  Checkbox</Button>
                             <Button type="primary" style={{ width: '100%', textAlign: "left", borderRadius: '0px'}} onClick={setSelectField}><FaList style={{ paddingRight: '3px', marginRight: '5px' }} />  Select</Button>
                             <Button type="primary" style={{ width: '100%', textAlign: "left", borderRadius: '0px'}} onClick={setRadioField}><FaRecordVinyl style={{ paddingRight: '3px', marginRight: '5px' }} />  Radio</Button>
-                            <Button type="primary" style={{ width: '100%', textAlign: "left", borderRadius: '0px'}}><FaMailBulk style={{ paddingRight: '3px', marginRight: '5px' }} />  Email</Button>
-                            <Button type="primary" style={{ width: '100%', textAlign: "left", borderRadius: '0px'}}><FaLink style={{ paddingRight: '3px', marginRight: '5px' }} />  Url</Button>
-                            <Button type="primary" style={{ width: '100%', textAlign: "left", borderRadius: '0px'}}><FaPhoneAlt style={{ paddingRight: '3px', marginRight: '5px' }} />  Phone</Button>
+                            {/* <Button type="primary" style={{ width: '100%', textAlign: "left", borderRadius: '0px'}} onClick={setEmailField}><FaMailBulk style={{ paddingRight: '3px', marginRight: '5px' }} />  Email</Button> */}
                             <Button type="primary" style={{ width: '100%', textAlign: "left", borderRadius: '0px'}} onClick={setDayField}><FaCalendarDay style={{ paddingRight: '3px', marginRight: '5px' }} />  Day</Button>
                             <Button type="primary" style={{ width: '100%', textAlign: "left", borderRadius: '0px'}} onClick={setDateTimeField}><FaCalendarAlt style={{ paddingRight: '3px', marginRight: '5px' }} />  Date/Time</Button>
                             <Button type="primary" style={{ width: '100%', textAlign: "left", borderRadius: '0px'}} onClick={setRangeDateField}><FaCalendarAlt style={{ paddingRight: '3px', marginRight: '5px' }} />  Range Date</Button>

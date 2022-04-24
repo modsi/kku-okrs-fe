@@ -5,6 +5,7 @@ import { Card, Row, Col, Button, Typography, Table, Form, Input, Radio, Space, I
 import logo from "../../../../../assets/images/favicon-96x96.png"
 import { STORE_TEMPLATE, StoreTemplateAction } from "../../../../redux/actions/StoreSearchAction"
 import { PlusOutlined, MinusCircleOutlined } from "@ant-design/icons";
+import { v4 as uuidv4 } from "uuid";
 
 const { Text, Link } = Typography;
 const CheckboxField = ({ form }) => {
@@ -15,7 +16,7 @@ const CheckboxField = ({ form }) => {
     const [required, setRequired] = useState(false);
     const [size, setSize] = useState(2);
     const [max, setMax] = useState(null);
-    const [options, setOptions] = useState([{ index: 1, label: 'A', value: 'A' }]);
+    const [options, setOptions] = useState([{ index: 1, label: '', value: '' }]);
     const [formLayout, setFormLayout] = useState('vertical');
     const [listField, setListField] = useState([]);
 
@@ -51,27 +52,29 @@ const CheckboxField = ({ form }) => {
 
     const onSubmit = async () => {
         // console.log(form.getFieldValue())    
-        if (form.getFieldValue('label') && form.getFieldValue('labelPosition') && form.getFieldValue('size')) {
+        if (form.getFieldValue('label') && form.getFieldValue('key')  && options.length > 0) {
             let store = storeTemplate?.components ?? []
             let components = store
-            let max = store ? Math.max(...store.map(({ index }) => index)) : 0;
+            let max = store.length > 0 ? Math.max(...store.map(({ index }) => index)) : 0;
             let obj = {
+                id: uuidv4(),
                 index: max + 1,
-                labelPosition: form.getFieldValue('labelPosition'),
+                labelPosition: "vertical",
                 type: 'checkbox',
-                key: 'input_' + (max+1),
+                key: form.getFieldValue('key'),
                 label: form.getFieldValue('label'),
-                size: form.getFieldValue('size') === 2 ? 'long' : 'short',
+                size: 'long',
                 options: options,
                 align: "left"
             }
             components.push(obj)
             console.log(components)
             setTitle('Label Text Field')
-            setOptions([{ index: 1, label: 'A', value: 'A' }])
+            setOptions([{ index: 1, label: '', value: '' }])
             setSize(2)
             setFormLayout('vertical')
             setTemplate({ ...storeTemplate, components: components })
+            form2.resetFields();
         } else {
             form.validateFields()
         }
@@ -82,11 +85,12 @@ const CheckboxField = ({ form }) => {
     };
 
     const add = () => {
-        let max = Math.max(...options.map(({ index }) => index));
-        setOptions([...options, { index: max + 1, label: 'A', value: 'A' }])
+        let max = options && options.length > 0 ? Math.max(...options.map(({ index }) => index)) : 0;
+        setOptions([...options, { index: max + 1, label: '', value: '' }])
     };
 
     const remove = (index) => {
+        form.setFieldsValue({["label" + index]: null , ["value" + index]: null});
         let store = [...options?.filter((item) => {
             if (item.index !== index) {
                 return (
@@ -102,12 +106,20 @@ const CheckboxField = ({ form }) => {
     }, [options])
 
     const updateOption = (inx, type, e) => {
-        // console.log('updateOption >>', index, type, e)
+        console.log('updateOption >>', inx, type, e)
         let op = options.find(({ index }) => index === inx)
         if (type === "label") {
             op.label = e.target.value
+            form.setFieldsValue({["label" + op.index]: e.target.value});
         } else {
-            op.value = e.target.value
+            let op2 = options.find(({ value }) => value === e.target.value)
+            if (!op2 || op2.index === op.index) {
+                op.value = e.target.value
+                form.setFieldsValue({ ["value" + op.index]: e.target.value });
+            } else {
+                op.value = null
+                form.setFieldsValue({ ["value" + op.index]: null });
+            }
         }
         let store = [...options?.filter((item) => {
             if (item.index !== inx) {
@@ -118,10 +130,12 @@ const CheckboxField = ({ form }) => {
         })]
         setOptions([ ...store, op ])
     };
+    
 
     const DynamicFieldSet = () => {
         let listField = []
-        // console.log('options >>', options)
+        console.log('DynamicFieldSet options >>', options)
+        options?.sort((a, b) => (a.index > b.index) ? 1 : -1)
         options.map((item, index) => {
             let field = (
                 <>
@@ -168,7 +182,16 @@ const CheckboxField = ({ form }) => {
                                             <Input placeholder="Label Text Field" onChange={(e) => { setTitle(e.target.value) }} />
                                         </Form.Item>
                                     </Col>
-                                    <Col xs={24} sm={24} md={24} lg={12} xl={12}>
+                                    <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                                        <Form.Item
+                                            label="Key"
+                                            name="key"
+                                            rules={[{ required: true, message: 'Please input Key!' }]}
+                                        >
+                                            <Input onChange={(e) => { form.setFieldsValue({['key']: e.target.value });  }} />
+                                        </Form.Item>
+                                    </Col>
+                                    {/* <Col xs={24} sm={24} md={24} lg={12} xl={12}>
                                         <Form.Item
                                             label={"Label Position"} name={"labelPosition"} rules={[{ required: true, message: 'Please input Label Position!' }]}>
                                             <Radio.Group onChange={onFormLayoutChange} value={formLayout} >
@@ -176,8 +199,8 @@ const CheckboxField = ({ form }) => {
                                                 <Radio value="horizontal">Left</Radio>
                                             </Radio.Group>
                                         </Form.Item>
-                                    </Col>
-                                    <Col xs={24} sm={24} md={24} lg={12} xl={12}>
+                                    </Col> */}
+                                    {/* <Col xs={24} sm={24} md={24} lg={12} xl={12}>
                                         <Form.Item
                                             label={"Size"} name={"size"} rules={[{ required: true, message: 'Please input Size!' }]}>
                                             <Radio.Group onChange={(e) => { setSize(e.target.value) }}>
@@ -185,7 +208,7 @@ const CheckboxField = ({ form }) => {
                                                 <Radio value={2}>long</Radio>
                                             </Radio.Group>
                                         </Form.Item>
-                                    </Col>
+                                    </Col> */}
                                     <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                                         <Form.Item
                                             label={"Options "} name={"options"}>
@@ -221,7 +244,7 @@ const CheckboxField = ({ form }) => {
                                                 <Form.Item
                                                     label={title}
                                                 >
-                                                    <Checkbox
+                                                    <Checkbox.Group
                                                         options={options}
                                                     />
                                                 </Form.Item>

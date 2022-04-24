@@ -7,7 +7,8 @@ import { DATE_FULL, DATE_NORMAL } from '../../../utils/Elements'
 import moment from 'moment';
 import logo from "../../../../assets/images/favicon-96x96.png"
 import { STORE_TEMPLATE, StoreTemplateAction } from "../../../redux/actions/StoreSearchAction"
-
+import Draggable from "react-draggable";
+import CardDraggable from '../../items/CardDraggable'
 
 const { Text, Link } = Typography;
 const { RangePicker } = DatePicker;
@@ -32,9 +33,10 @@ const PreviewTemplate = () => {
         setLayoutTemplate()
     }, [storeTemplate])
 
-    const remove = (index) => {
+    const remove = (id) => {
+        console.log('remove ', id);
         let store = [...storeTemplate?.components?.filter((item) => {
-            if (item.index !== index) {
+            if (item.id !== id) {
                 return (
                     true
                 )
@@ -65,21 +67,62 @@ const PreviewTemplate = () => {
         },
     };
 
-    const setLayoutTemplate = () => {
-        let listField = []
-        storeTemplate?.components?.map((item) => {
-            let size = item.size === 'long' ? 23 : 11
-            const formItemLayout =
-                item.labelPosition === 'horizontal'
-                    ? {
-                        labelCol: {
-                            span: 6,
-                        },
-                        wrapperCol: {
-                            span: 18,
-                        },
-                        labelAlign: "right"
+    const eventHandler = (e, data) => {
+        // console.log('Event Type', e.type);
+        // console.log({ e, data });
+        // console.log(data?.node.id);
+        console.log(data?.y);
+        if (data?.y !== 0) {
+            let c = Math.round(data?.y / 100)
+            // console.log(c);
+            let tmp = [...storeTemplate?.components]
+            // console.log(tmp);
+            let tmpO = tmp?.find(item => item.id === data?.node.id);
+            let newIndex = tmpO.index + c
+            newIndex = (newIndex <= 0 ? 1 : (newIndex > tmp.length ? tmp.length : newIndex))
+            // console.log(newIndex);
+            let components = []
+            // console.log('eventHandler ', tmpO.id);
+            if (tmp) {
+                tmp.sort((a, b) => (a.index > b.index) ? 1 : -1)
+                let inx = 1;
+                tmpO.index = newIndex;
+                components.push(tmpO);
+                tmp?.map((i) => {
+                    if (newIndex === inx) {
+                        inx = inx + 1;
                     }
+                    if (i.id !== tmpO.id) {
+                        i.index = inx;
+                        components.push(i);
+                        inx = inx + 1;
+                    }
+                })
+            }
+            setTemplate({ ...storeTemplate, components: components })
+        }
+    }
+
+    const setLayoutTemplate = () => {
+        console.log('start setLayoutTemplate')
+        let listField = []
+        let components = []
+        if (storeTemplate?.components) {
+            components = [...storeTemplate?.components]
+            components.sort((a, b) => (a.index > b.index) ? 1 : -1)
+        }
+        components?.map((currentItem) => {
+            let size = currentItem.size === 'long' ? 23 : 11
+            const formItemLayout =
+                currentItem.isSubTitle ? {
+                    labelCol: {
+                        span: 20,
+                    },
+                    wrapperCol: {
+                        span: 20,
+                    },
+                    style: { paddingLeft: '50px' }
+                }
                     : {
                         labelCol: {
                             span: 24,
@@ -90,74 +133,86 @@ const PreviewTemplate = () => {
                     };
             let field = (
                 <>
-                    <Col xs={24} sm={24} md={size} lg={size} xl={size} style={{ textAlign: item.align ?? "left" }}>
-                        <Row>
-                            <Col xs={24} sm={24} md={2} lg={2} xl={2} >
-                                <Button
-                                    type="link"
-                                    disabled={item.required === 1 ? true : false}
-                                    style={{ padding: '0px', color: item.required === 1 ? 'gray' :'red' }}
-                                    onClick={() =>
-                                        remove(item.index)
-                                    }
-                                >
-                                    <DeleteFilled />
-                                </Button>
-                            </Col>
-                            <Col xs={24} sm={24} md={22} lg={22} xl={22} >
-                                <Form.Item
-                                    className="template-text"
-                                    {...formItemLayout}
-                                    layout={item.labelPosition ?? 'vertical'}
-                                    label={item.label}
-                                    name={item.key}
-                                    rules={[{ required: item.required ? true : false, message: 'Please input ' + item?.label }]}
-                                >
-                                    {/* <Space direction="horizontal" style={{ width: '100%' }}> */}
-                                    {item.type === 'title' ?
-                                        (<Text strong>{item?.value}</Text>)
-                                        : item.type === 'textArea' ?
-                                            (<Input.TextArea showCount maxLength={item.maxLength} />)
-                                            : item.type === 'inputNumber' ?
-                                                (<InputNumber min={item.min} max={item.max} />)
-                                                : item.type === 'checkbox' ?
-                                                    (<Checkbox.Group options={item.options} />)
-                                                    : item.type === 'select' ?
-                                                        (<Select
-                                                            mode={item.mode}
-                                                            placeholder="Please select"
-                                                            style={{ width: '100%' }}
-                                                            options={item.options}
-                                                        />)
-                                                        : item.type === 'radio' ?
-                                                            (<Radio.Group
-                                                                options={item.options}
-                                                            />)
-                                                            : item.type === 'day' ?
-                                                                (<DatePicker />)
-                                                                : item.type === 'date_time' ?
-                                                                    (<DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />)
-                                                                    : item.type === 'range_date' ?
-                                                                        (<RangePicker />)
-                                                                        : item.type === 'upload' ?
-                                                                            (<Upload {...propsUpload}>
-                                                                                <Button icon={<UploadOutlined />}>Click to Upload</Button>
-                                                                            </Upload>)
-                                                                            : (<Input />)
-                                    }
-                                    {/* </Space> */}
-                                </Form.Item>
-                            </Col>
-                        </Row>
-                    </Col >
+                    <Col xs={24} sm={24} md={size} lg={size} xl={size} style={{ textAlign: currentItem.align ?? "left" }}>
+
+                        <Draggable
+                            axis='y'
+                            position={{ x: 0, y: 0 }}
+                            onStop={eventHandler}
+                        >
+                            <Card id={currentItem.id} >
+                                <Card.Grid style={{ width: '100%' }}>
+                                    <Row>
+                                        <Col xs={24} sm={24} md={2} lg={2} xl={2} >
+                                            <Button
+                                                type="link"
+                                                disabled={currentItem.required === 1 ? true : false}
+                                                style={{ padding: '0px', color: currentItem.required === 1 ? 'gray' : 'red' }}
+                                                onClick={() =>
+                                                    remove(currentItem.id)
+                                                }
+                                            >
+                                                <DeleteFilled />
+                                            </Button>
+                                        </Col>
+                                        <Col xs={24} sm={24} md={22} lg={22} xl={22} >
+                                            <Form.Item
+                                                className="template-text"
+                                                labelAlign='left'
+                                                labelWrap='true'
+                                                {...formItemLayout}
+                                                layout={currentItem.labelPosition ?? 'vertical'}
+                                                label={currentItem.label}
+                                                name={currentItem.key}
+                                                rules={[{ required: currentItem.required ? true : false, message: 'Please input ' + currentItem?.label }]}
+                                            >
+                                                {currentItem.type === 'title' ?
+                                                    (<Text strong>{currentItem?.value}</Text>)
+                                                    : currentItem.type === 'textArea' ?
+                                                        (<Input.TextArea showCount maxLength={currentItem.maxLength} />)
+                                                        : currentItem.type === 'inputNumber' ?
+                                                            (<InputNumber min={currentItem.min} max={currentItem.max} />)
+                                                            : currentItem.type === 'checkbox' ?
+                                                                (<Checkbox.Group options={currentItem.options} />)
+                                                                : currentItem.type === 'select' ?
+                                                                    (<Select
+                                                                        mode={currentItem.mode}
+                                                                        placeholder="Please select"
+                                                                        style={{ width: '100%' }}
+                                                                        options={currentItem.options}
+                                                                    />)
+                                                                    : currentItem.type === 'radio' ?
+                                                                        (<Radio.Group
+                                                                            options={currentItem.options}
+                                                                        />)
+                                                                        : currentItem.type === 'day' ?
+                                                                            (<DatePicker />)
+                                                                            : currentItem.type === 'date_time' ?
+                                                                                (<DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />)
+                                                                                : currentItem.type === 'range_date' ?
+                                                                                    (<RangePicker />)
+                                                                                    : currentItem.type === 'upload' ?
+                                                                                        (<Upload {...propsUpload}>
+                                                                                            <Button icon={<UploadOutlined />}>Click to Upload</Button>
+                                                                                        </Upload>)
+                                                                                        // : currentItem.type === 'email' ?
+                                                                                            // (<Input placeholder="Please enter email." onChange={(e) => form.validateFields()} />)
+                                                                                            : (<Input />)
+                                                }
+                                            </Form.Item>
+
+                                        </Col>
+                                    </Row>
+                                </Card.Grid>
+                            </Card>
+                        </Draggable>
+                    </Col>
                 </>
             )
             listField.push(field)
         })
-        // console.log('listField >> ', listField)
         setListField(listField)
     }
-
     return (
         <>
             <Card title={""} className="rounded" >

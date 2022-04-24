@@ -6,7 +6,7 @@ const RemoveDuplicateArray = (data = [], key = uuid()) => {
     removeArrDup = data.filter((obj, index, arr) => {
         return arr
         .map(mapObj => mapObj[key])
-        .indexOf(obj[key]) == index;
+        .indexOf(obj[key]) === index;
     })
     
     return removeArrDup

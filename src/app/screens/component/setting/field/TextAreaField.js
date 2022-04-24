@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Card, Row, Col, Button, Typography, Table, Form, Input, Radio, Space, Image, Switch, InputNumber } from 'antd';
 import logo from "../../../../../assets/images/favicon-96x96.png"
 import { STORE_TEMPLATE, StoreTemplateAction } from "../../../../redux/actions/StoreSearchAction"
+import { v4 as uuidv4 } from "uuid";
 
 const { Text, Link } = Typography;
 const TextAreaField = ({ form }) => {
@@ -14,7 +15,7 @@ const TextAreaField = ({ form }) => {
     const [required, setRequired] = useState(false);
     const [size, setSize] = useState(2);
     const [maxLength, setMaxLength] = useState(100);
-    const [formLayout, setFormLayout] = useState('horizontal');
+    const [formLayout, setFormLayout] = useState('vertical');
 
     const formItemLayout =
         formLayout === 'horizontal'
@@ -48,16 +49,17 @@ const TextAreaField = ({ form }) => {
 
     const onSubmit = async () => {
         // console.log(form.getFieldValue())    
-        if (form.getFieldValue('label') && form.getFieldValue('labelPosition') && form.getFieldValue('size') && form.getFieldValue('maxLength')) {
+        if (form.getFieldValue('label') && form.getFieldValue('size')  && form.getFieldValue('key')) {
             let store = storeTemplate?.components ?? []
             let components = store
             // console.log(store)
-            let max = store ? Math.max(...store.map(({ index }) => index)) : 0;
+            let max = store.length > 0 ? Math.max(...store.map(({ index }) => index)) : 0;
             let obj = {
+                id: uuidv4(),
                 index: max + 1,
-                labelPosition: form.getFieldValue('labelPosition'),
+                labelPosition: "vertical",
                 type: 'textArea',
-                key: 'input_' + (max+1),
+                key: form.getFieldValue('key'),
                 label: form.getFieldValue('label'),
                 size: form.getFieldValue('size') === 2 ? 'long' : 'short',
                 maxLength: maxLength,
@@ -68,8 +70,9 @@ const TextAreaField = ({ form }) => {
             setTitle('Label Text Field')
             setMaxLength(100)
             setSize(2)
-            setFormLayout('horizontal')
+            setFormLayout('vertical')
             setTemplate({ ...storeTemplate, components: components })
+            form2.resetFields();
         } else {
             form.validateFields()
         }
@@ -96,7 +99,16 @@ const TextAreaField = ({ form }) => {
                                             <Input placeholder="Label Text Field" onChange={(e) => { setTitle(e.target.value) }} />
                                         </Form.Item>
                                     </Col>
-                                    <Col xs={24} sm={24} md={24} lg={8} xl={8}>
+                                    <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                                        <Form.Item
+                                            label="Key"
+                                            name="key"
+                                            rules={[{ required: true, message: 'Please input Key!' }]}
+                                        >
+                                            <Input onChange={(e) => { form.setFieldsValue({['key']: e.target.value });  }} />
+                                        </Form.Item>
+                                    </Col>
+                                    {/* <Col xs={24} sm={24} md={24} lg={8} xl={8}>
                                         <Form.Item
                                             label={"Label Position"} name={"labelPosition"} rules={[{ required: true, message: 'Please input Label Position!' }]}>
                                             <Radio.Group onChange={onFormLayoutChange} value={formLayout} >
@@ -104,7 +116,7 @@ const TextAreaField = ({ form }) => {
                                                 <Radio value="horizontal">Left</Radio>
                                             </Radio.Group>
                                         </Form.Item>
-                                    </Col>
+                                    </Col> */}
                                     <Col xs={24} sm={24} md={24} lg={8} xl={8}>
                                         <Form.Item
                                             label={"Size"} name={"size"} rules={[{ required: true, message: 'Please input Size!' }]}>

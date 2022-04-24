@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Card, Row, Col, Button, Typography, Table, Form, Input, Radio, Space, Image } from 'antd';
 import logo from "../../../../../assets/images/favicon-96x96.png"
 import { STORE_TEMPLATE, StoreTemplateAction } from "../../../../redux/actions/StoreSearchAction"
+import { v4 as uuidv4 } from "uuid";
 
 const { Text, Link } = Typography;
 const TitleField = ({ form }) => {
@@ -26,8 +27,9 @@ const TitleField = ({ form }) => {
         if (form.getFieldValue('label')) {
             let store = storeTemplate?.components ?? []
             let components = store
-            let max = store ? Math.max(...store.map(({ index }) => index)) : 0;
+            let max = store.length > 0 ? Math.max(...store.map(({ index }) => index)) : 0;
             let obj = {
+                id: uuidv4(),
                 index: max + 1,
                 type: 'title',
                 value: form.getFieldValue('label'),

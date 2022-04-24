@@ -1,13 +1,13 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from "react-router-dom";
-import { Card, Row, Col, Button, Typography, Table, Form, Input, Radio, Space, Image, Switch, DatePicker, Checkbox } from 'antd';
+import { Card, Row, Col, Button, Typography, Table, Form, Input, Radio, Space, Image, Switch, Checkbox } from 'antd';
 import logo from "../../../../../assets/images/favicon-96x96.png"
 import { STORE_TEMPLATE, StoreTemplateAction } from "../../../../redux/actions/StoreSearchAction"
 import { v4 as uuidv4 } from "uuid";
 
 const { Text, Link } = Typography;
-const DayField = ({ form }) => {
+const EmailField = ({ form }) => {
     const dispatch = useDispatch()
     const [form2] = Form.useForm();
     const storeTemplate = useSelector(state => state?.storeSearchReducer?.[STORE_TEMPLATE])
@@ -19,23 +19,23 @@ const DayField = ({ form }) => {
 
     const formItemLayout =
         formLayout === 'horizontal'
-        ? {
-            labelCol: {
-                span: 8,
-            },
-            wrapperCol: {
-                span: 16,
-            },
-            labelAlign: "left"
-        }
-        : {
-            labelCol: {
-                span: 24,
-            },
-            wrapperCol: {
-                span: 24,
+            ? {
+                labelCol: {
+                    span: 8,
+                },
+                wrapperCol: {
+                    span: 16,
+                },
+                labelAlign: "left"
             }
-        };
+            : {
+                labelCol: {
+                    span: 24,
+                },
+                wrapperCol: {
+                    span: 24,
+                }
+            };
 
     const layout = {
         labelCol: { span: 24 },
@@ -61,12 +61,12 @@ const DayField = ({ form }) => {
                 id: uuidv4(),
                 index: max + 1,
                 labelPosition: "vertical",
-                type: 'day',
+                type: 'email',
                 key: form.getFieldValue('key'),
                 label: form.getFieldValue('label'),
                 size: form.getFieldValue('size') === 2 ? 'long' : 'short',
                 isSubTitle: form.getFieldValue('isSubTitle') ? true : false,
-                align: "left"
+                align: "left",
             }
             components.push(obj)
             console.log(components)
@@ -107,7 +107,7 @@ const DayField = ({ form }) => {
                                             name="key"
                                             rules={[{ required: true, message: 'Please input Key!' }]}
                                         >
-                                            <Input onChange={(e) => { form.setFieldsValue({['key']: e.target.value });  }} />
+                                            <Input onChange={(e) => { form.setFieldsValue({ ['key']: e.target.value }); }} />
                                         </Form.Item>
                                     </Col>
                                     {/* <Col xs={24} sm={24} md={24} lg={12} xl={12}>
@@ -131,7 +131,7 @@ const DayField = ({ form }) => {
                                     <Col xs={24} sm={24} md={24} lg={12} xl={12}>
                                         <Form.Item
                                             name={"isSubTitle"}>
-                                            <Checkbox onChange={(e) => { form.setFieldsValue({['isSubTitle']: e.target.checked });   }}>
+                                            <Checkbox onChange={(e) => { form.setFieldsValue({ ['isSubTitle']: e.target.checked }); }}>
                                                 Is sub Title
                                             </Checkbox>
                                         </Form.Item>
@@ -145,7 +145,8 @@ const DayField = ({ form }) => {
                                     <Row>
                                         <Col xs={size === 1 ? 12 : 24} sm={size === 1 ? 12 : 24} md={size === 1 ? 12 : 24} lg={size === 1 ? 12 : 24} xl={size === 1 ? 12 : 24}>
 
-                                            <Form form={form2}
+                                            <Form
+                                                form={form2}
                                                 className="template-text"
                                                 initialValues={{
                                                     layout: formLayout,
@@ -154,10 +155,10 @@ const DayField = ({ form }) => {
                                                 layout={formLayout} >
                                                 <Form.Item
                                                     label={title}
-                                                // name="key"
-                                                // rules={[{ required: required ? true : false, message: 'Please input ' + title }]}
+                                                    name="preview"
+                                                    rules={[{ type: 'email', message: 'The input is not valid E-mail!' }]}
                                                 >
-                                                     <DatePicker />
+                                                    <Input placeholder="Please enter email." onChange={(e) => form2.validateFields()} />
 
                                                 </Form.Item>
                                             </Form>
@@ -180,4 +181,4 @@ const DayField = ({ form }) => {
         </>
     )
 }
-export default DayField;
+export default EmailField;
