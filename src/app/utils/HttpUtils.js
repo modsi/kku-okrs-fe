@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { setStorage, getStorage } from "../screens/state/localStorage";
+import { clearStorege, getStorage } from "../screens/state/localStorage";
 import { ErrorModalMassage } from "../screens/items/Modal";
 export const httpUtils = {
 	post,
@@ -64,6 +64,7 @@ function patch(url, payload = {}, headersOption, responseType = 'application/jso
 		}
 		return call();
 	} catch (err) {
+		clearStorege('token')
 		console.error(err);
 		throw err;
 	}
@@ -89,6 +90,7 @@ function post(url, payload = {}, headersOption, responseType = 'application/json
 		}
 		return call();
 	} catch (err) {
+		clearStorege('token')
 		console.error(err);
 		throw err;
 	}
@@ -116,6 +118,7 @@ function get(url, payload = {}, headersOption) {
 		}
 		return call();
 	} catch (err) {
+		clearStorege('token')
 		console.error(err);
 		throw err;
 	}

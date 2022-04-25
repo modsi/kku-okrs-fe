@@ -25,6 +25,7 @@ const Main = () => {
     const navigate = useNavigate();
     const [mycontent, setContent] = useState(null)
     const [profile, setProfile] = useState({})
+    const [key, setKey] = useState(['6'])
 
     async function routeChange() {
         clearStorege('token')
@@ -33,17 +34,33 @@ const Main = () => {
     }
 
     useEffect(() => {
-        // console.log('check token', getStorage('token'))        
-        // if (!getStorage('token')) {
-        //     routeChange()
-        // } else {
-            setProfile(getStorage('profile'))
-            setContent(<User />);
-        // }
+        if (!getStorage('profile')) {
+            routeChange()
+        } else {
+            let p = getStorage('profile')
+            setProfile(p)
+            if (p?.role?.priority < 2) {
+                setKey(['6']);
+                setContent(<User />);
+            } else if (p?.role?.priority < 4) {
+                setKey(['3']);
+                setContent(<Admin />);
+            } else {
+                setKey(['1']);
+                setContent(<Dashboard />);
+            }
+        }
     }, [])
+
+    useEffect(() => {
+        if (!getStorage('token')) {
+            routeChange()
+        }
+    }, [getStorage('token')])
 
     const onClickMenu = value => {
         // console.log(value);
+        setKey([value.key])
         if (value.key === '1') {
             setContent(<Dashboard />);
         } else if (value.key === '2') {
@@ -99,7 +116,7 @@ const Main = () => {
                         </Space>
                     </Space>
                 </div>
-                <Menu theme="light" mode="inline" defaultSelectedKeys={['6']} onClick={onClickMenu}>
+                <Menu theme="light" mode="inline" selectedKeys={key} onClick={onClickMenu}>
                     <Menu.ItemGroup title='General'>
                         <Menu.Item key="1" icon={<AppstoreOutlined />} >
                             Dashboard 1 - แผนปฏิบัติการ
