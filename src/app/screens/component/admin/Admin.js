@@ -63,210 +63,232 @@ const Admin = () => {
     }
 
     const onSubmit = async () => {
-        if (form.getFieldValue('template')) {
-            let obj = listTemplate.find(template => template.id === form.getFieldValue('template'))
-            let components = obj?.components
-            let col = []
-            let data = {}
-            col.push({
-                title: 'ลำดับ',
-                align: 'center',
-                render: (text, record, index) => ((currentPage - 1) * 10) + index + 1
-            })
-            components.map(component => {
-                // console.log(component)                
-                let c = {}
-                c.title = component.label
-                c.align = 'center'
-                c.dataIndex = component.key
-                data[component.key] = ''
-                col.push(c)
-            })
-            col.push({
-                title: 'Action',
-                align: 'center',
-                fixed: 'right',
-                render: (record) =>
-                    <div className="text-center">
-                        <Button
-                            type="primary"
-                            className="pre-button"
-                            onClick={() => {
-                                setIsModal2(true);
-                                setAddEditTitle('แผนปฏิบัติการ')
-                            }
-                            }
-                        >
-                            <Text className="big6-title">manage</Text>
-                            {/* <EditOutlined /> */}
-                        </Button>
-                        <Button
-                            type="primary"
-                            className={record?.status ? "pre-button" : "nol-button"}
-                            onClick={() =>
-                                handleClickEdit(record)
-                            }
-                        >
-                            <Text className="big6-title">ส่งไปแบบรายงาน</Text>
-                            {/* <EditOutlined /> */}
-                        </Button>
-                    </div>
-            })
-            setColumns(col)
-            setDataSource([...dataSource, data])
-            handleClickCancel()
-        } else {
-            form.validateFields()
-        }
-    }
+      if (form.getFieldValue("template")) {
+        let obj = listTemplate.find(
+          (template) => template.id === form.getFieldValue("template")
+        );
+        let components = obj?.components;
+        let col = [];
+        let data = {};
+        col.push({
+          title: "ลำดับ",
+          align: "center",
+          width: "100px",
+          render: (text, record, index) => (currentPage - 1) * 10 + index + 1,
+        });
+        components.sort((a, b) => (a.index > b.index ? 1 : -1));
+        components.map((component) => {
+          //   console.log(component);
+          let c = {};
+          c.title = component.label;
+          c.align = "center";
+          c.width = "100px";
+          c.dataIndex = component.key;
+          data[component.key] = "";
+          col.push(c);
+        });
+        col.push({
+          title: "Action",
+          align: "center",
+          fixed: "right",
+          render: (record) => (
+            <div className="text-center">
+              <Button
+                type="primary"
+                className="pre-button"
+                onClick={() => {
+                  setIsModal2(true);
+                  setAddEditTitle("แผนปฏิบัติการ");
+                }}
+              >
+                <Text className="big6-title">manage</Text>
+                {/* <EditOutlined /> */}
+              </Button>
+              <Button
+                type="primary"
+                className={record?.status ? "pre-button" : "nol-button"}
+                onClick={() => handleClickEdit(record)}
+              >
+                <Text className="big6-title">ส่งไปแบบรายงาน</Text>
+                {/* <EditOutlined /> */}
+              </Button>
+            </div>
+          ),
+        });
+        setColumns(col);
+        setDataSource([...dataSource, data]);
+        handleClickCancel();
+      } else {
+        form.validateFields();
+      }
+    };
 
     const handleTableChange = (pagination, filters, sorter) => {
-        console.log('pagination >> ', pagination)
-        setCurrentPage(pagination.current)
+      console.log("pagination >> ", pagination);
+      setCurrentPage(pagination.current);
     };
 
     // console.log("listTemplate >> ", listTemplate)
     return (
-        <>
-            <Card title={"Manage Template"} className="rounded" >
-                <Row gutter={24}>
-                    <Col span={24} style={{ textAlign: "right" }} >
-                        <Button
-                            size="large"
-                            type="link"
-                            onClick={newTemplate}
-                            className="ggar-button"
-                        >
-                            <PlusCircleFilled className="big3-title" />
-                        </Button>
-                    </Col >
-                    <Col span={24} style={{ textAlign: "center" }}>
-                        <Table
-                            className='table-user'
-                            rowKey={(record, index) => record.key}
-                            style={{ whiteSpace: 'pre' }}
-                            loading={isLoading}
-                            scroll={{ x: 'max-content' }}
-                            size="small"
-                            bordered={false}
-                            dataSource={dataSource}
-                            onChange={handleTableChange}
-                            pagination={true}
-                            pageSize={10}
-                            columns={columns} />
-                    </Col>
-                </Row >
-            </Card>
+      <>
+        <Card title={"Manage Template"} className="rounded">
+          <Row gutter={24}>
+            <Col span={24} style={{ textAlign: "right" }}>
+              <Button
+                size="large"
+                type="link"
+                onClick={newTemplate}
+                className="ggar-button"
+              >
+                <PlusCircleFilled className="big3-title" />
+              </Button>
+            </Col>
+            <Col span={24} style={{ textAlign: "center" }}>
+              <Table
+                className="table-user"
+                rowKey={(record, index) => record.key}
+                style={{ whiteSpace: "pre" }}
+                loading={isLoading}
+                scroll={{ x: "max-content" }}
+                size="small"
+                bordered={false}
+                dataSource={dataSource}
+                onChange={handleTableChange}
+                pagination={true}
+                pageSize={10}
+                columns={columns}
+              />
+            </Col>
+          </Row>
+        </Card>
 
-            <div>
-                <Modal
-                    className="card-m-tem"
-                    closable={true}
-                    title={addEditTitle}
-                    visible={isModal2}
-                    width={"30%"}
-                    centered={true}
-                    footer={null}
-                    onCancel={handleClickCancel}
+        <div>
+          <Modal
+            className="card-m-tem"
+            closable={true}
+            title={addEditTitle}
+            visible={isModal2}
+            width={"30%"}
+            centered={true}
+            footer={null}
+            onCancel={handleClickCancel}
+          >
+            <Form form={form} {...layout}>
+              <Row>
+                <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                  <Steps progressDot current={1} className="step-dot">
+                    <Step title="" description="" />
+                    <Step title="" description="" />
+                    <Step title="" description="" />
+                    <Step title="" description="" />
+                  </Steps>
+                </Col>
+              </Row>
+              <Row>
+                <Col
+                  className="form-login form-user"
+                  xs={24}
+                  sm={24}
+                  md={24}
+                  lg={24}
+                  xl={24}
                 >
-                    <Form form={form} {...layout} >
-                        <Row>
-                            <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-                                <Steps progressDot current={1} className="step-dot">
-                                    <Step title="" description="" />
-                                    <Step title="" description="" />
-                                    <Step title="" description="" />
-                                    <Step title="" description="" />
-                                </Steps>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col className='form-login form-user' xs={24} sm={24} md={24} lg={24} xl={24}>
-                                <Form.Item name={"y"} label={"1.ปี"}>
-                                    <Input />
-                                </Form.Item>
-                            </Col>
-                        </Row>
-                        <Row gutter={24} className="row-inquiry-customer">
-                            <Col span={24} style={{ textAlign: "center" }}>
-                                <Button
-                                    className='btn-event btn-color-cancel'
-                                    style={{ margin: "0 8px" }}
-                                    onClick={() => {
-                                        handleClickCancel();
-                                    }}
-                                    danger
-                                >
-                                    ยกเลิก
-                                </Button>
-                                <Button
-                                    className='btn-event btn-color-ok'
-                                    type="primary"
-                                    danger
-                                    htmlType="submit"
-                                    onClick={onSubmit}
-                                    loading={isLoading}
-                                >
-                                    ยืนยัน
-                                </Button>
-                            </Col>
-                        </Row>
-                    </Form>
-                </Modal>
-            </div>
+                  <Form.Item name={"y"} label={"1.ปี"} value="test">
+                    <Input />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row gutter={24} className="row-inquiry-customer">
+                <Col span={24} style={{ textAlign: "center" }}>
+                  <Button
+                    className="btn-event btn-color-cancel"
+                    style={{ margin: "0 8px" }}
+                    onClick={() => {
+                      handleClickCancel();
+                    }}
+                    danger
+                  >
+                    ยกเลิก
+                  </Button>
+                  <Button
+                    className="btn-event btn-color-ok"
+                    type="primary"
+                    danger
+                    htmlType="submit"
+                    onClick={onSubmit}
+                    loading={isLoading}
+                  >
+                    ยืนยัน
+                  </Button>
+                </Col>
+              </Row>
+            </Form>
+          </Modal>
+        </div>
 
-            <div>
-                <Modal
-                    className="card-m-tem"
-                    closable={true}
-                    title={addEditTitle}
-                    visible={isModalAddEditVisible}
-                    width={"30%"}
-                    centered={true}
-                    footer={null}
-                    onCancel={handleClickCancel}
+        <div>
+          <Modal
+            className="card-m-tem"
+            closable={true}
+            title={addEditTitle}
+            visible={isModalAddEditVisible}
+            width={"30%"}
+            centered={true}
+            footer={null}
+            onCancel={handleClickCancel}
+          >
+            <Form form={form} {...layout}>
+              <Row>
+                <Col
+                  className="form-login form-user"
+                  xs={24}
+                  sm={24}
+                  md={24}
+                  lg={24}
+                  xl={24}
                 >
-                    <Form form={form} {...layout} >
-                        <Row>
-                            <Col className='form-login form-user' xs={24} sm={24} md={24} lg={24} xl={24}>
-                                <Form.Item name={"template"}>
-                                    <Select
-                                        options={SetOptionsForSelect({ label: 'template_name', value: 'id', data: listTemplate })}
-                                        placeholder="-Template ที่พร้อมใช้งาน-"
-                                        size="middle"
-                                        style={{ width: '100%' }}
-                                    />
-                                </Form.Item>
-                            </Col>
-                        </Row>
-                        <Row gutter={24} className="row-inquiry-customer">
-                            <Col span={24} style={{ textAlign: "center" }}>
-                                <Button
-                                    className='btn-event btn-color-cancel'
-                                    style={{ margin: "0 8px" }}
-                                    onClick={() => {
-                                        handleClickCancel();
-                                    }}
-                                    danger
-                                >
-                                    ยกเลิก
-                                </Button>
-                                <Button
-                                    className='btn-event btn-color-ok'
-                                    type="primary"
-                                    danger
-                                    htmlType="submit"
-                                    onClick={onSubmit}
-                                    loading={isLoading}
-                                >
-                                    ยืนยัน
-                                </Button>
-                            </Col>
-                        </Row>
-                    </Form>
-                </Modal>
-            </div>
-        </>
-    )
+                  <Form.Item name={"template"}>
+                    <Select
+                      options={SetOptionsForSelect({
+                        label: "template_name",
+                        value: "id",
+                        data: listTemplate,
+                      })}
+                      placeholder="-Template ที่พร้อมใช้งาน-"
+                      size="middle"
+                      style={{ width: "100%" }}
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row gutter={24} className="row-inquiry-customer">
+                <Col span={24} style={{ textAlign: "center" }}>
+                  <Button
+                    className="btn-event btn-color-cancel"
+                    style={{ margin: "0 8px" }}
+                    onClick={() => {
+                      handleClickCancel();
+                    }}
+                    danger
+                  >
+                    ยกเลิก
+                  </Button>
+                  <Button
+                    className="btn-event btn-color-ok"
+                    type="primary"
+                    danger
+                    htmlType="submit"
+                    onClick={onSubmit}
+                    loading={isLoading}
+                  >
+                    ยืนยัน
+                  </Button>
+                </Col>
+              </Row>
+            </Form>
+          </Modal>
+        </div>
+      </>
+    );
 }
 export default Admin;
