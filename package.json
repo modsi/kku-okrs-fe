@@ -26,6 +26,7 @@
     "uuid": "^8.3.2",
     "web-vitals": "^2.1.2"
   },
+  "homepage": "https://hsdoa.kku.ac.th/e-Project/kku-okrs-fe/",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
