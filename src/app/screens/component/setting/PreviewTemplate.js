@@ -68,7 +68,7 @@ const PreviewTemplate = () => {
     };
 
     const eventHandler = (e, data) => {
-        // console.log('Event Type', e.type);
+        console.log('Event Type', e.type);
         // console.log({ e, data });
         // console.log(data?.node.id);
         // console.log(data?.y);
@@ -143,16 +143,18 @@ const PreviewTemplate = () => {
                                 <Card.Grid style={{ width: '100%' }}>
                                     <Row>
                                         <Col xs={24} sm={24} md={2} lg={2} xl={2} >
-                                            <Button
-                                                type="link"
-                                                disabled={currentItem.required ? true : false}
-                                                style={{ padding: '0px', color: currentItem.required ? 'gray' : 'red' }}
-                                                onClick={() =>
-                                                    remove(currentItem.id)
-                                                }
-                                            >
-                                                <DeleteFilled />
-                                            </Button>
+                                            {storeTemplate?.templateId ? null :
+                                                <Button
+                                                    type="link"
+                                                    disabled={currentItem.required ? true : false}
+                                                    style={{ padding: '0px', color: currentItem.required ? 'gray' : 'red' }}
+                                                    onClick={() =>
+                                                        remove(currentItem.id)
+                                                    }
+                                                >
+                                                    <DeleteFilled />
+                                                </Button>
+                                            }
                                         </Col>
                                         <Col xs={24} sm={24} md={22} lg={22} xl={22} >
                                             {currentItem.type === 'table' ?
@@ -170,7 +172,7 @@ const PreviewTemplate = () => {
                                                         layout={currentItem.labelPosition ?? 'vertical'}
                                                         label={currentItem.label}
                                                         name={currentItem.key}
-                                                        // rules={[{ required: currentItem.required ? true : false, message: 'Please input ' + currentItem?.label }]}
+                                                    // rules={[{ required: currentItem.required ? true : false, message: 'Please input ' + currentItem?.label }]}
                                                     >
                                                         {currentItem.type === 'textArea' ?
                                                             (<Input.TextArea showCount maxLength={currentItem.maxLength} />)

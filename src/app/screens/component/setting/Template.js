@@ -10,6 +10,7 @@ import { tem1, tem2 } from '../../../../template-mock'
 import SettingTemplate from './SettingTemplate'
 import { ListTypeTemplateAction, LIST_TYPE_TEPM } from '../../../redux/actions/ListMasterAction'
 import { LIST_TEMPLATES, ListTemplateAction } from '../../../redux/actions/TemplateAction'
+import { StoreTemplateAction } from "../../../redux/actions/StoreSearchAction"
 
 const { Text, Link } = Typography;
 const Template = () => {
@@ -80,9 +81,9 @@ const Template = () => {
             render: (_, record) => {
                 return {
                     props: {
-                        style: { color: record?.status === 1 ? 'green' : 'red' }
+                        style: { color: record?.status === "1" ? '#03c703' : 'red' }
                     },
-                    children: record?.status === 1 ? 'พร้อมใช้งาน' : 'ยังไม่พร้อมใช้งาน'
+                    children: record?.status === "1" ? 'พร้อมใช้งาน' : 'ยังไม่พร้อมใช้งาน'
                 };
             }
         },
@@ -92,26 +93,27 @@ const Template = () => {
             align: 'center',
             width: 100,
             render: (record) =>
-                // <div className="text-center">
-                //     <Button
-                //         type="link"
-                //         className="text-danger"
-                //         onClick={() =>
-                //             handleClickEdit(record)
-                //         }
-                //     >
-                //         <FileSearchOutlined />
-                //     </Button>
-                // </div>
                 <div className="text-center">
                     <Button
+                        type="link"
+                        className="text-danger btn-view"
+                        onClick={() =>
+                            handleClickView(record)
+                        }
+                    >
+                        {/* <FileSearchOutlined /> */}
+                        <Text>View</Text>
+                    </Button>
+                    <Button
+                        style={{ marginLeft: '5px' }}
                         type="link"
                         className="text-danger btn-view"
                         onClick={() =>
                             handleClickEdit(record)
                         }
                     >
-                        <Text>view</Text>
+                        <SettingOutlined />
+                        <Text>Permission</Text>
                         {/* <EditOutlined /> */}
                     </Button>
                 </div>
@@ -120,8 +122,27 @@ const Template = () => {
 
     const handleClickEdit = (record) => {
         setShowSettingPage(true)
-        // console.log('record >> ', record);
+        console.log('record >> ', record);
         setData(record)
+    }
+
+    const handleClickView = (record) => {
+        setIsLoading(true)
+        setShowConfigPage(true)
+        let components = []
+        record.component.map((field, index) => {
+            let obj = {
+                id: field.id,
+                index: parseInt(field.priority ?? 1),
+                required: field.required && parseInt(field.required) === 1 ? true : false,
+                key: field.key,
+                label: field.label,
+            }
+            Object.assign(obj, field.properties)
+            components.push(obj)
+        })
+        setTemplate({ components: components, templateId: record.id, templateType: record.type_id, templateName: record.template_name })
+        setIsLoading(false)
     }
 
     const handleTableChange = (pagination, filters, sorter) => {
@@ -134,6 +155,12 @@ const Template = () => {
         listTemplate({ str: "" })
     }, [])
 
+    useEffect(() => {
+        setShowConfigPage(false);
+        setShowSettingPage(false);
+        setTemplate({});
+    }, [dataSource])
+
     async function handleListMaster() {
         dispatch(await ListTypeTemplateAction())
     }
@@ -142,14 +169,23 @@ const Template = () => {
         dispatch(await ListTemplateAction(data))
     }
 
-    console.log(dataSource)
+    // console.log(dataSource)
+
+    async function setTemplate(data) {
+        dispatch(await StoreTemplateAction(data))
+    }
+
+    const seachTemplate = (e) => {
+        listTemplate({ str: e.target.value })
+    }
+
     return (
         <>
             {showConfigPage ? (
                 <>
                     <PageHeader
                         style={{ padding: "0px" }}
-                        onBack={() => setShowConfigPage(false)}
+                        onBack={() => { setShowConfigPage(false); setTemplate({}); }}
                         title="Back"
                     />
                     <ConfigTemplate />
@@ -180,13 +216,8 @@ const Template = () => {
                                 <div style={{ float: 'right' }}>
                                     <Row>
                                         <Col>
-                                            <Input className='form-search' placeholder="Search by template name" size="small" />
+                                            <Input className='form-search' placeholder="Search by template name" size="small" onPressEnter={seachTemplate} />
                                         </Col>
-                                        {/* <Col>
-                                            <Button style={{border: "0px", background: "#F3F6F9", borderTopRightRadius: "10px", borderBottomRightRadius: "10px"}}>
-                                            <SearchOutlined />
-                                            </Button>
-                                        </Col> */}
                                     </Row>
                                 </div>
                             </Col>

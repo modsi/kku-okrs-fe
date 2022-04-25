@@ -55,3 +55,7 @@ export const SaveTemplateService = async (data = {}) => {
 export const GetTemplateService = async(data = {})=>{
     return await get(`${TEMPLATE__URL}/list_template?templateName=${data?.str ?? ''}&limit=${data?.size}&offset=${data?.page}`)
 }
+
+export const UpdateTemplateService = async (data = {}) => {
+    return await post(`${TEMPLATE__URL}/update_component_template`, data)
+}
