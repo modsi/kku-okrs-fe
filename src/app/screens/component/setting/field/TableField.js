@@ -195,91 +195,106 @@ const TableField = ({ form }) => {
     });
 
     return (
-        <>
-            <Row gutter={24}>
-                <Col span={24} style={{ textAlign: "left" }}>
-                    <Form
-                        {...layout}
-                        form={form}
+      <>
+        <Row gutter={24}>
+          <Col span={24} style={{ textAlign: "left" }}>
+            <Form {...layout} form={form}>
+              <Row>
+                <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                  <Form form={form} {...layout}>
+                    <Form.Item
+                      label="Label"
+                      name="label"
+                      rules={[
+                        { required: true, message: "Please input Label!" },
+                      ]}
                     >
-                        <Row>
-                            <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-                                <Form form={form} {...layout} >
-                                    <Form.Item
-                                        label="Label"
-                                        name="label"
-                                        rules={[{ required: true, message: 'Please input Label!' }]}
-                                    >
-                                        <Input onChange={(e) => { setTitle(e.target.value) }} />
-                                    </Form.Item>
-                                </Form>
-                            </Col>
-                            <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-                                <Form.Item
-                                    label="Key"
-                                    name="key"
-                                    rules={[{ required: true, message: 'Please input Key!' }]}
-                                >
-                                    <Input onChange={(e) => { form.setFieldsValue({ ['key']: e.target.value }); }} />
-                                </Form.Item>
-                            </Col>
-                            <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                                <Form.Item
-                                    label={"Columns "} name={"columns"}>
-                                    {listField}
-                                    <Form.Item>
-                                        <Button
-                                            type="dashed"
-                                            onClick={() => add()}
-                                            style={{ width: '60%' }}
-                                            icon={<PlusOutlined />}
-                                        >
-                                            Add Columns
-                                        </Button>
-                                    </Form.Item>
-                                </Form.Item>
-                            </Col>
-                            <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                                <Form.Item
-                                    initialValue={row}
-                                    label="Number of Rows"
-                                    name="rows"
-                                    rules={[{ required: true, message: 'Please input Rows!' }]}
-                                >
-                                    <InputNumber onChange={(value) => { setRow(value) }} />
-                                </Form.Item>
-                            </Col>
-                            <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-                                <Space direction="vertical" style={{ width: '100%' }}>
-                                    <Card title={"Preview"} className="rounded"  >
-                                        <Text strong>{title}</Text>
-                                        <Table
-                                            dataSource={dataSource}
-                                            columns={mergedColumns}
-                                            pagination={false}
-                                            components={{
-                                                body: {
-                                                    cell: EditableCell,
-                                                },
-                                            }}
-                                            bordered
-                                        />
-                                    </Card>
-                                    <Button
-                                        type="primary"
-                                        danger
-                                        htmlType="submit"
-                                        onClick={onSubmit}
-                                    >
-                                        Save
-                                    </Button>
-                                </Space>
-                            </Col>
-                        </Row>
-                    </Form>
+                      <Input
+                        onChange={(e) => {
+                          setTitle(e.target.value);
+                        }}
+                      />
+                    </Form.Item>
+                  </Form>
                 </Col>
-            </Row>
-        </>
-    )
+                <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                  <Form.Item
+                    label="Key"
+                    name="key"
+                    rules={[{ required: true, message: "Please input Key!" }]}
+                  >
+                    <Input
+                      onChange={(e) => {
+                        form.setFieldsValue({ ["key"]: e.target.value });
+                      }}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+                  <Form.Item label={"Columns "} name={"columns"}>
+                    {listField}
+                    <Form.Item>
+                      <Button
+                        type="dashed"
+                        onClick={() => add()}
+                        style={{ width: "60%" }}
+                        icon={<PlusOutlined />}
+                      >
+                        Add Columns
+                      </Button>
+                    </Form.Item>
+                  </Form.Item>
+                </Col>
+                <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+                  <Form.Item
+                    initialValue={row}
+                    label="Number of Rows"
+                    name="rows"
+                    rules={[{ required: true, message: "Please input Rows!" }]}
+                  >
+                    <InputNumber
+                      onChange={(value) => {
+                        setRow(value);
+                      }}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                  <Space direction="vertical" style={{ width: "100%" }}>
+                    <Card title={"Preview"} className="rounded">
+                      <Text strong>{title}</Text>
+                      <Table
+                        dataSource={dataSource}
+                        columns={mergedColumns}
+                        pagination={false}
+                        components={{
+                          body: {
+                            cell: EditableCell,
+                          },
+                        }}
+                        bordered
+                      />
+                    </Card>
+                    <Button
+                      type="primary"
+                      style={{
+                        background: "#389e0d",
+                        borderColor: "#389e0d",
+                        borderRadius: ".5rem",
+                        marginBottom: "1rem",
+                      }}
+                      htmlType="submit"
+                      onClick={onSubmit}
+                    >
+                      บันทึก
+                    </Button>
+                  </Space>
+                </Col>
+              </Row>
+            </Form>
+          </Col>
+        </Row>
+      </>
+    );
 }
 export default TableField;

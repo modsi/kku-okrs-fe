@@ -46,45 +46,53 @@ const TitleField = ({ form }) => {
     }
 
     return (
-        <>
-            <Row gutter={24}>
-                <Col span={24} style={{ textAlign: "left" }}>
-                    <Form
-                        {...layout}
-                        form={form}
+      <>
+        <Row gutter={24}>
+          <Col span={24} style={{ textAlign: "left" }}>
+            <Form {...layout} form={form}>
+              <Row>
+                <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                  <Form form={form} {...layout}>
+                    <Form.Item
+                      label="Label"
+                      name="label"
+                      rules={[
+                        { required: true, message: "Please input Label!" },
+                      ]}
                     >
-                        <Row>
-                            <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-                                <Form form={form} {...layout} >
-                                    <Form.Item
-                                        label="Label"
-                                        name="label"
-                                        rules={[{ required: true, message: 'Please input Label!' }]}
-                                    >
-                                        <Input onChange={(e) => { setTitle(e.target.value) }} />
-                                    </Form.Item>
-                                </Form>
-                            </Col>
-                            <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-                                <Space direction="vertical" style={{ width: '100%' }}>
-                                    <Card title={"Preview"} className="rounded"  >
-                                        <Text strong>{title}</Text>
-                                    </Card>
-                                    <Button
-                                        type="primary"
-                                        danger
-                                        htmlType="submit"
-                                        onClick={onSubmit}
-                                    >
-                                        Save
-                                    </Button>
-                                </Space>
-                            </Col>
-                        </Row>
-                    </Form>
+                      <Input
+                        onChange={(e) => {
+                          setTitle(e.target.value);
+                        }}
+                      />
+                    </Form.Item>
+                  </Form>
                 </Col>
-            </Row>
-        </>
-    )
+                <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                  <Space direction="vertical" style={{ width: "100%" }}>
+                    <Card title={"Preview"} className="rounded">
+                      <Text strong>{title}</Text>
+                    </Card>
+                    <Button
+                      type="primary"
+                      style={{
+                        background: "#389e0d",
+                        borderColor: "#389e0d",
+                        borderRadius: ".5rem",
+                        marginBottom: "1rem",
+                      }}
+                      htmlType="submit"
+                      onClick={onSubmit}
+                    >
+                      บันทึก
+                    </Button>
+                  </Space>
+                </Col>
+              </Row>
+            </Form>
+          </Col>
+        </Row>
+      </>
+    );
 }
 export default TitleField;
