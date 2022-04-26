@@ -190,7 +190,7 @@ const Faculty = (props) => {
                             </Col>
                             <Col xs={0} sm={0} md={1} lg={1}></Col>
                             <Col xs={24} sm={24} md={11} lg={11} className="box-plan">
-                                <PieFull title={'สรุปงบประมาณ'} data={dataBudget} width={200} height={200} dataColor={['#ef5261', '#f6c863']} backgroundColor={'linear-gradient(90deg, rgba(161, 255, 206, 0.25) 0.76%, rgba(250, 255, 209, 0.25) 100%)'} dataTextColor={['#4E5C84', '#4E5C84']} helfData={true} pie={false} brk={true} unit={'บาท'} />
+                                <PieFull title={'สรุปงบประมาณ'} data={dataBudget} showFormatCurrency={true} width={200} height={200} dataColor={['#ef5261', '#f6c863']} backgroundColor={'linear-gradient(90deg, rgba(161, 255, 206, 0.25) 0.76%, rgba(250, 255, 209, 0.25) 100%)'} dataTextColor={['#4E5C84', '#4E5C84']} helfData={true} pie={false} brk={true} unit={'บาท'} />
                             </Col>
                         </Row>
 
@@ -214,7 +214,7 @@ const Faculty = (props) => {
                             </Col>
                             <Col xs={0} sm={0} md={1} lg={1}></Col>
                             <Col xs={24} sm={24} md={11} lg={11} className="box-plan">
-                                <PieFull title={'สรุปงบประมาณ'} data={dataBudget} width={200} height={200} dataColor={['#ef5261', '#f6c863']} backgroundColor={'linear-gradient(90deg, rgba(255, 175, 189, 0.25) 0%, rgba(250, 255, 209, 0.25) 100%, rgba(255, 195, 160, 0.25) 100%)'} dataTextColor={['#4E5C84', '#4E5C84']} helfData={true} pie={false} brk={true} unit={'บาท'} />
+                                <PieFull title={'สรุปงบประมาณ'} data={dataBudget} showFormatCurrency={true} width={200} height={200} dataColor={['#ef5261', '#f6c863']} backgroundColor={'linear-gradient(90deg, rgba(255, 175, 189, 0.25) 0%, rgba(250, 255, 209, 0.25) 100%, rgba(255, 195, 160, 0.25) 100%)'} dataTextColor={['#4E5C84', '#4E5C84']} helfData={true} pie={false} brk={true} unit={'บาท'} />
                             </Col>
                         </Row>
                         <Card
@@ -239,7 +239,7 @@ const Faculty = (props) => {
                             </Col>
                             <Col xs={0} sm={0} md={1} lg={1}></Col>
                             <Col xs={24} sm={24} md={11} lg={11} className="box-plan">
-                                <PieFull title={'สรุปงบประมาณ'} data={dataCS} width={200} height={200} dataColor={['#ef5261', '#f6c863']} backgroundColor={'linear-gradient(90deg, rgba(117, 255, 220, 0.25) 0%, rgba(163, 216, 255, 0.25) 51.04%, rgba(248, 215, 251, 0.25) 100%)'} dataTextColor={['#4E5C84', '#4E5C84']} helfData={true} pie={false} brk={true} unit={'บาท'} />
+                                <PieFull title={'สรุปงบประมาณ'} data={dataCS} showFormatCurrency={true} width={200} height={200} dataColor={['#ef5261', '#f6c863']} backgroundColor={'linear-gradient(90deg, rgba(117, 255, 220, 0.25) 0%, rgba(163, 216, 255, 0.25) 51.04%, rgba(248, 215, 251, 0.25) 100%)'} dataTextColor={['#4E5C84', '#4E5C84']} helfData={true} pie={false} brk={true} unit={'บาท'} />
                             </Col>
                         </Row>
                         <Card
