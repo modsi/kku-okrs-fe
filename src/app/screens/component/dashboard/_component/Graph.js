@@ -10,7 +10,7 @@ const Graph = (props) => {
     height = 300,
     titleFirst = '',
     title = '',
-    data = [],
+    data = {dataGraph: [], act: []},
     dataColor = '#5B8FF9',
     showRefresh = false,
     dataTextColor = false,
@@ -24,11 +24,11 @@ const Graph = (props) => {
   const config = {
     width: width,
     height: height,
-    data,
-    xField: 'type',
+    data: data?.dataGraph || [],
+    xField: 'name',
     yField: 'value',
     seriesField: '',
-    color: ({ type }) => {
+    color: ({ name }) => {
       return brandColor;
     },
     label: {
@@ -49,7 +49,7 @@ const Graph = (props) => {
     xAxis: {
       label: {
         autoHide: true,
-        autoRotate: false,
+        autoRotate: true,
       },
     },
     yAxis: false
@@ -67,10 +67,10 @@ const Graph = (props) => {
       }
       <Row lg={24}>
 
-        <Col xs={24} sm={24} md={12} lg={12} className="box-plols-detail">
+        <Col xs={24} sm={24} md={8} lg={8} className="box-plols-detail">
           <div class="center-box">
             {
-              data.map((items, gIndex) => {
+              data?.act.map((items, gIndex) => {
                 return (
                   <div>
                     <span className="text-legend" style={{ color: !dataTextColor ? '#000' : dataTextColor[gIndex] }}>{items.type} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{items.value} &nbsp;&nbsp;%</span>
@@ -93,7 +93,7 @@ const Graph = (props) => {
 
 
         </Col>
-        <Col xs={24} sm={24} md={12} lg={12} className="box-plols">
+        <Col xs={24} sm={24} md={16} lg={16} className="box-plols">
           <Column {...config} />
         </Col>
 

@@ -5,6 +5,7 @@ import { FileTextOutlined, UserOutlined, FolderOpenOutlined, AuditOutlined, Apps
 import logo from "../../assets/images/favicon-32x32.png"
 import Admin from './component/admin/ManageTemplate';
 import Dashboard from './component/dashboard/Dashboard';
+import Dashboard2 from './component/dashboard/Dashboard2';
 import Institution from './component/dashboard/Institution';
 import Course from './component/dashboard/Course';
 import Faculty from './component/dashboard/Faculty';
@@ -63,8 +64,14 @@ const Main = () => {
         setKey([value.key])
         if (value.key === '1') {
             setContent(<Dashboard />);
-        } else if (value.key === '2') {
-            setContent(<Faculty />);
+        } else if (value.key === '2-1') {
+            setContent(<Dashboard2 />);
+        } else if (value.key === '2-2') {
+            setContent(<Faculty title={'ผลการดำเนินงานกองบริหารงานคณะ'} />);
+        } else if (value.key === '2-3') {
+            setContent(<Faculty title={'ผลการดำเนินงานสาขาวิชา (ศูนย์ต่างๆ)'} />);
+        } else if (value.key === '2-4') {
+            setContent(<Faculty title={'ผลการดำเนินงานสาขาวิชา (ศูนย์ต่างๆ)'} />);
         } else if (value.key === '4') {
             setContent(<Institution />);
         } else if (value.key === '3') {
@@ -121,9 +128,12 @@ const Main = () => {
                         <Menu.Item key="1" icon={<AppstoreOutlined />} >
                             Dashboard 1 - แผนปฏิบัติการ
                         </Menu.Item>
-                        <Menu.Item key="2" icon={<AppstoreOutlined />}>
-                            Dashboard 2 - ผลการดำเนินงานของคณะ
-                        </Menu.Item>
+                        <SubMenu key="sub2" icon={<AppstoreOutlined />} title="Dashboard 2 - ผลการดำเนินงานของคณะ">
+                            <Menu.Item key="2-1">ภาพรวมคณะ</Menu.Item>
+                            <Menu.Item key="2-2">กองบริการงานคณะ</Menu.Item>
+                            <Menu.Item key="2-3">สาขาวิชา</Menu.Item>
+                            <Menu.Item key="2-4">ศูนย์</Menu.Item>
+                        </SubMenu>
                         {profile?.role?.priority < 4 ?
                             <Menu.Item key="3" icon={<AuditOutlined />}>
                                 Manage Template
