@@ -10,7 +10,7 @@ const TEMPLATE__URL = `${API_ENDPOINT}/templates`
 const DASHBOARD_URL = `${API_ENDPOINT}/dashboard`
 
 export const ListInstitutions = async () => {
-    return await get(`${MANAGE_URL}/institution`)    
+    return await get(`${MANAGE_URL}/institution`)
 }
 
 export const ListRoles = async () => {
@@ -29,7 +29,7 @@ export const SaveAccountService = async (data = {}) => {
     return await post(`${USER_URL}/register`, data)
 }
 
-export const GetAccountService = async(data = {})=>{
+export const GetAccountService = async (data = {}) => {
     return await get(`${MANAGE_URL}/accounts?page=${data.page}&size=${data.size}&q=${data.str}`)
 }
 
@@ -53,19 +53,17 @@ export const SaveTemplateService = async (data = {}) => {
     return await post(`${TEMPLATE__URL}/create_component_template`, data)
 }
 
-export const GetTemplateService = async(data = {})=>{
+export const GetTemplateService = async (data = {}) => {
     return await get(`${TEMPLATE__URL}/list_template?templateName=${data?.str ?? ''}&limit=${data?.size}&offset=${data?.page}`)
 }
 
-<<<<<<< HEAD
 export const GetDashboardOne = async () => {
     return await get(`${DASHBOARD_URL}/dashboardOne`)
 }
 
 export const GetDashboardTwo = async () => {
     return await get(`${DASHBOARD_URL}/dashboardTwo`)
-=======
+}
 export const UpdateTemplateService = async (data = {}) => {
     return await post(`${TEMPLATE__URL}/update_component_template`, data)
->>>>>>> 5549dbf3f129c2b888eeeaab85e62833f789d900
 }
