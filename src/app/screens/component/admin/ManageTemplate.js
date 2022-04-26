@@ -209,8 +209,8 @@ const ManageTemplate = () => {
     }
 
     const handleTableChange = (pagination, filters, sorter) => {
-        console.log('pagination >> ', pagination)
-        setCurrentPage(pagination.current)
+      console.log("pagination >> ", pagination);
+      setCurrentPage(pagination.current);
     };
 
     // console.log("listTemplate >> ", listTemplate)
@@ -246,17 +246,17 @@ const ManageTemplate = () => {
                 </Row >
             </Card>
 
-            <div>
-                <Modal
-                    className="card-m-tem"
-                    closable={true}
-                    title={addEditTitle}
-                    visible={isModal2}
-                    width={"30%"}
-                    centered={true}
-                    footer={null}
-                    onCancel={handleClickCancel}
-                >
+        <div>
+          <Modal
+            className="card-m-tem"
+            closable={true}
+            title={addEditTitle}
+            visible={isModal2}
+            width={"30%"}
+            centered={true}
+            footer={null}
+            onCancel={handleClickCancel}
+          >
                     <Form form={form2} {...layout} >
                         <Row>
                             <Col xs={24} sm={24} md={24} lg={24} xl={24}>
@@ -299,58 +299,69 @@ const ManageTemplate = () => {
                 </Modal>
             </div>
 
-            <div>
-                <Modal
-                    className="card-m-tem"
-                    closable={true}
-                    title={addEditTitle}
-                    visible={isModalAddEditVisible}
-                    width={"30%"}
-                    centered={true}
-                    footer={null}
-                    onCancel={handleClickCancel}
+        <div>
+          <Modal
+            className="card-m-tem"
+            closable={true}
+            title={addEditTitle}
+            visible={isModalAddEditVisible}
+            width={"30%"}
+            centered={true}
+            footer={null}
+            onCancel={handleClickCancel}
+          >
+            <Form form={form} {...layout}>
+              <Row>
+                <Col
+                  className="form-login form-user"
+                  xs={24}
+                  sm={24}
+                  md={24}
+                  lg={24}
+                  xl={24}
                 >
-                    <Form form={form} {...layout} >
-                        <Row>
-                            <Col className='form-login form-user' xs={24} sm={24} md={24} lg={24} xl={24}>
-                                <Form.Item name={"template"}>
-                                    <Select
-                                        options={SetOptionsForSelect({ label: 'template_name', value: 'id', data: listTemplate })}
-                                        placeholder="-Template ที่พร้อมใช้งาน-"
-                                        size="middle"
-                                        style={{ width: '100%' }}
-                                    />
-                                </Form.Item>
-                            </Col>
-                        </Row>
-                        <Row gutter={24} className="row-inquiry-customer">
-                            <Col span={24} style={{ textAlign: "center" }}>
-                                <Button
-                                    className='btn-event btn-color-cancel'
-                                    style={{ margin: "0 8px" }}
-                                    onClick={() => {
-                                        handleClickCancel();
-                                    }}
-                                    danger
-                                >
-                                    ยกเลิก
-                                </Button>
-                                <Button
-                                    className='btn-event btn-color-ok'
-                                    type="primary"
-                                    danger
-                                    htmlType="submit"
-                                    onClick={onSubmit}
-                                    loading={isLoading}
-                                >
-                                    ยืนยัน
-                                </Button>
-                            </Col>
-                        </Row>
-                    </Form>
-                </Modal>
-            </div>
-        </>
-    )
+                  <Form.Item name={"template"}>
+                    <Select
+                      options={SetOptionsForSelect({
+                        label: "template_name",
+                        value: "id",
+                        data: listTemplate,
+                      })}
+                      placeholder="-Template ที่พร้อมใช้งาน-"
+                      size="middle"
+                      style={{ width: "100%" }}
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row gutter={24} className="row-inquiry-customer">
+                <Col span={24} style={{ textAlign: "center" }}>
+                  <Button
+                    className="btn-event btn-color-cancel"
+                    style={{ margin: "0 8px" }}
+                    onClick={() => {
+                      handleClickCancel();
+                    }}
+                    danger
+                  >
+                    ยกเลิก
+                  </Button>
+                  <Button
+                    className="btn-event btn-color-ok"
+                    type="primary"
+                    danger
+                    htmlType="submit"
+                    onClick={onSubmit}
+                    loading={isLoading}
+                  >
+                    ยืนยัน
+                  </Button>
+                </Col>
+              </Row>
+            </Form>
+          </Modal>
+        </div>
+      </>
+    );
 }
 export default ManageTemplate;

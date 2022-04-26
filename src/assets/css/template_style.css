@@ -1,0 +1,46 @@
+.template-style{
+    padding: .5rem;
+}
+
+.template-style .ant-radio-button-wrapper:nth-child(odd){
+    border-radius: 5rem 0 0 5rem;
+}
+
+.template-style .ant-radio-button-wrapper:nth-child(even){
+    border-radius: 0 5rem 5rem 0;
+    margin-right: .5rem ;
+}
+
+.template-style .ant-radio-button-wrapper-disabled:nth-child(odd){
+    border-radius: 5rem 0 0 5rem;
+}
+
+.template-style .ant-radio-button-wrapper-disabled:nth-child(even){
+    border-radius: 0 5rem 5rem 0;
+    margin-right: .5rem ;
+}
+
+.template-style .ant-radio-button-wrapper-checked:nth-child(odd){
+    border-radius: 5rem 0 0 5rem;
+}
+
+.template-style .ant-radio-button-wrapper-checked:nth-child(even){
+    border-radius: 0 5rem 5rem 0;
+    margin-right: .5rem ;
+}
+
+.template-style .ant-radio-button-wrapper:not(:first-child)::before{
+    width: 0;
+}
+
+.ant-input{
+    border-radius: .5rem !important;
+}
+
+.ant-input-number{
+    border-radius: .5rem !important;
+}
+
+.ant-select-selector{
+    border-radius: .5rem !important;
+}

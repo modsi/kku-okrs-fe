@@ -85,32 +85,45 @@ const NumberField = ({ form }) => {
     };
 
     return (
-        <>
-            <Row gutter={24}>
-                <Col span={24} style={{ textAlign: "left" }}>
-                    <Row>
-                        <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-                            <Form form={form} {...layout} >
-                                <Row>
-                                    <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-                                        <Form.Item
-                                            label="Label"
-                                            name="label"
-                                            rules={[{ required: true, message: 'Please input Label!' }]}
-                                        >
-                                            <Input placeholder="Label Text Field" onChange={(e) => { setTitle(e.target.value) }} />
-                                        </Form.Item>
-                                    </Col>
-                                    <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-                                        <Form.Item
-                                            label="Key"
-                                            name="key"
-                                            rules={[{ required: true, message: 'Please input Key!' }]}
-                                        >
-                                            <Input onChange={(e) => { form.setFieldsValue({['key']: e.target.value });  }} />
-                                        </Form.Item>
-                                    </Col>
-                                    {/* <Col xs={24} sm={24} md={24} lg={8} xl={8}>
+      <>
+        <Row gutter={24}>
+          <Col span={24} style={{ textAlign: "left" }}>
+            <Row>
+              <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                <Form form={form} {...layout}>
+                  <Row>
+                    <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                      <Form.Item
+                        label="Label"
+                        name="label"
+                        rules={[
+                          { required: true, message: "Please input Label!" },
+                        ]}
+                      >
+                        <Input
+                          placeholder="Label Text Field"
+                          onChange={(e) => {
+                            setTitle(e.target.value);
+                          }}
+                        />
+                      </Form.Item>
+                    </Col>
+                    <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                      <Form.Item
+                        label="Key"
+                        name="key"
+                        rules={[
+                          { required: true, message: "Please input Key!" },
+                        ]}
+                      >
+                        <Input
+                          onChange={(e) => {
+                            form.setFieldsValue({ ["key"]: e.target.value });
+                          }}
+                        />
+                      </Form.Item>
+                    </Col>
+                    {/* <Col xs={24} sm={24} md={24} lg={8} xl={8}>
                                         <Form.Item
                                             label={"Label Position"} name={"labelPosition"} rules={[{ required: true, message: 'Please input Label Position!' }]}>
                                             <Radio.Group onChange={onFormLayoutChange} value={formLayout} >
@@ -119,66 +132,91 @@ const NumberField = ({ form }) => {
                                             </Radio.Group>
                                         </Form.Item>
                                     </Col> */}
-                                    <Col xs={24} sm={24} md={24} lg={8} xl={8}>
-                                        <Form.Item
-                                            label={"Size"} name={"size"} rules={[{ required: true, message: 'Please input Size!' }]}>
-                                            <Radio.Group onChange={(e) => { setSize(e.target.value) }}>
-                                                <Radio value={1}>short</Radio>
-                                                <Radio value={2}>long</Radio>
-                                            </Radio.Group>
-                                        </Form.Item>
-                                    </Col>
-                                    <Col xs={24} sm={24} md={12} lg={4} xl={4}>
-                                        <Form.Item
-                                            label={"Max"} name={"max"}>
-                                            <InputNumber onChange={(value) => { setMax(value) }} />
-                                        </Form.Item>
-                                    </Col>
-                                    <Col xs={24} sm={24} md={12} lg={4} xl={4}>
-                                        <Form.Item
-                                            label={"Min"} name={"min"}>
-                                            <InputNumber onChange={(value) => { setMin(value) }} />
-                                        </Form.Item>
-                                    </Col>
-                                </Row>
-                            </Form>
-                        </Col>
-                        <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-                            <Space direction="vertical" style={{ width: '100%' }}>
-                                <Card title={"Preview"} className="rounded"  >
-                                    <Row>
-                                        <Col xs={size === 1 ? 12 : 24} sm={size === 1 ? 12 : 24} md={size === 1 ? 12 : 24} lg={size === 1 ? 12 : 24} xl={size === 1 ? 12 : 24}>
-
-                                            <Form form={form2}
-                                                className="template-text"
-                                                initialValues={{
-                                                    layout: formLayout,
-                                                }}
-                                                {...formItemLayout}
-                                                layout={formLayout} >
-                                                <Form.Item
-                                                    label={title}
-                                                >
-                                                    <InputNumber min={min} max={max} />
-                                                </Form.Item>
-                                            </Form>
-                                        </Col>
-                                    </Row>
-                                </Card>
-                                <Button
-                                    type="primary"
-                                    danger
-                                    htmlType="submit"
-                                    onClick={onSubmit}
-                                >
-                                    Save
-                                </Button>
-                            </Space>
-                        </Col>
+                    <Col xs={24} sm={24} md={24} lg={8} xl={8}>
+                      <Form.Item
+                        label={"Size"}
+                        name={"size"}
+                        rules={[
+                          { required: true, message: "Please input Size!" },
+                        ]}
+                      >
+                        <Radio.Group
+                          onChange={(e) => {
+                            setSize(e.target.value);
+                          }}
+                        >
+                          <Radio value={1}>short</Radio>
+                          <Radio value={2}>long</Radio>
+                        </Radio.Group>
+                      </Form.Item>
+                    </Col>
+                    <Col xs={24} sm={24} md={12} lg={4} xl={4}>
+                      <Form.Item label={"Max"} name={"max"}>
+                        <InputNumber
+                          onChange={(value) => {
+                            setMax(value);
+                          }}
+                        />
+                      </Form.Item>
+                    </Col>
+                    <Col xs={24} sm={24} md={12} lg={4} xl={4}>
+                      <Form.Item label={"Min"} name={"min"}>
+                        <InputNumber
+                          onChange={(value) => {
+                            setMin(value);
+                          }}
+                        />
+                      </Form.Item>
+                    </Col>
+                  </Row>
+                </Form>
+              </Col>
+              <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                <Space direction="vertical" style={{ width: "100%" }}>
+                  <Card title={"Preview"} className="rounded">
+                    <Row>
+                      <Col
+                        xs={size === 1 ? 12 : 24}
+                        sm={size === 1 ? 12 : 24}
+                        md={size === 1 ? 12 : 24}
+                        lg={size === 1 ? 12 : 24}
+                        xl={size === 1 ? 12 : 24}
+                      >
+                        <Form
+                          form={form2}
+                          className="template-text"
+                          initialValues={{
+                            layout: formLayout,
+                          }}
+                          {...formItemLayout}
+                          layout={formLayout}
+                        >
+                          <Form.Item label={title}>
+                            <InputNumber min={min} max={max} />
+                          </Form.Item>
+                        </Form>
+                      </Col>
                     </Row>
-                </Col>
+                  </Card>
+                  <Button
+                    type="primary"
+                    style={{
+                      background: "#389e0d",
+                      borderColor: "#389e0d",
+                      borderRadius: ".5rem",
+                      marginBottom: "1rem",
+                    }}
+                    htmlType="submit"
+                    onClick={onSubmit}
+                  >
+                    บันทึก
+                  </Button>
+                </Space>
+              </Col>
             </Row>
-        </>
-    )
+          </Col>
+        </Row>
+      </>
+    );
 }
 export default NumberField;

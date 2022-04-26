@@ -163,32 +163,52 @@ const RadioField = ({ form }) => {
     };
 
     return (
-        <>
-            <Row gutter={24}>
-                <Col span={24} style={{ textAlign: "left" }}>
-                    <Row>
-                        <Col xs={24} sm={24} md={24} lg={10} xl={10} style={{ paddingRight: "10px" }}>
-                            <Form form={form} {...layout} >
-                                <Row>
-                                    <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-                                        <Form.Item
-                                            label="Label"
-                                            name="label"
-                                            rules={[{ required: true, message: 'Please input Label!' }]}
-                                        >
-                                            <Input placeholder="Label Text Field" onChange={(e) => { setTitle(e.target.value) }} />
-                                        </Form.Item>
-                                    </Col>
-                                    <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-                                        <Form.Item
-                                            label="Key"
-                                            name="key"
-                                            rules={[{ required: true, message: 'Please input Key!' }]}
-                                        >
-                                            <Input onChange={(e) => { form.setFieldsValue({['key']: e.target.value });  }} />
-                                        </Form.Item>
-                                    </Col>
-                                    {/* <Col xs={24} sm={24} md={24} lg={12} xl={12}>
+      <>
+        <Row gutter={24}>
+          <Col span={24} style={{ textAlign: "left" }}>
+            <Row>
+              <Col
+                xs={24}
+                sm={24}
+                md={24}
+                lg={10}
+                xl={10}
+                style={{ paddingRight: "10px" }}
+              >
+                <Form form={form} {...layout}>
+                  <Row>
+                    <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                      <Form.Item
+                        label="Label"
+                        name="label"
+                        rules={[
+                          { required: true, message: "Please input Label!" },
+                        ]}
+                      >
+                        <Input
+                          placeholder="Label Text Field"
+                          onChange={(e) => {
+                            setTitle(e.target.value);
+                          }}
+                        />
+                      </Form.Item>
+                    </Col>
+                    <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                      <Form.Item
+                        label="Key"
+                        name="key"
+                        rules={[
+                          { required: true, message: "Please input Key!" },
+                        ]}
+                      >
+                        <Input
+                          onChange={(e) => {
+                            form.setFieldsValue({ ["key"]: e.target.value });
+                          }}
+                        />
+                      </Form.Item>
+                    </Col>
+                    {/* <Col xs={24} sm={24} md={24} lg={12} xl={12}>
                                         <Form.Item
                                             label={"Label Position"} name={"labelPosition"} rules={[{ required: true, message: 'Please input Label Position!' }]}>
                                             <Radio.Group onChange={onFormLayoutChange} value={formLayout} >
@@ -206,63 +226,70 @@ const RadioField = ({ form }) => {
                                             </Radio.Group>
                                         </Form.Item>
                                     </Col>                                    */}
-                                    <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-                                        <Form.Item
-                                            label={"Options "} name={"options"}>
-                                            {listField}
-                                            <Form.Item>
-                                                <Button
-                                                    type="dashed"
-                                                    onClick={() => add()}
-                                                    style={{ width: '60%' }}
-                                                    icon={<PlusOutlined />}
-                                                >
-                                                    Add Option
-                                                </Button>
-                                            </Form.Item>
-                                        </Form.Item>
-                                    </Col>
-                                </Row>
-                            </Form>
-                        </Col>
-                        <Col xs={24} sm={24} md={24} lg={14} xl={14}>
-                            <Space direction="vertical" style={{ width: '100%' }}>
-                                <Card title={"Preview"} className="rounded"  >
-                                    <Row>
-                                        <Col xs={size === 1 ? 12 : 24} sm={size === 1 ? 12 : 24} md={size === 1 ? 12 : 24} lg={size === 1 ? 12 : 24} xl={size === 1 ? 12 : 24}>
-
-                                            <Form form={form2}
-                                                className="template-text"
-                                                initialValues={{
-                                                    layout: formLayout,
-                                                }}
-                                                {...formItemLayout}
-                                                layout={formLayout} >
-                                                <Form.Item
-                                                    label={title}
-                                                >
-                                                    <Radio.Group                                                       
-                                                        options={options}
-                                                    />
-                                                </Form.Item>
-                                            </Form>
-                                        </Col>
-                                    </Row>
-                                </Card>
-                                <Button
-                                    type="primary"
-                                    danger
-                                    htmlType="submit"
-                                    onClick={onSubmit}
-                                >
-                                    Save
-                                </Button>
-                            </Space>
-                        </Col>
+                    <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                      <Form.Item label={"Options "} name={"options"}>
+                        {listField}
+                        <Form.Item>
+                          <Button
+                            type="dashed"
+                            onClick={() => add()}
+                            style={{ width: "60%" }}
+                            icon={<PlusOutlined />}
+                          >
+                            Add Option
+                          </Button>
+                        </Form.Item>
+                      </Form.Item>
+                    </Col>
+                  </Row>
+                </Form>
+              </Col>
+              <Col xs={24} sm={24} md={24} lg={14} xl={14}>
+                <Space direction="vertical" style={{ width: "100%" }}>
+                  <Card title={"Preview"} className="rounded">
+                    <Row>
+                      <Col
+                        xs={size === 1 ? 12 : 24}
+                        sm={size === 1 ? 12 : 24}
+                        md={size === 1 ? 12 : 24}
+                        lg={size === 1 ? 12 : 24}
+                        xl={size === 1 ? 12 : 24}
+                      >
+                        <Form
+                          form={form2}
+                          className="template-text"
+                          initialValues={{
+                            layout: formLayout,
+                          }}
+                          {...formItemLayout}
+                          layout={formLayout}
+                        >
+                          <Form.Item label={title}>
+                            <Radio.Group options={options} />
+                          </Form.Item>
+                        </Form>
+                      </Col>
                     </Row>
-                </Col>
+                  </Card>
+                  <Button
+                    type="primary"
+                    style={{
+                      background: "#389e0d",
+                      borderColor: "#389e0d",
+                      borderRadius: ".5rem",
+                      marginBottom: "1rem",
+                    }}
+                    htmlType="submit"
+                    onClick={onSubmit}
+                  >
+                    บันทึก
+                  </Button>
+                </Space>
+              </Col>
             </Row>
-        </>
-    )
+          </Col>
+        </Row>
+      </>
+    );
 }
 export default RadioField;
