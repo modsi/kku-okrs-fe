@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Layout, Menu, Image, Row, Col, Typography, Space, Button } from 'antd';
 import { FileTextOutlined, UserOutlined, FolderOpenOutlined, AuditOutlined, AppstoreOutlined, GroupOutlined, LogoutOutlined } from '@ant-design/icons';
 import logo from "../../assets/images/favicon-32x32.png"
-import Admin from './component/admin/Admin';
+import Admin from './component/admin/ManageTemplate';
 import Dashboard from './component/dashboard/Dashboard';
 import Institution from './component/dashboard/Institution';
 import Course from './component/dashboard/Course';
