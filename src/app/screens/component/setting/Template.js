@@ -81,7 +81,9 @@ const Template = () => {
       dataIndex: "updatedate",
       align: "center",
       width: 80,
-      render: (_, record) => record?.updatedate,
+      render: (_, record) => record?.updatedate !== null
+            ? moment(record.updatedate).format(DATE_FULL)
+            : null,
     },
     {
       title: "Status",

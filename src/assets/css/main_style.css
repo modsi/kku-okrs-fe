@@ -169,16 +169,32 @@ div#root {
 }
 
 .ggar-button {
-  background: transparent;
-  color: #eb680a;
+  background: #eb680a;
+  color: #ede5df;
   height: auto !important;
+  border-color: #fff;
 }
 
 .ggar-button:hover,
 .ggar-button:focus {
-  color: #f1a873;
+  color: #e96507;
+  background: #f1b58a;
+  border-color: rgb(231, 212, 212);
 }
 
+.ant-steps-item-process > .ant-steps-item-container > .ant-steps-item-icon{
+  background: #08a161;
+  border-color: #d0ddd0;
+}
+
+.ant-steps-item-finish .ant-steps-item-icon{
+  border-color:#08a161;
+  color:#08a161;
+}
+
+.ant-steps-item-finish .ant-steps-item-icon > .ant-steps-icon{
+  color:#08a161;
+}
 .g-button {
   background-color: red; /* For browsers that do not support gradients */
   background-image: linear-gradient(to right, #eb680a, #f7e72b);
@@ -400,7 +416,7 @@ display: inline;
 }
 
 .card-m-tem > .ant-modal-content, .card-m-tem > .ant-modal-content > .ant-modal-header {
-  background: #C4C4C4;
+  background: #d9d9d9;
 }
 
 /* .card-m-tem >  */
