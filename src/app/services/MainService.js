@@ -7,6 +7,7 @@ const API_ENDPOINT = `https://e-project.kku.ac.th/api`
 const USER_URL = `${API_ENDPOINT}/users`
 const MANAGE_URL = `${API_ENDPOINT}/manage`
 const TEMPLATE__URL = `${API_ENDPOINT}/templates`
+const FORM__URL = `${API_ENDPOINT}/form`
 
 export const ListInstitutions = async () => {
     return await get(`${MANAGE_URL}/institution`)    
@@ -58,4 +59,16 @@ export const GetTemplateService = async(data = {})=>{
 
 export const UpdateTemplateService = async (data = {}) => {
     return await post(`${TEMPLATE__URL}/update_component_template`, data)
+}
+
+export const SaveFormService = async (data = {}) => {
+    return await post(`${FORM__URL}/create_form`, data)
+}
+
+export const GetFormeService = async(data = {})=>{
+    return await get(`${FORM__URL}/list_form?name=${data?.str ?? ''}&roleId=${data?.roleId}&username=${data?.username}`)
+}
+
+export const UpdateFormService = async (data = {}) => {
+    return await post(`${FORM__URL}/update_from`, data)
 }

@@ -128,7 +128,8 @@ const Main = () => {
                             <Menu.Item key="3" icon={<AuditOutlined />}>
                                 Manage Template
                             </Menu.Item>
-                            :
+                            : null}
+                        {profile?.role?.priority === '4' || profile?.role?.priority === '1' ?
                             <>
                                 <Menu.Item key="4" icon={<FileTextOutlined />}>
                                     Report Form 1
@@ -137,6 +138,7 @@ const Main = () => {
                                     Report Form 2
                                 </Menu.Item>
                             </>
+                            : null
                         }
                         <Menu.Item key="8" icon={<FolderOpenOutlined />}>
                             Data History
