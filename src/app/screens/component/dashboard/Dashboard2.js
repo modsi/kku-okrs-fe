@@ -13,9 +13,10 @@ import {
 
 const Dashboard2 = () => {
   const dispatch = useDispatch();
-  const storeListDashboard = useSelector(
-    (state) => state?.main?.[LIST_DASHBOARD]
-  );
+  // const storeListDashboard = useSelector(
+  //   (state) => state?.main?.[LIST_DASHBOARD]
+  // );
+  const [storeListDashboard, setStoreListDashboard] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [fetchData, setFetchData] = useState(false);
   const [dataSummary, setDataSummary] = useState([]);
@@ -76,7 +77,9 @@ const Dashboard2 = () => {
   }, [storeListDashboard]);
 
   async function handleListDashboard() {
-    dispatch(await ListDashboardTwoAction());
+    dispatch(await ListDashboardTwoAction().then(value => {
+      setStoreListDashboard(value.payload.list_dashboard);
+    }));
   }
 
   const gridStyle = {

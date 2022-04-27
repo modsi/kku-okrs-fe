@@ -8,7 +8,8 @@ import { LIST_DASHBOARD, ListDashboardOneAction } from '../../../redux/actions/D
 
 const Dashboard = () => {
     const dispatch = useDispatch()
-    const storeListDashboard = useSelector(state => state?.main?.[LIST_DASHBOARD])
+    // const storeListDashboard = useSelector(state => state?.main?.[LIST_DASHBOARD])
+    const [storeListDashboard, setStoreListDashboard] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [fetchData, setFetchData] = useState(false);
     const [listDashboard, setListDashboard] = useState([]);
@@ -76,7 +77,9 @@ const Dashboard = () => {
     }, [storeListDashboard])
 
     async function handleListDashboard() {
-        dispatch(await ListDashboardOneAction())
+        dispatch(await ListDashboardOneAction().then(value => {
+            setStoreListDashboard(value.payload.list_dashboard);
+        }))
     }
 
     function setData(list) {
@@ -154,7 +157,7 @@ const Dashboard = () => {
                     <div className="site-card-wrapper">
                         <Row style={{ paddingBottom: '20px' }}>
                             <Col xs={24} sm={24} md={14} lg={14}>
-                                <PieFull titleFirst={'ผลการดำเนินงานตาม OKRs'} data={dataOKRs} backgroundColor={'rgba(255, 164, 92, 0.25)'} dataColor={['#f6c863', '#ef5261']} dataTextColor={['#A15219', '#45B649']} showRefresh={true} />
+                                <PieFull titleFirst={'ผลการดำเนินงานตาม OKRs'} data={dataOKRs} backgroundColor={'rgba(255, 164, 92, 0.25)'} dataColor={['#f6c863', '#ef5261']} dataTextColor={['#A15219', '#45B649']} />
                             </Col>
                             <Col xs={0} sm={0} md={1} lg={1}></Col>
                             <Col xs={24} sm={24} md={9} lg={9} className="box-plan">
