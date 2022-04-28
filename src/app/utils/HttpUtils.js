@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { clearStorege, getStorage } from "../screens/state/localStorage";
 import { ErrorModalMassage } from "../screens/items/Modal";
+import { useNavigate } from "react-router-dom";
+
 export const httpUtils = {
 	post,
 	get,
@@ -64,11 +66,18 @@ function patch(url, payload = {}, headersOption, responseType = 'application/jso
 		}
 		return call();
 	} catch (err) {
-		clearStorege('token')
+		GoToLogin()
 		console.error(err);
 		throw err;
 	}
 };
+
+function GoToLogin () {	
+	let navigate = useNavigate();
+	clearStorege('token')
+	let path = '/';
+	navigate(path);
+}
 
 function post(url, payload = {}, headersOption, responseType = 'application/json') {
 	try {
@@ -90,7 +99,7 @@ function post(url, payload = {}, headersOption, responseType = 'application/json
 		}
 		return call();
 	} catch (err) {
-		clearStorege('token')
+		GoToLogin()
 		console.error(err);
 		throw err;
 	}
@@ -118,7 +127,7 @@ function get(url, payload = {}, headersOption) {
 		}
 		return call();
 	} catch (err) {
-		clearStorege('token')
+		GoToLogin()
 		console.error(err);
 		throw err;
 	}

@@ -1,22 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
-import { PageHeader,Modal, Steps, Card, Row, Col, Button, Typography, Table, Form, Input, Radio, Space, Image, InputNumber, Checkbox, Select, DatePicker, Upload, message } from 'antd';
+import { PageHeader, Modal, Steps, Card, Row, Col, Button, Typography, Table, Form, Input, Radio, Space, Image, InputNumber, Checkbox, Select, DatePicker, Upload, message } from 'antd';
 import { EditOutlined, EyeOutlined, SettingOutlined, PlusOutlined, FileSearchOutlined, PlusCircleFilled } from "@ant-design/icons";
 import { tem1, tem2 } from '../../../../template-mock'
 import { LIST_TEMPLATES, ListTemplateAction } from '../../../redux/actions/TemplateAction'
 import SetOptionsForSelect, { SetOptionsForSelectSetLable } from '../../items/SetOptionsForSelect'
-import { clearStorege, getStorage } from "../../../screens/state/localStorage";
+import { clearStorege, getStorage } from "../../state/localStorage";
 import {
   ConfirmModalEditText,
   SuccessModal,
   ErrorModalMassageHtml,
 } from "../../items/Modal";
 import { SaveFormAction, ListFormAction, LIST_FORM, UpdateFormAction } from "../../../redux/actions/FormAction";
-import {
-  StoreTemplateAction,
-  STORE_TEMPLATE,
-} from "../../../redux/actions/StoreSearchAction";
-import FormReport from './FormReport'
+import FormReport from "./FormReport";
+import { StoreTemplateAction } from "../../../redux/actions/StoreSearchAction";
 
 const { Text, Link } = Typography;
 const { RangePicker } = DatePicker;
@@ -28,7 +25,7 @@ const temp_columns = [
   }
 ];
 
-const ManageTemplate = () => {
+const ReportForm1 = () => {
   const dispatch = useDispatch()
   const [isLoading, setIsLoading] = useState(false);
   const [isModalAddEditVisible, setIsModalAddEditVisible] = useState(false);
@@ -71,7 +68,7 @@ const ManageTemplate = () => {
 
   useEffect(() => {
     if (listForm) {
-      setListFormComponent(listForm.result?.filter(l => l.step_id !== "3"))
+      setListFormComponent(listForm.result?.filter(l => l.step_id === "3" && l.type_id === '1'))
     }
   }, [listForm])
 
@@ -92,6 +89,8 @@ const ManageTemplate = () => {
     setIsModalAddEditVisible(false);
     setIsModal2(false)
     form2.resetFields()
+    setShowConfigPage(false);
+    setTemplate({});
   }
 
   const newTemplate = () => {
@@ -101,12 +100,11 @@ const ManageTemplate = () => {
 
   const handleClickEdit = (record) => {
     console.log("handleClickEdit", record)
-    setStep(record.stepId - 1)
     setListComponent(record)
-    let l = record?.component?.filter(i => profile.role_id === '1' ? i.permission === 3 || i.permission === 4 : i.permission === parseInt(profile.role_id))
-    setLayoutTemplate(l)
-    setIsModal2(true);
-    setAddEditTitle(profile?.role?.role_name)
+    setIsLoading(true);
+    setShowConfigPage(true);
+    setTemplate(record);
+    setIsLoading(false);
   }
 
   const setLayoutTemplate = (listComponent) => {
@@ -185,11 +183,7 @@ const ManageTemplate = () => {
   }
 
   const saveForm = () => {
-    if (form2.getFieldValue("name")) {
-      ConfirmModalEditText(onSubmit, conditionSave());
-    } else {
-      form2.validateFields();
-    }
+    ConfirmModalEditText(onSubmit, conditionSave());
   };
 
   const handleUpStep = (record) => {
@@ -261,19 +255,6 @@ const ManageTemplate = () => {
     setIsLoading(false);
   }
 
-  const handleClickView = (record) => {
-    console.log("handleClickEdit", record)
-    setListComponent(record)
-    setIsLoading(true);
-    setShowConfigPage(true);
-    setTemplate(record);
-    setIsLoading(false);
-  }
-
-  async function setTemplate(data) {
-    dispatch(await StoreTemplateAction(data));
-  }
-
   const setPage = () => {
     let list = []
     console.log('setPage', listFormComponent)
@@ -340,57 +321,28 @@ const ManageTemplate = () => {
           fixed: 'right',
           render: (_, record) =>
             <div className="text-center">
-              {record?.stepId === '4' || record?.stepId === '5' ?
-                <>
-                  <Button
-                    type="primary"
-                    className="pre-button"
-                    onClick={() => {
-                      handleClickView(record)
-                    }
-                    }
-                  >
-                    <Text className="big6-title">รายงาน</Text>
-                    {/* <EditOutlined /> */}
-                  </Button>
-                  <Button
-                    type="primary"
-                    className={record?.status ? "pre-button" : "nol-button"}
-                    disabled={record?.status ? false : true}
-                    onClick={() =>
-                      handleUpStep(record)
-                    }
-                  >
-                    <Text className="big6-title">manage</Text>
-                    {/* <EditOutlined /> */}
-                  </Button>
-                </>
-                :
-                <>
-                  <Button
-                    type="primary"
-                    className="pre-button"
-                    onClick={() => {
-                      handleClickEdit(record)
-                    }
-                    }
-                  >
-                    <Text className="big6-title">manage</Text>
-                    {/* <EditOutlined /> */}
-                  </Button>
-                  <Button
-                    type="primary"
-                    className={record?.status ? "pre-button" : "nol-button"}
-                    disabled={record?.status ? false : true}
-                    onClick={() =>
-                      handleUpStep(record)
-                    }
-                  >
-                    <Text className="big6-title">ส่งไปแบบรายงาน</Text>
-                    {/* <EditOutlined /> */}
-                  </Button>
-                </>
-              }
+              <Button
+                type="primary"
+                className="pre-button"
+                onClick={() => {
+                  handleClickEdit(record)
+                }
+                }
+              >
+                <Text className="big6-title">รายงาน</Text>
+                {/* <EditOutlined /> */}
+              </Button>
+              <Button
+                type="primary"
+                className={record?.status ? "pre-button" : "nol-button"}
+                disabled={record?.status ? false : true}
+                onClick={() =>
+                  handleUpStep(record)
+                }
+              >
+                <Text className="big6-title">ส่งไปแบบรายงาน</Text>
+                {/* <EditOutlined /> */}
+              </Button>
             </div>
         })
         let field = (
@@ -428,6 +380,11 @@ const ManageTemplate = () => {
     }
     setListTableForm(list)
   }
+
+  async function setTemplate(data) {
+    dispatch(await StoreTemplateAction(data));
+  }
+
   return (
     <>
       {showConfigPage ? (
@@ -469,7 +426,7 @@ const ManageTemplate = () => {
           </Row>
         </>
       ) :
-        <Card title={"Manage Report"} className="rounded" >
+        <Card title={"Report Form 1"} className="rounded" >
           <Row gutter={24}>
             <Col span={24} style={{ textAlign: "right" }} >
               <Button type="primary" shape="circle" size="large"
@@ -611,4 +568,4 @@ const ManageTemplate = () => {
     </>
   );
 }
-export default ManageTemplate;
+export default ReportForm1;
