@@ -12,6 +12,8 @@ import Faculty from './component/dashboard/Faculty';
 import History from './component/dataHistory/History';
 import User from './component/setting/User';
 import Template from './component/setting/Template';
+import ReportForm1 from './component/admin/ReportForm1'
+import ReportForm2 from './component/admin/ReportForm2'
 import { clearStorege, getStorage } from "../screens/state/localStorage";
 import { FaRegUserCircle } from "react-icons/fa";
 import { ConfirmModalEditText } from "./items/Modal";
@@ -35,7 +37,7 @@ const Main = () => {
     }
 
     useEffect(() => {
-        if (!getStorage('profile')) {
+        if (!getStorage('profile') || !getStorage('token')) {
             routeChange()
         } else {
             let p = getStorage('profile')
@@ -51,13 +53,7 @@ const Main = () => {
                 setContent(<Dashboard />);
             }
         }
-    }, [])
-
-    useEffect(() => {
-        if (!getStorage('token')) {
-            routeChange()
-        }
-    }, [getStorage('token')])
+    }, [])    
 
     const onClickMenu = value => {
         // console.log(value);
@@ -73,7 +69,9 @@ const Main = () => {
         } else if (value.key === '2-4') {
             setContent(<Faculty title={'ผลการดำเนินงานสาขาวิชา (ศูนย์ต่างๆ)'} subTitle={'หลักสูตร'} />);
         } else if (value.key === '4') {
-            setContent(<Institution />);
+            setContent(<ReportForm1 />);
+        } else if (value.key === '5') {
+            setContent(<ReportForm2 />);
         } else if (value.key === '3') {
             setContent(<Admin />);
         } else if (value.key === '6') {
@@ -136,7 +134,7 @@ const Main = () => {
                         </SubMenu>
                         {profile?.role?.priority < 4 ?
                             <Menu.Item key="3" icon={<AuditOutlined />}>
-                                Manage Template
+                                Manage Report
                             </Menu.Item>
                             : null}
                         {profile?.role?.priority === '4' || profile?.role?.priority === '1' ?
