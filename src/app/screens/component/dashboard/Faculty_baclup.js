@@ -3,8 +3,6 @@ import { Card, Col, Table, Row } from "antd";
 import BorderWrap from "../../items/BorderWrap";
 
 import PieFull from "./_component/PieFull";
-import MultiPieFull from "./_component/MultiPieFull";
-import RadarPlot from "./_component/RadarPlot";
 import { useDispatch, useSelector } from "react-redux";
 import {
   LIST_DASHBOARD,
@@ -12,27 +10,14 @@ import {
 } from "../../../redux/actions/DashboardAction";
 
 const Faculty = (props) => {
-
-    const {
-        title = '',
-        subTitle = ''
-      } = props;
+  const { title = "" } = props;
 
   const dispatch = useDispatch();
-  // const storeListDashboard = useSelector(
-  //   (state) => state?.main?.[LIST_DASHBOARD]
-  // );
-  const [storeListDashboard, setStoreListDashboard] = useState([]);
+  const storeListDashboard = useSelector(
+    (state) => state?.main?.[LIST_DASHBOARD]
+  );
   const [isLoading, setIsLoading] = useState(false);
   const [fetchData, setFetchData] = useState(false);
-  const [dataSummary, setDataSummary] = useState([]);
-  const [dataBudget, setDataBudget] = useState([]);
-  const [dataSDGs, setDataSDGs] = useState([]);
-  const [listSDGs, setListSDGs] = useState([]);
-  const [centurySkill, setCenturySkill] = useState([]);
-  const [listCenturySkill, setListCenturySkill] = useState([]);
-  const [dataStrategy, setDataStrategy] = useState([]);
-  const [successPlans, setSuccessPlan] = useState([]);
 
   useEffect(() => {
     handleListDashboard();
@@ -41,29 +26,13 @@ const Faculty = (props) => {
   useEffect(() => {
     if (storeListDashboard && storeListDashboard.data) {
       // let data = [];
-      if (storeListDashboard.data.successData)
-        setDataSummary(storeListDashboard.data.successData);
+      // if (storeListDashboard.data.OKRs) setDataOKRs(setData(storeListDashboard.data.OKRs));
 
-      if (storeListDashboard.data.budget)
-        setDataBudget(storeListDashboard.data.budget);
+      // if (storeListDashboard.data.overall) setDataPlan(setData(storeListDashboard.data.overall));
 
-      if (storeListDashboard.data.strategy)
-        setDataStrategy(storeListDashboard.data.strategy);
+      // if (storeListDashboard.data.success) setDataSuccess(setData(storeListDashboard.data.success));
 
-      if (storeListDashboard.data.sdgs)
-        setDataSDGs(storeListDashboard.data.sdgs);
-
-      if (storeListDashboard.data.sdgsData)
-        setListSDGs(storeListDashboard.data.sdgsData);
-
-      if (storeListDashboard.data.centurySkill)
-        setCenturySkill(storeListDashboard.data.centurySkill);
-
-      if (storeListDashboard.data.centurySkillData)
-        setListCenturySkill(storeListDashboard.data.centurySkillData);
-
-      if (storeListDashboard.data.successPlan)
-        setSuccessPlan(storeListDashboard.data.successPlan);
+      // if (storeListDashboard.data.pic) setDataSource(storeListDashboard.data.pic);
 
       setFetchData(true);
     } else {
@@ -72,9 +41,7 @@ const Faculty = (props) => {
   }, [storeListDashboard]);
 
   async function handleListDashboard() {
-    dispatch(await ListDashboardTwoAction().then(value => {
-      setStoreListDashboard(value.payload.list_dashboard);
-    }));
+    dispatch(await ListDashboardTwoAction());
   }
 
   const gridStyle = {
@@ -92,44 +59,41 @@ const Faculty = (props) => {
   const columns = [
     {
       title: "#",
-      dataIndex: "id",
-      key: "id",
+      dataIndex: "no",
+      key: "no",
       align: "center",
       width: 20,
       fixed: "left",
     },
     {
-      title: "ประเด็นยุทธศาสตร์",
+      title: "หลักสูตร",
       dataIndex: "name",
       key: "name",
       align: "center",
       width: 80,
-      render: (_, record) => record?.name,
+      render: (_, record) => record?.name + " " + record.lastName,
     },
     {
       title: "ดำเนินการแล้ว",
-      dataIndex: "complete",
-      key: "complete",
+      dataIndex: "username",
+      key: "username",
       align: "center",
       width: 80,
     },
-    ,
     {
-      title: "งบประมาณที่ใช้",
-      dataIndex: "budget_2",
-      key: "budget_2",
+      title: "งบประมาณ",
+      dataIndex: "status",
+      key: "status",
       align: "center",
       fixed: "right",
-      className: "column-money",
       width: 80,
     },
     {
       title: "งบประมาณคงเหลือ",
-      dataIndex: "budget_3",
-      key: "budget_3",
+      dataIndex: "status",
+      key: "status",
       align: "center",
       fixed: "right",
-      className: "column-money",
       width: 80,
     },
   ];
@@ -137,10 +101,10 @@ const Faculty = (props) => {
   const columns2 = [
     {
       title: "#",
-      dataIndex: "id",
-      key: "id",
+      dataIndex: "no",
+      key: "no",
       align: "center",
-      width: 20,
+      width: 50,
       fixed: "left",
     },
     {
@@ -149,71 +113,81 @@ const Faculty = (props) => {
       key: "name",
       align: "center",
       width: 80,
+      render: (_, record) => record?.name + " " + record.lastName,
     },
     {
       title: "โครงการทั้งหมด",
-      dataIndex: "complete",
-      key: "complete",
+      dataIndex: "username",
+      key: "username",
       align: "center",
       width: 80,
     },
     {
       title: "งบประมาณที่ใช้",
-      dataIndex: "budget_2",
-      key: "budget_2",
+      dataIndex: "status",
+      key: "status",
       align: "center",
       fixed: "right",
-      className: "column-money",
       width: 80,
     },
   ];
 
-  const columns3 = [
+  const dataSummary = [
     {
-      title: "#",
-      dataIndex: "id",
-      key: "id",
-      align: "center",
-      width: 20,
-      fixed: "left",
+      type: "แบบรายงานที่ 1",
+      value: 54,
     },
     {
-      title: "21 Century Skill",
-      dataIndex: "name",
-      key: "name",
-      align: "center",
-      width: 80,
+      type: "แบบรายงานที่ 2",
+      value: 40,
+    },
+  ];
+
+  const dataBudget = [
+    {
+      type: "งบประมาณที่ใช้ไปแล้ว",
+      value: 3203000,
     },
     {
-      title: "โครงการทั้งหมด",
-      dataIndex: "complete",
-      key: "complete",
-      align: "center",
-      width: 80,
+      type: "งบประมาณคงเหลือ",
+      value: 6207000,
+    },
+  ];
+
+  const dataSDGs = [
+    {
+      type: "แบบรายงานที่ 1",
+      value: 54,
     },
     {
-      title: "งบประมาณที่ใช้",
-      dataIndex: "budget_2",
-      key: "budget_2",
-      align: "center",
-      fixed: "right",
-      className: "column-money",
-      width: 80,
+      type: "แบบรายงานที่ 2",
+      value: 40,
+    },
+  ];
+
+  const dataCS = [
+    {
+      type: "แบบรายงานที่ 1",
+      value: 54,
+    },
+    {
+      type: "แบบรายงานที่ 2",
+      value: 40,
     },
   ];
 
   return (
     <>
       {fetchData && (
-        <div className="container-dashboard2">
+        <div className="container-faculty">
           <div style={{ padding: "20px 15px 10px 15px" }}>
             <span className="head-plots" style={{ margin: "10px 0px" }}>
-              {title}
+              {title}{" "}
             </span>
           </div>
 
           <Row style={{ paddingBottom: "20px" }}>
-            <Col xs={24} sm={24} md={11} lg={11}>
+            <Col xs={24} sm={24} md={12} lg={12}>
               <PieFull
                 title={"สรุปจำนวนโครงการที่ดำเนินการแล้ว"}
                 width={200}
@@ -226,7 +200,7 @@ const Faculty = (props) => {
               />
             </Col>
             <Col xs={0} sm={0} md={1} lg={1}></Col>
-            <Col xs={24} sm={24} md={12} lg={12} className="box-plan">
+            <Col xs={24} sm={24} md={11} lg={11} className="box-plan">
               <PieFull
                 title={"สรุปงบประมาณ"}
                 data={dataBudget}
@@ -254,17 +228,17 @@ const Faculty = (props) => {
               loading={isLoading}
               scroll={{ x: "max-content" }}
               size="small"
-              dataSource={dataStrategy}
+              // dataSource={dataSource}
               columns={columns}
             />
           </Card>
           <div style={{ padding: "20px 15px 10px 15px" }}>
             <span className="head-plots" style={{ margin: "10px 0px" }}>
-              SDGs ({subTitle})
+              SDGs (หลักสูตร)
             </span>
           </div>
           <Row style={{ paddingBottom: "20px" }}>
-            <Col xs={24} sm={24} md={10} lg={10}>
+            <Col xs={24} sm={24} md={12} lg={12}>
               <PieFull
                 title={"สรุปจำนวนโครงการตาม SDGs"}
                 width={200}
@@ -273,23 +247,25 @@ const Faculty = (props) => {
                 dataColor={["#f6c863", "#ef5261"]}
                 dataTextColor={["#A15219", "#45B649"]}
                 text={true}
-                pie={false}
                 unit={"รายการ"}
               />
             </Col>
             <Col xs={0} sm={0} md={1} lg={1}></Col>
-            <Col xs={24} sm={24} md={13} lg={13} className="box-plan">
-              <RadarPlot
+            <Col xs={24} sm={24} md={11} lg={11} className="box-plan">
+              <PieFull
                 title={"สรุปงบประมาณ"}
-                data={listSDGs}
+                data={dataBudget}
                 showFormatCurrency={true}
                 width={200}
                 height={200}
-                dataColor={["#4E5C8480", "#4E5C8480"]}
+                dataColor={["#ef5261", "#f6c863"]}
                 backgroundColor={
                   "linear-gradient(90deg, rgba(255, 175, 189, 0.25) 0%, rgba(250, 255, 209, 0.25) 100%, rgba(255, 195, 160, 0.25) 100%)"
                 }
-                dataTextColor={["#4E5C8480", "#4E5C8480"]}
+                dataTextColor={["#4E5C84", "#4E5C84"]}
+                helfData={true}
+                pie={false}
+                brk={true}
                 unit={"บาท"}
               />
             </Col>
@@ -302,42 +278,44 @@ const Faculty = (props) => {
               loading={isLoading}
               scroll={{ x: "max-content" }}
               size="small"
-              dataSource={listSDGs}
+              // dataSource={dataSource}
               columns={columns2}
             />
           </Card>
           <div style={{ padding: "20px 15px 10px 15px" }}>
             <span className="head-plots" style={{ margin: "10px 0px" }}>
-              21 Century Skill ({subTitle}){" "}
+              21 Century Skill (หลักสูตร){" "}
             </span>
           </div>
           <Row style={{ paddingBottom: "20px" }}>
-            <Col xs={24} sm={24} md={10} lg={10}>
+            <Col xs={24} sm={24} md={12} lg={12}>
               <PieFull
                 title={"สรุปจำนวนโครงการตาม 21 Century Skill"}
                 width={200}
                 height={200}
-                data={centurySkill}
+                data={dataSDGs}
                 dataColor={["#f6c863", "#ef5261"]}
                 dataTextColor={["#A15219", "#45B649"]}
                 text={true}
-                pie={false}
                 unit={"รายการ"}
               />
             </Col>
             <Col xs={0} sm={0} md={1} lg={1}></Col>
-            <Col xs={24} sm={24} md={13} lg={13} className="box-plan">
-              <RadarPlot
+            <Col xs={24} sm={24} md={11} lg={11} className="box-plan">
+              <PieFull
                 title={"สรุปงบประมาณ"}
-                data={listCenturySkill}
+                data={dataCS}
                 showFormatCurrency={true}
                 width={200}
                 height={200}
-                dataColor={["#4E5C8480", "#4E5C8480"]}
+                dataColor={["#ef5261", "#f6c863"]}
                 backgroundColor={
                   "linear-gradient(90deg, rgba(117, 255, 220, 0.25) 0%, rgba(163, 216, 255, 0.25) 51.04%, rgba(248, 215, 251, 0.25) 100%)"
                 }
-                dataTextColor={["#4E5C8480", "#4E5C8480"]}
+                dataTextColor={["#4E5C84", "#4E5C84"]}
+                helfData={true}
+                pie={false}
+                brk={true}
                 unit={"บาท"}
               />
             </Col>
@@ -350,8 +328,8 @@ const Faculty = (props) => {
               loading={isLoading}
               scroll={{ x: "max-content" }}
               size="small"
-              dataSource={listCenturySkill}
-              columns={columns3}
+              // dataSource={dataSource}
+              columns={columns2}
             />
           </Card>
         </div>

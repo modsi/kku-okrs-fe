@@ -67,11 +67,11 @@ const Main = () => {
         } else if (value.key === '2-1') {
             setContent(<Dashboard2 />);
         } else if (value.key === '2-2') {
-            setContent(<Faculty title={'ผลการดำเนินงานกองบริหารงานคณะ'} />);
+            setContent(<Faculty title={'ผลการดำเนินงานกองบริหารงานคณะ'} subTitle={'หลักสูตร'} />);
         } else if (value.key === '2-3') {
-            setContent(<Faculty title={'ผลการดำเนินงานสาขาวิชา (ศูนย์ต่างๆ)'} />);
+            setContent(<Faculty title={'ผลการดำเนินงานสาขาวิชา (ศูนย์ต่างๆ)'} subTitle={'หลักสูตร'} />);
         } else if (value.key === '2-4') {
-            setContent(<Faculty title={'ผลการดำเนินงานสาขาวิชา (ศูนย์ต่างๆ)'} />);
+            setContent(<Faculty title={'ผลการดำเนินงานสาขาวิชา (ศูนย์ต่างๆ)'} subTitle={'หลักสูตร'} />);
         } else if (value.key === '4') {
             setContent(<Institution />);
         } else if (value.key === '3') {
