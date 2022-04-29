@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
-import { Layout, Menu, Image, Row, Col, Typography, Space, Button } from 'antd';
+import { useDispatch, useSelector } from 'react-redux'
+import { Layout, Menu, Image, Row, Col, Typography, Space, Button, Badge } from 'antd';
 import { FileTextOutlined, UserOutlined, FolderOpenOutlined, AuditOutlined, AppstoreOutlined, GroupOutlined, LogoutOutlined } from '@ant-design/icons';
 import logo from "../../assets/images/favicon-32x32.png"
 import Admin from './component/admin/ManageTemplate';
@@ -21,15 +22,21 @@ import { ConfirmModalEditText } from "./items/Modal";
 import logoProfile from "../../assets/images/icon/pixlr-bg-result.png";
 import logoLogOut from "../../assets/images/icon/log-out.png";
 
+import { SaveFormAction, ListFormAction, LIST_FORM, UpdateFormAction } from "../redux/actions/FormAction";
+
 const { Text, Link } = Typography;
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 const Main = () => {
+    const dispatch = useDispatch()
     const navigate = useNavigate();
     const [mycontent, setContent] = useState(null)
     const [profile, setProfile] = useState({})
     const [key, setKey] = useState(['6'])
-
+    const listForm = useSelector(state => state?.main?.[LIST_FORM])
+    const [count2, setCount2] = useState(0)
+    const [count31, setCount31] = useState(0)
+    const [count32, setCount32] = useState(0)
     async function routeChange() {
         clearStorege('token')
         let path = '/';
@@ -37,11 +44,37 @@ const Main = () => {
     }
 
     useEffect(() => {
+        console.log(profile)
+        if (profile?.role?.priority === '1') {
+            let c = listForm?.result?.filter(l => l.step_id !== "3" && l.step_id !== "5" && l.step_id !== "8" && l.step_id !== "1")
+            setCount2(c?.length)
+        } else if (profile?.role?.priority === '2') {
+            let c = listForm?.result?.filter(l => l.step_id === "4")
+            setCount2(c?.length)
+        } else if (profile?.role?.priority === '3') {
+            let c
+            if (profile?.role_id === '3') {
+                c = listForm?.result?.filter(l => l.step_id === "2" || l.step_id === "7")
+            } else if (profile?.role_id === '4') {
+                c = listForm?.result?.filter(l => l.step_id === "2" || l.step_id === "6")
+            }
+            setCount2(c?.length)
+        }
+
+        let c = listForm?.result?.filter(l => (l.step_id === "8" || l.step_id === "3") && l.type_id === '1')
+        setCount31(c?.length)
+        c = listForm?.result?.filter(l => (l.step_id === "8" || l.step_id === "3") && l.type_id === '2')
+        setCount32(c?.length)
+
+    }, [listForm, profile])
+
+    useEffect(() => {
         if (!getStorage('profile') || !getStorage('token')) {
             routeChange()
         } else {
             let p = getStorage('profile')
             setProfile(p)
+            handleListMaster()
             if (p?.role?.priority < 2) {
                 setKey(['6']);
                 setContent(<User />);
@@ -53,7 +86,12 @@ const Main = () => {
                 setContent(<Dashboard />);
             }
         }
-    }, [])    
+    }, [])
+
+    async function handleListMaster() {
+        let p = getStorage('profile')
+        dispatch(await ListFormAction({ roleId: p.role_id, str: '', username: p.username }))
+    }
 
     const onClickMenu = value => {
         // console.log(value);
@@ -94,7 +132,7 @@ const Main = () => {
             content: "Are you sure to Logout ?"
         }
     }
-    // console.log('profile>>', profile)
+    // console.log('count>>', count2, count31, count32)
     return (
         <Layout className="main-layout" style={{ minHeight: '100vh' }}>
             <Sider
@@ -133,24 +171,35 @@ const Main = () => {
                             <Menu.Item key="2-4">ศูนย์</Menu.Item>
                         </SubMenu>
                         {profile?.role?.priority < 4 ?
+
                             <Menu.Item key="3" icon={<AuditOutlined />}>
-                                Manage Report
+                                <Badge count={count2} offset={[20, 5]} >
+                                    Manage Report
+                                </Badge>
                             </Menu.Item>
+
                             : null}
                         {profile?.role?.priority === '4' || profile?.role?.priority === '1' ?
                             <>
                                 <Menu.Item key="4" icon={<FileTextOutlined />}>
-                                    Report Form 1
+                                    <Badge count={count31} offset={[20, 5]} >
+                                        Report Form 1
+                                    </Badge>
                                 </Menu.Item>
                                 <Menu.Item key="5" icon={<FileTextOutlined />}>
-                                    Report Form 2
+                                    <Badge count={count32} offset={[20, 5]} >
+                                        Report Form 2
+                                    </Badge>
                                 </Menu.Item>
                             </>
                             : null
                         }
-                        <Menu.Item key="8" icon={<FolderOpenOutlined />}>
-                            Data History
-                        </Menu.Item>
+                        {profile?.role?.priority < 5 ?
+                            <Menu.Item key="8" icon={<FolderOpenOutlined />}>
+                                Data History
+                            </Menu.Item>
+                            : null
+                        }
                     </Menu.ItemGroup>
                     {profile?.role?.priority < 2 ?
                         <Menu.ItemGroup title='Management'>

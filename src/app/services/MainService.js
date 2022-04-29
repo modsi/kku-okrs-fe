@@ -2,13 +2,14 @@ import { httpUtils } from '../utils/HttpUtils'
 
 const { get, post, patch, postTokenKku, postLoginKku } = httpUtils
 const API_KKU = `https://api.kku.ac.th/v2`
-const API_ENDPOINT = `http://localhost:8080/api`
-// const API_ENDPOINT = `https://e-project.kku.ac.th/api`
+// const API_ENDPOINT = `http://localhost:8080/api`
+const API_ENDPOINT = `https://e-project.kku.ac.th/api`
 const USER_URL = `${API_ENDPOINT}/users`
 const MANAGE_URL = `${API_ENDPOINT}/manage`
 const TEMPLATE__URL = `${API_ENDPOINT}/templates`
 const DASHBOARD_URL = `${API_ENDPOINT}/dashboard`
 const FORM__URL = `${API_ENDPOINT}/form`
+const REPORT_URL = `https://e-project.kku.ac.th/api/report/`
 
 export const ListInstitutions = async () => {
     return await get(`${MANAGE_URL}/institution`)
@@ -83,4 +84,14 @@ export const UpdateFormService = async (data = {}) => {
 
 export const SaveComplateFormService = async (data = {}) => {
     return await post(`${FORM__URL}/complate_form`, data)
+}
+
+export const ExportFormCsv = async (formId) => {
+    return await get(`${REPORT_URL}complete_report_csv?formId=${formId}`)
+
+}
+
+export const ExportFormWord = async (formId) => {
+    return await get(`${REPORT_URL}complete_report_doc?formId=${formId}`)
+
 }

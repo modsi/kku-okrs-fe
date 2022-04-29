@@ -13,6 +13,7 @@ import {
 } from "../../items/Modal";
 import { SaveFormAction, ListFormAction, LIST_FORM, UpdateFormAction } from "../../../redux/actions/FormAction";
 import FormReport from "./FormReport";
+import FormUpload from "./FormUpload";
 import { StoreTemplateAction } from "../../../redux/actions/StoreSearchAction";
 
 const { Text, Link } = Typography;
@@ -68,7 +69,7 @@ const ReportForm1 = () => {
 
   useEffect(() => {
     if (listForm) {
-      setListFormComponent(listForm.result?.filter(l => l.step_id === "3" && l.type_id === '1'))
+      setListFormComponent(listForm.result?.filter(l => (l.step_id === "8" || l.step_id === "3") && l.type_id === '1'))
     }
   }, [listForm])
 
@@ -107,59 +108,6 @@ const ReportForm1 = () => {
     setIsLoading(false);
   }
 
-  const setLayoutTemplate = (listComponent) => {
-    console.log('start setLayoutTemplate', listComponent)
-    let listField = []
-    listComponent?.sort((a, b) => (a.index > b.index) ? 1 : -1)
-    listComponent?.map((currentItem) => {
-      let field = (
-        <>
-          <Col xs={24} sm={24} md={24} lg={24} xl={24} >
-            {currentItem.type === 'title' ?
-              (<Text style={currentItem.isSubTitle ? { paddingLeft: '50px' } : {}}>{currentItem?.label}</Text>)
-              : (<Form.Item
-                className="template-text"
-                labelAlign='left'
-                labelWrap='true'
-                layout={currentItem.labelPosition ?? 'vertical'}
-                label={currentItem.label}
-                name={currentItem.key}
-                rules={[{ required: currentItem.required ? true : false, message: 'Please input ' + currentItem?.label }]}
-              >
-                {currentItem.type === 'textArea' ?
-                  (<Input.TextArea showCount maxLength={currentItem.maxLength} />)
-                  : currentItem.type === 'inputNumber' ?
-                    (<InputNumber min={currentItem.min} max={currentItem.max} />)
-                    : currentItem.type === 'checkbox' ?
-                      (<Checkbox.Group options={currentItem.options} />)
-                      : currentItem.type === 'select' ?
-                        (<Select
-                          mode={currentItem.mode}
-                          placeholder="Please select"
-                          style={{ width: '100%' }}
-                          options={currentItem.options}
-                        />)
-                        : currentItem.type === 'radio' ?
-                          (<Radio.Group
-                            options={currentItem.options}
-                          />)
-                          : currentItem.type === 'day' ?
-                            (<DatePicker />)
-                            : currentItem.type === 'date_time' ?
-                              (<DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />)
-                              : currentItem.type === 'range_date' ?
-                                (<RangePicker />)
-                                : (<Input />)
-                }
-              </Form.Item>
-              )}
-          </Col>
-        </>
-      )
-      listField.push(field)
-    })
-    setListField(listField)
-  }
 
   const onSubmitNewReport = async () => {
     setIsLoading(true)
@@ -173,7 +121,7 @@ const ReportForm1 = () => {
       data.templateName = obj?.template_name
       data.typeId = obj?.type_id
       data.stepId = profile.role_id === '1' ? 2 : 1
-      data.status = false
+      data.id = null
       setListFormComponent([data, ...listFormComponent])
       handleClickCancel()
     } else {
@@ -208,7 +156,7 @@ const ReportForm1 = () => {
     setIsLoading(true);
     console.log('upStep', record)
     let data = { ...record }
-    data.stepId = parseInt(record.stepId) + 1
+    data.stepId = (record.stepId === '6' || record.stepId === '7' || record.stepId === '8' ? 4 : parseInt(record.stepId) + 1)
     let res = await UpdateFormAction(data);
     if (res.error === null) {
       SuccessModal("Success");
@@ -232,7 +180,6 @@ const ReportForm1 = () => {
         c.value = form2.getFieldValue(key)
       }
     });
-    data.status = 1
     data.name = form2.getFieldValue('name')
     data.component = components
     try {
@@ -280,7 +227,7 @@ const ReportForm1 = () => {
         col.push({
           title: ' Status ',
           align: 'center',
-          dataIndex: 'status',
+          dataIndex: 'id',
           render: (val) => {
             if (!val) {
               return {
@@ -334,8 +281,8 @@ const ReportForm1 = () => {
               </Button>
               <Button
                 type="primary"
-                className={record?.status ? "pre-button" : "nol-button"}
-                disabled={record?.status ? false : true}
+                className={record?.id ? "pre-button" : "nol-button"}
+                disabled={record?.id ? false : true}
                 onClick={() =>
                   handleUpStep(record)
                 }
@@ -348,7 +295,7 @@ const ReportForm1 = () => {
         let field = (
           <>
             <Table
-              className='table-user'
+              className='table-user custom-table-dashboard'
               rowKey={(record, index) => record.id}
               style={{ whiteSpace: 'pre' }}
               loading={isLoading}
@@ -365,7 +312,7 @@ const ReportForm1 = () => {
     } else {
       list.push(
         <Table
-          className='table-user'
+          className='table-user custom-table-dashboard'
           rowKey={(record, index) => record.key}
           style={{ whiteSpace: 'pre' }}
           loading={isLoading}
@@ -399,6 +346,7 @@ const ReportForm1 = () => {
           />
           <Row gutter={24} className="row-inquiry-customer">
             <FormReport form={form2} />
+            <FormUpload form={form2} />
           </Row>
           <Row gutter={24} className="row-inquiry-customer">
             <Col span={24} style={{ textAlign: "center" }}>
@@ -427,14 +375,7 @@ const ReportForm1 = () => {
         </>
       ) :
         <Card title={"Report Form 1"} className="rounded" >
-          <Row gutter={24}>
-            <Col span={24} style={{ textAlign: "right" }} >
-              <Button type="primary" shape="circle" size="large"
-                onClick={newTemplate} className="ggar-button"
-              >
-                <PlusOutlined className="big3-title" />
-              </Button>
-            </Col >
+          <Row gutter={24}>         
             <Col span={24} style={{ textAlign: "center" }}>
               {listTableForm}
             </Col>

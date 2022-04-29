@@ -193,7 +193,8 @@ const FormReport = ({ form }) => {
         </>
       )
       listField.push(field)
-    })
+      form.setFieldsValue({[currentItem.key] : currentItem.value})
+    })    
     setListField(listField)
   }
 

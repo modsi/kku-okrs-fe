@@ -22,6 +22,7 @@ import {
   ListTemplateAction,
 } from "../../../redux/actions/TemplateAction";
 import { StoreTemplateAction } from "../../../redux/actions/StoreSearchAction";
+import FormReport from "../admin/FormReport"
 
 const { Text, Link } = Typography;
 const Template = () => {
@@ -138,25 +139,28 @@ const Template = () => {
   const handleClickView = (record) => {
     setIsLoading(true);
     setShowConfigPage(true);
-    let components = [];
-    record.component.map((field, index) => {
-      let obj = {
-        id: field.id,
-        index: parseInt(field.priority ?? 1),
-        required:
-          field.required && parseInt(field.required) === 1 ? true : false,
-        key: field.key,
-        label: field.label,
-      };
-      Object.assign(obj, field.properties);
-      components.push(obj);
-    });
-    setTemplate({
-      components: components,
-      templateId: record.id,
-      templateType: record.type_id,
-      templateName: record.template_name,
-    });
+    // let components = [];
+    // record.component.map((field, index) => {
+    //   let obj = {
+    //     id: field.id,
+    //     index: parseInt(field.priority ?? 1),
+    //     required:
+    //       field.required && parseInt(field.required) === 1 ? true : false,
+    //     key: field.key,
+    //     label: field.label,
+    //   };
+    //   Object.assign(obj, field.properties);
+    //   components.push(obj);
+    // });
+    // setTemplate({
+    //   components: components,
+    //   templateId: record.id,
+    //   templateType: record.type_id,
+    //   templateName: record.template_name,
+    // });
+    setIsLoading(true);
+    setShowConfigPage(true);
+    setTemplate(record);
     setIsLoading(false);
   };
 
@@ -206,7 +210,7 @@ const Template = () => {
             }}
             title="Back"
           />
-          <ConfigTemplate />
+          <FormReport form={form} />
         </>
       ) : showSettingPage ? (
         <>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
-import { PageHeader,Modal, Steps, Card, Row, Col, Button, Typography, Table, Form, Input, Radio, Space, Image, InputNumber, Checkbox, Select, DatePicker, Upload, message } from 'antd';
+import { PageHeader, Modal, Steps, Card, Row, Col, Button, Typography, Table, Form, Input, Radio, Space, Image, InputNumber, Checkbox, Select, DatePicker, Upload, message } from 'antd';
 import { EditOutlined, EyeOutlined, SettingOutlined, PlusOutlined, FileSearchOutlined, PlusCircleFilled } from "@ant-design/icons";
 import { tem1, tem2 } from '../../../../template-mock'
 import { LIST_TEMPLATES, ListTemplateAction } from '../../../redux/actions/TemplateAction'
@@ -17,6 +17,7 @@ import {
   STORE_TEMPLATE,
 } from "../../../redux/actions/StoreSearchAction";
 import FormReport from './FormReport'
+import FormUpload from "./FormUpload";
 
 const { Text, Link } = Typography;
 const { RangePicker } = DatePicker;
@@ -49,6 +50,45 @@ const ManageTemplate = () => {
   const [listFormComponent, setListFormComponent] = useState([]);
   const [listTableForm, setListTableForm] = useState([]);
   const [showConfigPage, setShowConfigPage] = useState(false);
+  const storeTemplate = useSelector(
+    (state) => state?.storeSearchReducer?.[STORE_TEMPLATE]
+  );
+
+  const propsStatus =
+  {
+    "id": "00000",
+    "index": 4000,
+    "key": "OKRs_Status",
+    "size": "long",
+    "type": "select",
+    "align": "left",
+    "permission": 2,
+    "label": "สถานะ",
+    "required": true,
+    "options": [
+      {
+        "index": 1,
+        "label": "สิ้นสุดโครงการ",
+        "value": 1
+      },
+      {
+        "index": 2,
+        "label": "Reject to แผนปฏิบัติการ",
+        "value": 6
+      },
+      {
+        "index": 3,
+        "label": "Reject to แผนงบประมาณ",
+        "value": 7
+      },
+      {
+        "index": 4,
+        "label": "Reject to ผู้ใช้งาน",
+        "value": 8
+      }
+    ],
+    "labelPosition": "vertical"
+  }
 
   const layout = {
     labelCol: { span: 24 },
@@ -71,7 +111,7 @@ const ManageTemplate = () => {
 
   useEffect(() => {
     if (listForm) {
-      setListFormComponent(listForm.result?.filter(l => l.step_id !== "3"))
+      setListFormComponent(listForm.result?.filter(l => l.step_id !== "3" && l.step_id !== "8"))
     }
   }, [listForm])
 
@@ -101,7 +141,8 @@ const ManageTemplate = () => {
 
   const handleClickEdit = (record) => {
     console.log("handleClickEdit", record)
-    setStep(record.stepId - 1)
+    form2.setFieldsValue({ ['name']: record.name })
+    setStep(record.stepId === '6' || record.stepId === '7' || record.stepId === '8' ? 3 : record.stepId - 1)
     setListComponent(record)
     let l = record?.component?.filter(i => profile.role_id === '1' ? i.permission === 3 || i.permission === 4 : i.permission === parseInt(profile.role_id))
     setLayoutTemplate(l)
@@ -114,6 +155,7 @@ const ManageTemplate = () => {
     let listField = []
     listComponent?.sort((a, b) => (a.index > b.index) ? 1 : -1)
     listComponent?.map((currentItem) => {
+      console.log('value', currentItem.value)
       let field = (
         <>
           <Col xs={24} sm={24} md={24} lg={24} xl={24} >
@@ -158,6 +200,7 @@ const ManageTemplate = () => {
           </Col>
         </>
       )
+      form2.setFieldsValue({ [currentItem.key]: currentItem.value })
       listField.push(field)
     })
     setListField(listField)
@@ -175,7 +218,7 @@ const ManageTemplate = () => {
       data.templateName = obj?.template_name
       data.typeId = obj?.type_id
       data.stepId = profile.role_id === '1' ? 2 : 1
-      data.status = false
+      data.id = null
       setListFormComponent([data, ...listFormComponent])
       handleClickCancel()
     } else {
@@ -214,7 +257,7 @@ const ManageTemplate = () => {
     setIsLoading(true);
     console.log('upStep', record)
     let data = { ...record }
-    data.stepId = parseInt(record.stepId) + 1
+    data.stepId = (record.stepId === '6' || record.stepId === '7' || record.stepId === '8' ? 4 : parseInt(record.stepId) + 1)
     let res = await UpdateFormAction(data);
     if (res.error === null) {
       SuccessModal("Success");
@@ -236,9 +279,19 @@ const ManageTemplate = () => {
       let c = components.find(k => k.key === key)
       if (c) {
         c.value = form2.getFieldValue(key)
+      } 
+      
+      if (key === 'OKRs_Status'){
+        let value = form2.getFieldValue(key)
+        if(value === 1){
+          data.status = 1
+          data.stepId = 5
+        }else {
+          data.status = null
+          data.stepId = value
+        }
       }
-    });
-    data.status = 1
+    });    
     data.name = form2.getFieldValue('name')
     data.component = components
     try {
@@ -270,6 +323,24 @@ const ManageTemplate = () => {
     setIsLoading(false);
   }
 
+  const handleClickValidated = (record) => {
+    console.log("handleClickValidated", record)
+    let status = {...propsStatus}
+    if(record.status){
+      if(record.status === "1"){
+        Object.assign(status,{value: 1})
+      }else {
+        Object.assign(status,{value: parseInt(record.stepId)})
+      }
+    }
+    form2.setFieldsValue({ ['name']: record.name })
+    setStep(record.stepId - 1)
+    setListComponent(record)
+    let l = record?.component?.filter(i => profile.role_id === '1' ? i.permission === 3 || i.permission === 4 : i.permission === parseInt(profile.role_id))
+    setLayoutTemplate([...l, status])
+    setIsModal2(true);
+    setAddEditTitle(profile?.role?.role_name)
+  }
   async function setTemplate(data) {
     dispatch(await StoreTemplateAction(data));
   }
@@ -299,7 +370,7 @@ const ManageTemplate = () => {
         col.push({
           title: ' Status ',
           align: 'center',
-          dataIndex: 'status',
+          dataIndex: 'id',
           render: (val) => {
             if (!val) {
               return {
@@ -344,7 +415,7 @@ const ManageTemplate = () => {
                 <>
                   <Button
                     type="primary"
-                    className="pre-button"
+                    className={record?.stepId === '5' ? "appr-button" : "pre-button"}
                     onClick={() => {
                       handleClickView(record)
                     }
@@ -355,10 +426,10 @@ const ManageTemplate = () => {
                   </Button>
                   <Button
                     type="primary"
-                    className={record?.status ? "pre-button" : "nol-button"}
-                    disabled={record?.status ? false : true}
+                    className={record?.status !== '1' ? "pre-button" : "nol-button"}
+                    disabled={record?.id ? false : true}
                     onClick={() =>
-                      handleUpStep(record)
+                      handleClickValidated(record)
                     }
                   >
                     <Text className="big6-title">manage</Text>
@@ -380,8 +451,8 @@ const ManageTemplate = () => {
                   </Button>
                   <Button
                     type="primary"
-                    className={record?.status ? "pre-button" : "nol-button"}
-                    disabled={record?.status ? false : true}
+                    className={record?.id ? "pre-button" : "nol-button"}
+                    disabled={record?.id ? false : true}
                     onClick={() =>
                       handleUpStep(record)
                     }
@@ -396,7 +467,7 @@ const ManageTemplate = () => {
         let field = (
           <>
             <Table
-              className='table-user'
+              className='table-user custom-table-dashboard'
               rowKey={(record, index) => record.id}
               style={{ whiteSpace: 'pre' }}
               loading={isLoading}
@@ -413,7 +484,7 @@ const ManageTemplate = () => {
     } else {
       list.push(
         <Table
-          className='table-user'
+          className='table-user custom-table-dashboard'
           rowKey={(record, index) => record.key}
           style={{ whiteSpace: 'pre' }}
           loading={isLoading}
@@ -442,31 +513,34 @@ const ManageTemplate = () => {
           />
           <Row gutter={24} className="row-inquiry-customer">
             <FormReport form={form2} />
+            <FormUpload form={form2} />
           </Row>
-          <Row gutter={24} className="row-inquiry-customer">
-            <Col span={24} style={{ textAlign: "center" }}>
-              <Button
-                className='btn-event btn-color-cancel'
-                style={{ margin: "0 8px" }}
-                onClick={() => {
-                  handleClickCancel();
-                }}
-                danger
-              >
-                ยกเลิก
-              </Button>
-              <Button
-                className='btn-event btn-color-ok'
-                type="primary"
-                danger
-                htmlType="submit"
-                onClick={saveForm}
-                loading={isLoading}
-              >
-                บันทึก
-              </Button>
-            </Col>
-          </Row>
+          {storeTemplate?.stepId !== '5' ?
+            <Row gutter={24} className="row-inquiry-customer">
+              <Col span={24} style={{ textAlign: "center" }}>
+                <Button
+                  className='btn-event btn-color-cancel'
+                  style={{ margin: "0 8px" }}
+                  onClick={() => {
+                    handleClickCancel();
+                  }}
+                  danger
+                >
+                  ยกเลิก
+                </Button>
+                <Button
+                  className='btn-event btn-color-ok'
+                  type="primary"
+                  danger
+                  htmlType="submit"
+                  onClick={saveForm}
+                  loading={isLoading}
+                >
+                  บันทึก
+                </Button>
+              </Col>
+            </Row>
+            : null}
         </>
       ) :
         <Card title={"Manage Report"} className="rounded" >

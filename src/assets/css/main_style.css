@@ -168,11 +168,28 @@ div#root {
   border-color: #fff;
 }
 
+.appr-button {
+  background-color: #0f890d;
+  border-color: #fff;
+  border-radius: 10px;
+  height: auto;
+}
+
+.appr-button:hover,
+.appr-button:focus {
+  background-color: #4ff855;
+  border-color: #fff;
+}
+
 .ggar-button {
   background: #eb680a;
   color: #ede5df;
   height: auto !important;
   border-color: #fff;
+}
+
+.ant-badge{
+  color: rgba(0, 0, 0, 0.5);
 }
 
 .ggar-button:hover,

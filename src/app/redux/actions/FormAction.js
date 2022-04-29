@@ -1,6 +1,6 @@
-import { SaveFormService, GetFormeService, UpdateFormService, SaveComplateFormService } from '../../services/MainService'
+import { SaveFormService, GetFormeService, UpdateFormService, SaveComplateFormService, ExportFormCsv, ExportFormWord } from '../../services/MainService'
 import { Payload } from '../../utils/Payload'
-
+import { clearStorege, getStorage } from "../../screens/state/localStorage";
 
 export const SaveFormAction = async (data) => {
   const result = await SaveFormService(data)
@@ -20,14 +20,70 @@ export const UpdateFormAction = async (data) => {
   return result?.data
 }
 
+function dateNow() {
+  var date = new Date();
+  var day = date.getDate();
+  if (day < 10) {
+    day = "0" + day;
+  }
+  var month = date.getMonth() + 1;
+  if (month < 10) {
+    month = "0" + month;
+  }
+  var year = date.getFullYear();
+  return year + month;
+}
+
+export const EXPORT_CSV = 'EXPORT_CSV'
+export const ExportFormCsvAction = async (data) => {
+
+  const result = await ExportFormCsv(data?.id)
+  // console.log(result)
+  const url = window.URL.createObjectURL(new Blob([result?.data]), { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+  const link = document.createElement('a');
+  link.href = url;
+  link.setAttribute('download', 'report-' + data?.name + '-' + dateNow() + '.csv');
+  document.body.appendChild(link);
+  link.click();
+  const params = {
+    [EXPORT_CSV]: {
+      fileName: result?.data,
+    }
+  }
+  return Payload({ params: params, type: EXPORT_CSV })
+}
+
+export const EXPORT_WORD = 'EXPORT_WORD'
+export const ExportFormWordAction = async (data) => {
+
+  const result = await ExportFormWord(data?.id)
+  // console.log(result)
+  const url = window.URL.createObjectURL(new Blob([result?.data]), { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+  const link = document.createElement('a');
+  link.href = url;
+  link.setAttribute('download', 'report-' + data?.name + '-' + dateNow() + '.docx');
+  document.body.appendChild(link);
+  link.click();
+  const params = {
+    [EXPORT_WORD]: {
+      fileName: result?.data,
+    }
+  }
+  return Payload({ params: params, type: EXPORT_WORD })
+}
+
 export const SaveCompalteFormAction = async (id, data) => {
   let obj = {}
   let component = []
   data.component.map((c) => {
-    // console.log('component', c)
+    console.log('component', c)
     let o = {
       label: c.label,
       key: c.key
+    }
+    if (data.status === 1) {
+      o.approvedFlag = 1
+      o.approvedBy = getStorage('profile')?.username
     }
     if (c.value && Array.isArray(c.value)) {
       c.value.map((v) => {
@@ -40,6 +96,12 @@ export const SaveCompalteFormAction = async (id, data) => {
       let v = c.value
       o.value = v.value
       o.labelValue = v.label
+      component.push(o)
+    } else if (c.type === 'select') {
+      let v = c.value
+      let label = c.options.find(k => k.value = v)?.label
+      o.value = v - 1 
+      o.labelValue = label
       component.push(o)
     } else {
       o.value = c.value

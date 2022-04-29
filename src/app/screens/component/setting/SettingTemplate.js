@@ -46,8 +46,9 @@ const SettingTemplate = ({ data }) => {
     useEffect(() => {
         if (listRoles) {
             let d = []
-            listRoles.sort((a, b) => (parseInt(a.id) > parseInt(b.id)) ? 1 : -1)
-            listRoles.map(c => {
+            let l = listRoles.filter(c=> c.id !== "6" && c.id !== "1" )
+            l.sort((a, b) => (parseInt(a.id) > parseInt(b.id)) ? 1 : -1)
+            l.map(c => {
                 let comp = { label: (c.id === "1" ? 'ระบบ' : c.role_name), value: parseInt(c.id) }
                 if (c.id === "1") {
                     comp.disabled = true
