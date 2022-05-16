@@ -39,7 +39,7 @@ export const ExportFormCsvAction = async (data) => {
 
   const result = await ExportFormCsv(data?.id)
   // console.log(result)
-  const url = window.URL.createObjectURL(new Blob([result?.data]), { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+  const url = window.URL.createObjectURL(new Blob([result?.data]));
   const link = document.createElement('a');
   link.href = url;
   link.setAttribute('download', 'report-' + data?.name + '-' + dateNow() + '.csv');
@@ -58,11 +58,10 @@ export const ExportFormWordAction = async (data) => {
 
   const result = await ExportFormWord(data?.id)
   // console.log(result)
-  const url = window.URL.createObjectURL(new Blob([result?.data]), { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+  const url = window.URL.createObjectURL(new Blob([result?.data]));
   const link = document.createElement('a');
   link.href = url;
   link.setAttribute('download', 'report-' + data?.name + '-' + dateNow() + '.docx');
-  document.body.appendChild(link);
   link.click();
   const params = {
     [EXPORT_WORD]: {

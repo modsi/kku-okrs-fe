@@ -1,6 +1,6 @@
 import { httpUtils } from '../utils/HttpUtils'
 
-const { get, post, patch, postTokenKku, postLoginKku } = httpUtils
+const { get, post, patch, postTokenKku, postLoginKku, downloadFile } = httpUtils
 const API_KKU = `https://api.kku.ac.th/v2`
 // const API_ENDPOINT = `http://localhost:8080/api`
 const API_ENDPOINT = `https://e-project.kku.ac.th/api`
@@ -87,11 +87,10 @@ export const SaveComplateFormService = async (data = {}) => {
 }
 
 export const ExportFormCsv = async (formId) => {
-    return await get(`${REPORT_URL}complete_report_csv?formId=${formId}`)
+    return await downloadFile(`${REPORT_URL}complete_report_csv?formId=${formId}`)
 
 }
 
 export const ExportFormWord = async (formId) => {
-    return await get(`${REPORT_URL}complete_report_doc?formId=${formId}`)
-
+    return await downloadFile(`${REPORT_URL}complete_report_doc?formId=${formId}`)
 }

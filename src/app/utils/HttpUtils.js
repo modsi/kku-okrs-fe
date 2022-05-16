@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 export const httpUtils = {
 	post,
 	get,
+	downloadFile,
 	postFormData,
 	postUpload,
 	patch,
@@ -118,6 +119,35 @@ function get(url, payload = {}, headersOption) {
 			};
 
 			// console.log("options",options);
+
+			const response = await axios(options)
+				.then(response => {
+					return response;
+				});
+			return response
+		}
+		return call();
+	} catch (err) {
+		GoToLogin()
+		console.error(err);
+		throw err;
+	}
+};
+
+async function downloadFile(url, payload = {}, headersOption) {
+	try {
+		const call = async () => {
+			const headers = getHeaders(headersOption);
+			const options = {
+				method: 'GET',
+				...headers,
+				params: payload,
+				responseType: "blob",
+				mode: 'no-cors',
+				url,
+			};
+
+			 console.log("options","blob");
 
 			const response = await axios(options)
 				.then(response => {
