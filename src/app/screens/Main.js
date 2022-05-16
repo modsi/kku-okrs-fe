@@ -75,12 +75,9 @@ const Main = () => {
             let p = getStorage('profile')
             setProfile(p)
             handleListMaster()
-            if (p?.role?.priority < 2) {
-                setKey(['6']);
-                setContent(<User />);
-            } else if (p?.role?.priority < 4) {
-                setKey(['3']);
-                setContent(<Admin />);
+            if (p?.role?.priority === '1') {
+                setKey(['7']);
+                setContent(<Template />);            
             } else {
                 setKey(['1']);
                 setContent(<Dashboard />);
@@ -170,47 +167,34 @@ const Main = () => {
                             <Menu.Item key="2-3">สาขาวิชา</Menu.Item>
                             <Menu.Item key="2-4">ศูนย์</Menu.Item>
                         </SubMenu>
-                        {profile?.role?.priority < 4 ?
+                        <Menu.Item key="3" icon={<AuditOutlined />} hidden={profile?.role?.priority !== '3' && profile?.role?.priority !== '1'}>
+                            <Badge count={count2} offset={[20, 5]} >
+                                Manage Report
+                            </Badge>
+                        </Menu.Item>
+                        <Menu.Item key="4" icon={<FileTextOutlined />}  hidden={profile?.role?.priority === '3' || profile?.role?.priority === '5'}>
+                            <Badge count={count31} offset={[20, 5]} >
+                                Report Form 1
+                            </Badge>
+                        </Menu.Item>
+                        <Menu.Item key="5" icon={<FileTextOutlined />} hidden={profile?.role?.priority === '3' || profile?.role?.priority === '5'}>
+                            <Badge count={count32} offset={[20, 5]} >
+                                Report Form 2
+                            </Badge>
+                        </Menu.Item>
 
-                            <Menu.Item key="3" icon={<AuditOutlined />}>
-                                <Badge count={count2} offset={[20, 5]} >
-                                    Manage Report
-                                </Badge>
-                            </Menu.Item>
-
-                            : null}
-                        {profile?.role?.priority === '4' || profile?.role?.priority === '1' ?
-                            <>
-                                <Menu.Item key="4" icon={<FileTextOutlined />}>
-                                    <Badge count={count31} offset={[20, 5]} >
-                                        Report Form 1
-                                    </Badge>
-                                </Menu.Item>
-                                <Menu.Item key="5" icon={<FileTextOutlined />}>
-                                    <Badge count={count32} offset={[20, 5]} >
-                                        Report Form 2
-                                    </Badge>
-                                </Menu.Item>
-                            </>
-                            : null
-                        }
-                        {profile?.role?.priority < 5 ?
-                            <Menu.Item key="8" icon={<FolderOpenOutlined />}>
-                                Data History
-                            </Menu.Item>
-                            : null
-                        }
+                        <Menu.Item key="8" icon={<FolderOpenOutlined />} hidden={profile?.role?.priority === '5'}>
+                            Data History
+                        </Menu.Item>
                     </Menu.ItemGroup>
-                    {profile?.role?.priority < 2 ?
-                        <Menu.ItemGroup title='Management'>
-                            <Menu.Item key="6" icon={<UserOutlined />}>
-                                User
-                            </Menu.Item>
-                            <Menu.Item key="7" icon={<GroupOutlined />}>
-                                Template
-                            </Menu.Item>
-                        </Menu.ItemGroup>
-                        : null}
+                    <Menu.ItemGroup title='Management' hidden={profile?.role?.priority !== '1'}>
+                        <Menu.Item key="6" icon={<UserOutlined />}>
+                            User
+                        </Menu.Item>
+                        <Menu.Item key="7" icon={<GroupOutlined />}>
+                            Template
+                        </Menu.Item>
+                    </Menu.ItemGroup>
                 </Menu>
             </Sider>
             <Layout>
