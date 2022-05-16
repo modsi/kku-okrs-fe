@@ -7,6 +7,7 @@ import {
   PlusOutlined,
   SearchOutlined,
   EyeOutlined,
+  EditFilled
 } from "@ant-design/icons";
 import { DATE_FULL, DATE_NORMAL } from "../../../utils/Elements";
 import moment from "moment";
@@ -31,6 +32,7 @@ const Template = () => {
   const [form] = Form.useForm();
   const [isLoading, setIsLoading] = useState(false);
   const [showConfigPage, setShowConfigPage] = useState(false);
+  const [showViewPage, setShowViewPage] = useState(false);
   const [showSettingPage, setShowSettingPage] = useState(false);
   const [isModalAddEditVisible, setIsModalAddEditVisible] = useState(false);
   const [addEditTitle, setAddEditTitle] = useState("");
@@ -107,7 +109,7 @@ const Template = () => {
       fixed: "right",
       align: "center",
       width: 100,
-      render: (record) => (
+      render: (record) => ( 
         <div className="text-center">
           <Button
             type="link"
@@ -119,11 +121,18 @@ const Template = () => {
           </Button>
           <Button
             style={{ marginLeft: "5px", borderRadius: ".5rem" }}
+            // onClick={() => handleClickView(record)}            
+            disabled={record?.is_used === true ? true : false}
+          >
+            <EditFilled />
+            <Text>Edit</Text>
+          </Button>
+          <Button
+            style={{ marginLeft: "5px", borderRadius: ".5rem" }}
             onClick={() => handleClickEdit(record)}
           >
             <SettingOutlined />
             Permission
-            {/* <EditOutlined /> */}
           </Button>
         </div>
       ),
@@ -138,34 +147,15 @@ const Template = () => {
 
   const handleClickView = (record) => {
     setIsLoading(true);
-    setShowConfigPage(true);
-    // let components = [];
-    // record.component.map((field, index) => {
-    //   let obj = {
-    //     id: field.id,
-    //     index: parseInt(field.priority ?? 1),
-    //     required:
-    //       field.required && parseInt(field.required) === 1 ? true : false,
-    //     key: field.key,
-    //     label: field.label,
-    //   };
-    //   Object.assign(obj, field.properties);
-    //   components.push(obj);
-    // });
-    // setTemplate({
-    //   components: components,
-    //   templateId: record.id,
-    //   templateType: record.type_id,
-    //   templateName: record.template_name,
-    // });
-    setIsLoading(true);
-    setShowConfigPage(true);
-    setTemplate(record);
+    setShowViewPage(true);
+    setTemplate({
+      name: 'Preview Template :' + record.template_name,
+      ...record
+    });
     setIsLoading(false);
   };
 
   const handleTableChange = (pagination, filters, sorter) => {
-    // console.log('pagination >> ', pagination)
     setCurrentPage(pagination.current);
   };
 
@@ -177,6 +167,7 @@ const Template = () => {
   useEffect(() => {
     setShowConfigPage(false);
     setShowSettingPage(false);
+    setShowViewPage(false);
     setTemplate({});
   }, [dataSource]);
 
@@ -200,7 +191,19 @@ const Template = () => {
 
   return (
     <>
-      {showConfigPage ? (
+      {showViewPage ? (
+        <>
+          <PageHeader
+            style={{ padding: "0px" }}
+            onBack={() => {
+              setShowViewPage(false);
+              setTemplate({});
+            }}
+            title="Back"
+          />
+          <FormReport form={form} />
+        </>
+      ) : showConfigPage ? (
         <>
           <PageHeader
             style={{ padding: "0px" }}
@@ -210,7 +213,8 @@ const Template = () => {
             }}
             title="Back"
           />
-          <FormReport form={form} />
+          {/* <FormReport form={form} /> */}
+          <ConfigTemplate />
         </>
       ) : showSettingPage ? (
         <>
