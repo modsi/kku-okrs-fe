@@ -73,7 +73,7 @@
 }
 
 .custom-table-dashboard .ant-table.ant-table-small .ant-table-title, .ant-table.ant-table-small .ant-table-footer, .ant-table.ant-table-small .ant-table-thead > tr > th, .ant-table.ant-table-small .ant-table-tbody > tr > td, .ant-table.ant-table-small tfoot > tr > th, .ant-table.ant-table-small tfoot > tr > td {
-    padding: 10px 0px;
+    padding: 10px 5px;
 }
 
 .end-box-mobile {
