@@ -43,7 +43,6 @@ export const ExportFormCsvAction = async (data) => {
   const link = document.createElement('a');
   link.href = url;
   link.setAttribute('download', 'report-' + data?.name + '-' + dateNow() + '.csv');
-  document.body.appendChild(link);
   link.click();
   const params = {
     [EXPORT_CSV]: {

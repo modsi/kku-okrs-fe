@@ -147,8 +147,6 @@ async function downloadFile(url, payload = {}, headersOption) {
 				url,
 			};
 
-			 console.log("options","blob");
-
 			const response = await axios(options)
 				.then(response => {
 					return response;
