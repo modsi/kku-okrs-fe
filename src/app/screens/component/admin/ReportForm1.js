@@ -44,7 +44,7 @@ import {
   SuccessModal,
   ErrorModalMassageHtml,
 } from "../../items/Modal";
-import {
+import { propsIds, propsStatus,
   SaveFormAction,
   ListFormAction,
   LIST_FORM,
@@ -53,6 +53,8 @@ import {
 import FormReport from "./FormReport";
 import FormUpload from "./FormUpload";
 import { StoreTemplateAction } from "../../../redux/actions/StoreSearchAction";
+import { UpdateTempateAction } from '../../../redux/actions/TemplateAction'
+import moment from "moment";
 
 const { Text, Link } = Typography;
 const { RangePicker } = DatePicker;
@@ -72,9 +74,8 @@ const ReportForm1 = () => {
   const [addEditTitle, setAddEditTitle] = useState("");
   const [form] = Form.useForm();
   const [form2] = Form.useForm();
-  const listTemplateMaster = useSelector(
-    (state) => state?.main?.[LIST_TEMPLATES]
-  );
+  const [form3] = Form.useForm();
+  const listTemplateMaster = useSelector((state) => state?.main?.[LIST_TEMPLATES]);
   const listForm = useSelector((state) => state?.main?.[LIST_FORM]);
   const [listTemplate, setListTemplate] = useState([]);
   const [columns, setColumns] = useState(temp_columns);
@@ -87,6 +88,7 @@ const ReportForm1 = () => {
   const [listFormComponent, setListFormComponent] = useState([]);
   const [listTableForm, setListTableForm] = useState([]);
   const [showConfigPage, setShowConfigPage] = useState(false);
+  const [showViewPage, setShowViewPage] = useState(false);
 
   const layout = {
     labelCol: { span: 24 },
@@ -102,18 +104,14 @@ const ReportForm1 = () => {
 
   useEffect(() => {
     if (listTemplateMaster) {
-      let list = listTemplateMaster.result?.filter((l) => l.status === "1");
+      let list = listTemplateMaster.result?.filter((l) => l.status === "1" && l.type_id === "3");
       setListTemplate(list);
     }
   }, [listTemplateMaster]);
 
   useEffect(() => {
     if (listForm) {
-      setListFormComponent(
-        listForm.result?.filter(
-          (l) => (l.step_id === "8" || l.step_id === "3") && l.type_id === "1"
-        )
-      );
+      setListFormComponent(listForm.result?.filter(l => (l.step_id > 2 && l.step_id !== '9' && l.type_id === "1")))
     }
   }, [listForm]);
 
@@ -136,13 +134,9 @@ const ReportForm1 = () => {
     setIsModalAddEditVisible(false);
     setIsModal2(false);
     form2.resetFields();
+    form3.resetFields();
     setShowConfigPage(false);
     setTemplate({});
-  };
-
-  const newTemplate = () => {
-    setIsModalAddEditVisible(true);
-    setAddEditTitle("เลือกใช้ Template");
   };
 
   const handleClickEdit = (record) => {
@@ -154,28 +148,6 @@ const ReportForm1 = () => {
     setIsLoading(false);
   };
 
-  const onSubmitNewReport = async () => {
-    setIsLoading(true);
-    if (form.getFieldValue("template")) {
-      let obj = listTemplate.find(
-        (template) => template.id === form.getFieldValue("template")
-      );
-      let components = obj?.component;
-      components?.sort((a, b) => (a.index > b.index ? 1 : -1));
-      let data = {};
-      data.component = components;
-      data.templateId = obj?.id;
-      data.templateName = obj?.template_name;
-      data.typeId = obj?.type_id;
-      data.stepId = profile.role_id === "1" ? 2 : 1;
-      data.id = null;
-      setListFormComponent([data, ...listFormComponent]);
-      handleClickCancel();
-    } else {
-      form.validateFields();
-    }
-    setIsLoading(false);
-  };
 
   const saveForm = () => {
     ConfirmModalEditText(onSubmit, conditionSave());
@@ -203,10 +175,29 @@ const ReportForm1 = () => {
     setIsLoading(true);
     console.log("upStep", record);
     let data = { ...record };
+    let components = record?.component
+    data.templateId = record?.templateId ?? record?.template_id;
+    data.templateName = record?.templateName;
+    data.typeId = record?.typeId ?? record?.type_id;
+    data.id = record?.id;
+    data.status = record?.status;
+    data.name = record?.name;
+    let stepId = record?.stepId ?? record?.step_id;
     data.stepId =
-      record.stepId === "6" || record.stepId === "7" || record.stepId === "8"
+      stepId === "6" || stepId === "7" || stepId === "8"
         ? 4
-        : parseInt(record.stepId) + 1;
+        : parseInt(stepId) + 1;
+    if (data.stepId === 4) {
+      let c = components.find(k => k.key === 'OKRs_Ids')
+      if (!c) {
+        c = propsIds
+        components.push(c)
+      }
+      let ids = padLeadingZeros(record?.id, 5);
+      c.label = 'เลขการรับเงิน : ' + ids
+      c.value = ids
+    }
+    data.component = components
     let res = await UpdateFormAction(data);
     if (res.error === null) {
       SuccessModal("Success");
@@ -222,11 +213,39 @@ const ReportForm1 = () => {
     setIsLoading(true);
     let res = {};
     let data = listComponent;
+    data.templateId = listComponent?.templateId ?? listComponent?.template_id;
+    data.templateName = listComponent?.templateName;
+    data.typeId = listComponent?.typeId ?? listComponent?.type_id;
+    data.id = listComponent?.id;
+    data.stepId = listComponent?.stepId ?? listComponent?.step_id;
+    data.status = listComponent?.status;
+    data.name = listComponent?.name;
     let components = listComponent?.component;
     Object.keys(form2.getFieldsValue()).forEach(function (key) {
       let c = components.find((k) => k.key === key);
       if (c) {
         c.value = form2.getFieldValue(key);
+      } 
+
+      if (key === 'OKRs_Status') {
+        console.log('OKRs_Status', c)
+        if(c===null || c===undefined){
+          console.log('add c')
+          c = propsStatus
+          components.push(c)
+        }
+        let value = form2.getFieldValue(key)        
+        c.value = propsStatus.options.find(k => k.value === value)?.label
+        if (value === 1) {
+          data.status = 1
+          data.stepId = 5
+        } else if (value < 10) {
+          data.status = 0
+          data.stepId = value
+        } else {
+          data.status = 0
+          data.stepId = 4
+        }        
       }
     });
     data.name = form2.getFieldValue("name");
@@ -254,196 +273,63 @@ const ReportForm1 = () => {
   const setPage = () => {
     let list = [];
     console.log("setPage", listFormComponent);
-
     if (listFormComponent) {
       listFormComponent?.map((obj, i) => {
         let components = obj?.component;
         components?.sort((a, b) => (a.index > b.index ? 1 : -1));
         let col = [];
-        let data = {};
-        data.component = components;
-        data.templateId = obj?.templateId ?? obj?.template_id;
-        data.templateName = obj?.templateName;
-        data.typeId = obj?.typeId ?? obj?.type_id;
-        data.id = obj?.id;
-        data.stepId = obj?.stepId ?? obj?.step_id;
-        data.status = obj?.status;
-        data.name = obj?.name;
-
         let colData = {
-          'no': i+1,
+          'no': i + 1,
           'id': obj?.id,
           'OKRs_Ids': '',
           'OKRs_Date': '',
-          'OKRs_Book_Number': '',
+          'OKRs_BookNumber': '',
           'OKRs_Project': '',
           'OKRs_Title': '',
           'OKRs_Value': '',
           'OKRs_Unit_Value': '',
           'OKRs_Success': '',
           'OKRs_Budget_2': '',
-          'OKRs_Finance_Number': '',
+          'OKRs_FinanceNumber': '',
           'OKRs_Officer': '',
           'OKRs_Status': '',
           'record_data': obj
         }
 
         components.map((component) => {
-          if (component.key == 'OKRs_Ids') {
-            colData.OKRs_Ids = component.value;
-          } else if (component.key == 'OKRs_Date') {
-            colData.OKRs_Date = component.value;
-          } else if (component.key == 'OKRs_Book_Number') {
-            colData.OKRs_Book_Number = component.value;
-          } else if (component.key == 'OKRs_Project') {
-            colData.OKRs_Project = component.value;
-          } else if (component.key == 'OKRs_Title') {
+          if (component.key === 'OKRs_Title') {
             colData.OKRs_Title = component.value;
-          } else if (component.key == 'OKRs_Value') {
+          } else if (component.key === 'OKRs_Ids') {
+            colData.OKRs_Ids = component.value;
+          } else if (component.key === 'OKRs_Date') {
+            colData.OKRs_Date = component.value;
+          } else if (component.key === 'OKRs_BookNumber') {
+            colData.OKRs_BookNumber = component.value;
+          } else if (component.key === 'OKRs_Project') {
+            colData.OKRs_Project = component.value;
+          } else if (component.key === 'OKRs_Project') {
+            colData.OKRs_Project = component.value;
+          } else if (component.key === 'OKRs_Value') {
             colData.OKRs_Value = component.value;
-          } else if (component.key == 'OKRs_Unit_Value') {
+          } else if (component.key === 'OKRs_Unit_Value') {
             colData.OKRs_Unit_Value = component.value;
-          } else if (component.key == 'OKRs_Success') {
+          } else if (component.key === 'OKRs_Success') {
             colData.OKRs_Success = component.value;
-          } else if (component.key == 'OKRs_Budget_2') {
+          } else if (component.key === 'OKRs_Budget_2') {
             colData.OKRs_Budget_2 = component.value;
-          } else if (component.key == 'OKRs_Finance_Number') {
-            colData.OKRs_Finance_Number = component.value;
-          } else if (component.key == 'OKRs_Officer') {
+          } else if (component.key === 'OKRs_FinanceNumber') {
+            colData.OKRs_FinanceNumber = component.value;
+          } else if (component.key === 'OKRs_Officer') {
             colData.OKRs_Officer = component.value;
-          } else if (component.key == 'OKRs_Status') {
+          } else if (component.key === 'OKRs_Status') {
             colData.OKRs_Status = component.value;
           }
         });
 
         list.push(colData);
-
-
-
-
-
-        ///code old ---------------------------
-
-        // col.push({
-        //   title: " Report Name ",
-        //   align: "center",
-        //   dataIndex: "name",
-        // });
-        // col.push({
-        //   title: " Status ",
-        //   align: "center",
-        //   dataIndex: "id",
-        //   render: (val) => {
-        //     if (!val) {
-        //       return {
-        //         props: {
-        //           style: { color: "red" },
-        //         },
-        //         children: (
-        //           <Text strong style={{ color: "red" }}>
-        //             unSeve
-        //           </Text>
-        //         ),
-        //       };
-        //     } else {
-        //       return {
-        //         props: {
-        //           style: { color: "green" },
-        //         },
-        //         children: (
-        //           <Text strong style={{ color: "green" }}>
-        //             Seved
-        //           </Text>
-        //         ),
-        //       };
-        //     }
-        //   },
-        // });
-
-        // // list column
-        // components.map((component) => {
-        //   col.push({
-        //     title: " " + component.label + " ",
-        //     align: "center",
-        //     dataIndex: component.key,
-        //     render: (_, record) => {
-        //       let c = record.component.find((k) => k.key === component.key);
-        //       return {
-        //         props: {
-        //           style: { color: "green" },
-        //         },
-        //         children: (
-        //           <Text strong style={{ color: "black" }}>
-        //             {c.value}:{c.key}
-        //           </Text>
-        //         ),
-        //       };
-        //     },
-        //   });
-        // });
-
-        // col.push({
-        //   title: "Action",
-        //   align: "center",
-        //   fixed: "right",
-        //   render: (_, record) => (
-        //     <div className="text-center">
-        //       <Button
-        //         type="primary"
-        //         className="pre-button"
-        //         onClick={() => {
-        //           handleClickEdit(record);
-        //         }}
-        //       >
-        //         <Text className="big6-title">รายงาน</Text>
-        //         {/* <EditOutlined /> */}
-        //       </Button>
-        //       <Button
-        //         type="primary"
-        //         className={record?.id ? "pre-button" : "nol-button"}
-        //         disabled={record?.id ? false : true}
-        //         onClick={() => handleUpStep(record)}
-        //       >
-        //         <Text className="big6-title">ส่งไปแบบรายงาน</Text>
-        //         {/* <EditOutlined /> */}
-        //       </Button>
-        //     </div>
-        //   ),
-        // });
-        // let field = (
-        //   <>
-        //     <Table
-        //       className="table-user custom-table-dashboard"
-        //       rowKey={(record, index) => record.id}
-        //       style={{ whiteSpace: "pre" }}
-        //       loading={isLoading}
-        //       scroll={{ x: "max-content" }}
-        //       size="small"
-        //       bordered
-        //       dataSource={[data]}
-        //       pagination={false}
-        //       columns={col}
-        //     />
-        //   </>
-        // );
-        // list.push(field);
       });
     } else {
-      // list.push(
-      //   <Table
-      //     className="table-user custom-table-dashboard"
-      //     rowKey={(record, index) => record.key}
-      //     style={{ whiteSpace: "pre" }}
-      //     loading={isLoading}
-      //     scroll={{ x: "max-content" }}
-      //     size="small"
-      //     bordered
-      //     dataSource={[]}
-      //     pagination={false}
-      //     pageSize={10}
-      //     columns={columns}
-      //   />
-      // );
+
     }
     setListTableForm(list);
   };
@@ -452,6 +338,11 @@ const ReportForm1 = () => {
     dispatch(await StoreTemplateAction(data));
   }
 
+  function padLeadingZeros(num, size) {
+    var s = num + "";
+    while (s.length < size) s = "0" + s;
+    return s;
+  }
 
   const columnsTable = [
     {
@@ -476,15 +367,15 @@ const ReportForm1 = () => {
       key: "OKRs_Date",
       align: "center",
       width: 80,
-      render: (_, record) => record?.OKRs_Date,
+      render: (_, record) => record?.OKRs_Date ? moment(record?.OKRs_Date).format('yyyy-MM-DD') : null,
     },
     {
       title: "เลขที่หนังสือรับ อว",
-      dataIndex: "OKRs_Book_Number",
-      key: "OKRs_Book_Number",
+      dataIndex: "OKRs_BookNumber",
+      key: "OKRs_BookNumber",
       align: "left",
       width: 80,
-      render: (_, record) => record?.OKRs_Book_Number,
+      render: (_, record) => record?.OKRs_BookNumber,
     },
     {
       title: "ชื่อโครงการ",
@@ -528,11 +419,11 @@ const ReportForm1 = () => {
     },
     {
       title: "เลขที่คุมยอด",
-      dataIndex: "OKRs_Finance_Number",
-      key: "OKRs_Finance_Number",
+      dataIndex: "OKRs_FinanceNumber",
+      key: "OKRs_FinanceNumber",
       align: "center",
       width: 80,
-      render: (_, record) => record?.OKRs_Finance_Number,
+      render: (_, record) => record?.OKRs_FinanceNumber,
     },
     {
       title: "เจ้าของเรื่อง",
@@ -551,38 +442,226 @@ const ReportForm1 = () => {
       render: (_, record) => record?.OKRs_Status,
     },
     {
+      title: "Step",
+      dataIndex: "stepName",
+      align: "left",
+      width: 80,
+      render: (_, record) => record?.record_data?.step_name,
+    },
+    {
       title: "Action",
       align: "center",
       fixed: "right",
-      render: (_, record) => (
-        <div className="text-center">
-          <Button
-            type="primary"
-            className="pre-button"
-            onClick={() => {
-              handleClickEdit(record.record_data);
-            }}
-          >
-            <Text className="big6-title">รายงาน</Text>
-            {/* <EditOutlined /> */}
-          </Button>
-          <Button
-            type="primary"
-            className={record?.id ? "pre-button" : "nol-button"}
-            disabled={record?.id ? false : true}
-            onClick={() => handleUpStep(record.record_data)}
-          >
-            <Text className="big6-title">ส่งไปแบบรายงาน</Text>
-            {/* <EditOutlined /> */}
-          </Button>
-        </div>
-      ),
+      render: (record) => {
+        return (
+          <>
+            {(profile?.role?.priority === '1' || profile?.role?.priority === '2') && (record?.record_data?.step_id === '4' || record?.record_data?.step_id === '5') ?
+              <>
+                <Button
+                  type="primary"
+                  className={record?.record_data?.step_id === '5' ? "appr-button" : "pre-button"}
+                  onClick={() => {
+                    handleClickView(record.record_data)
+                  }
+                  }
+                >
+                  <Text className="big6-title">รายงาน</Text>
+                </Button>
+                <Button
+                  type="primary"
+                  className="pre-button"
+                  onClick={() =>
+                    handleClickValidated(record.record_data)
+                  }
+                >
+                  <Text className="big6-title">manage</Text>
+                </Button>
+              </>
+              :
+              <div className="text-center">
+                <Button
+                  disabled={profile?.role?.priority === '4' && (record?.record_data?.step_id === '3' || record?.record_data?.step_id === '8') ? false : true}
+                  type="primary"
+                  className="pre-button"
+                  onClick={() => {
+                    handleClickEdit(record.record_data);
+                  }}
+                >
+                  <Text className="big6-title">รายงาน</Text>
+                </Button>
+                <Button
+                  disabled={profile?.role?.priority === '4' && (record?.record_data?.step_id === '3' || record?.record_data?.step_id === '8') ? false : true}
+                  type="primary"
+                  className={record?.id ? "pre-button" : "nol-button"}
+                  onClick={() => handleUpStep(record.record_data)}
+                >
+                  <Text className="big6-title">ส่งไปแบบรายงาน</Text>
+                </Button>
+              </div>
+            }
+          </>
+        )
+      },
     }
   ];
 
+  const handleClickValidated = (record) => {
+    console.log("handleClickValidated", record)
+    let l = record?.component?.filter(i => profile.role_id === '1' ? i.permission === 3 || i.permission === 4 : i.permission === parseInt(profile.role_id))
+    let c = l.find((k) => k.key === 'OKRs_Status');
+    console.log("handleClickValidated >> c ", c)
+    if (!c) {
+      let status = { ...propsStatus }
+      if (record.status) {
+        if (record.status === "1") {
+          Object.assign(status, { value: 1 })
+        } else {
+          Object.assign(status, { value: parseInt(record.stepId) })
+        }
+      }
+      setLayoutTemplate([...l, status])
+    } else {
+      setLayoutTemplate(l)
+    }
+    form2.setFieldsValue({ ['name']: record.name })
+    setStep(record.stepId - 1)
+    setListComponent(record)
+
+    setIsModal2(true);
+    setAddEditTitle(profile?.role?.role_name)
+  }
+  async function setTemplate(data) {
+    dispatch(await StoreTemplateAction(data));
+  }
+
+  const setLayoutTemplate = (listComponent) => {
+    console.log('start setLayoutTemplate', listComponent)
+    let listField = []
+    listComponent?.sort((a, b) => (a.index > b.index) ? 1 : -1)
+    listComponent?.map((currentItem) => {
+      console.log('value', currentItem.value)
+      let field = (
+        <>
+          <Col xs={24} sm={24} md={24} lg={24} xl={24} >
+            {currentItem.type === 'title' ?
+              (<Text style={currentItem.isSubTitle ? { paddingLeft: '50px' } : {}}>{currentItem?.label}</Text>)
+              : (<Form.Item
+                className="template-text"
+                labelAlign='left'
+                labelWrap='true'
+                layout={currentItem.labelPosition ?? 'vertical'}
+                label={currentItem.label}
+                name={currentItem.key}
+                rules={[{ required: currentItem.required ? true : false, message: 'Please input ' + currentItem?.label }]}
+              >
+                {currentItem.type === 'textArea' ?
+                  (<Input.TextArea showCount maxLength={currentItem.maxLength} />)
+                  : currentItem.type === 'inputNumber' ?
+                    (<InputNumber min={currentItem.min} max={currentItem.max} />)
+                    : currentItem.type === 'checkbox' ?
+                      (<Checkbox.Group options={currentItem.options} />)
+                      : currentItem.type === 'select' ?
+                        (<Select
+                          mode={currentItem.mode}
+                          placeholder="Please select"
+                          style={{ width: '100%' }}
+                          options={currentItem.options}
+                        />)
+                        : currentItem.type === 'radio' ?
+                          (<Radio.Group
+                            options={currentItem.options}
+                          />)
+                          : currentItem.type === 'day' ?
+                            (<DatePicker />)
+                            : currentItem.type === 'date_time' ?
+                              (<DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />)
+                              : currentItem.type === 'range_date' ?
+                                (<RangePicker />)
+                                : (<Input />)
+                }
+              </Form.Item>
+              )}
+          </Col>
+        </>
+      )
+      if (currentItem.type === 'day' || currentItem.type === 'date_time') {
+        form2.setFieldsValue({ [currentItem.key]: moment(currentItem.value) })
+      } else {
+        form2.setFieldsValue({ [currentItem.key]: currentItem.value })
+      }
+      listField.push(field)
+    })
+    setListField(listField)
+  }
+  const handleClickView = (record) => {
+    console.log("handleClickView", record)
+    setListComponent(record)
+    setIsLoading(true);
+    setShowViewPage(true);
+    setTemplate(record);
+    setIsLoading(false);
+  }
+
+  const newSpecTemplate = () => {
+    setIsModalAddEditVisible(true);
+    setAddEditTitle('เลือกใช้ Template')
+  }
+
+  const onSubmitNewReport = async () => {
+    if (form3.getFieldValue('template') && form3.getFieldValue('name')) {
+      ConfirmModalEditText(onSubmitNew, conditionSave());
+    } else {
+      form3.validateFields()
+    }
+  }
+
+  const onSubmitNew = async () => {
+    console.log('start onSubmitNew', form3.getFieldValue('template'), form3.getFieldValue('name'))
+    setIsLoading(true)
+    let obj = listTemplate.find(template => template.id === form3.getFieldValue('template'))
+    let data = {}
+    data.name = form3.getFieldValue('name')
+    data.stepId = 3
+    data.templateId = obj?.id 
+    data.typeId = 1
+    data.status = 0
+    data.component = obj?.component
+    data.id = null
+    let res = {};
+    try {
+      res = await SaveFormAction(data);
+      if (res.error === null) {
+        obj.isUsed = true
+        res = await UpdateTempateAction(obj);
+        SuccessModal("Success");
+        handleListMaster()
+      } else {
+        ErrorModalMassageHtml(res.error.message);
+      }
+    } catch (err) {
+      console.error(err)
+      ErrorModalMassageHtml(err);
+    }
+    handleClickCancel()
+    setIsLoading(false);
+  }
   return (
     <>
-      {showConfigPage ? (
+      {showViewPage ? (
+        <>
+          <PageHeader
+            style={{ padding: "0px" }}
+            onBack={() => {
+              setShowViewPage(false);
+              setTemplate({});
+            }}
+            title="Back"
+          />
+          <Row gutter={24} className="row-inquiry-customer">
+            <FormReport form={form2} />
+          </Row>
+        </>
+      ) : showConfigPage ? (
         <>
           <PageHeader
             style={{ padding: "0px" }}
@@ -624,6 +703,15 @@ const ReportForm1 = () => {
       ) : (
         <Card title={"Report Form 1"} className="rounded">
           <Row gutter={24}>
+            {profile?.role?.priority === '1' || profile?.role?.priority === '4' ?
+              <Col span={24} style={{ textAlign: "right" }} >
+                <Button type="primary" shape="round" icon={<PlusOutlined />}
+                  onClick={newSpecTemplate} className="ggar2-button"
+                >
+                  รายงานพิเศษ
+                </Button>
+              </Col >
+              : null}
             <Col span={24} style={{ textAlign: "center" }}>
               {/* {listTableForm} */}
 
@@ -634,17 +722,16 @@ const ReportForm1 = () => {
                 loading={isLoading}
                 scroll={{ x: "max-content" }}
                 size="small"
-                bordered
                 dataSource={listTableForm}
                 pagination={false}
                 columns={columnsTable}
               />
 
-
             </Col>
           </Row>
         </Card>
       )}
+
       <div>
         <Modal
           className="card-m-tem"
@@ -656,16 +743,9 @@ const ReportForm1 = () => {
           footer={null}
           onCancel={handleClickCancel}
         >
-          <Form form={form2} {...layout}>
+          <Form form={form2} {...layout} >
             <Row>
-              <Col
-                xs={24}
-                sm={24}
-                md={24}
-                lg={24}
-                xl={24}
-                style={{ paddingBottom: "15px" }}
-              >
+              <Col xs={24} sm={24} md={24} lg={24} xl={24} style={{ paddingBottom: '15px' }}>
                 <Steps current={step} percent={60}>
                   <Step title="Admin1 กรอกข้อมูล" />
                   <Step title="Admin2 กรอกข้อมูล" />
@@ -677,11 +757,9 @@ const ReportForm1 = () => {
             <Row>
               <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                 <Form.Item
-                  label="Report Name"
+                  label='Report Name'
                   name={"name"}
-                  rules={[
-                    { required: true, message: "Report Name is required" },
-                  ]}
+                  rules={[{ required: true, message: 'Report Name is required' }]}
                 >
                   <Input />
                 </Form.Item>
@@ -691,7 +769,7 @@ const ReportForm1 = () => {
             <Row gutter={24} className="row-inquiry-customer">
               <Col span={24} style={{ textAlign: "center" }}>
                 <Button
-                  className="btn-event btn-color-cancel"
+                  className='btn-event btn-color-cancel'
                   style={{ margin: "0 8px" }}
                   onClick={() => {
                     handleClickCancel();
@@ -701,7 +779,7 @@ const ReportForm1 = () => {
                   ยกเลิก
                 </Button>
                 <Button
-                  className="btn-event btn-color-ok"
+                  className='btn-event btn-color-ok'
                   type="primary"
                   danger
                   htmlType="submit"
@@ -727,7 +805,7 @@ const ReportForm1 = () => {
           footer={null}
           onCancel={handleClickCancel}
         >
-          <Form form={form} {...layout}>
+          <Form form={form3} {...layout}>
             <Row>
               <Col
                 className="form-login form-user"
@@ -737,7 +815,9 @@ const ReportForm1 = () => {
                 lg={24}
                 xl={24}
               >
-                <Form.Item name={"template"}>
+                <Form.Item name={"template"}
+                  rules={[{ required: true, message: 'Please Select!' }]}
+                >
                   <Select
                     options={SetOptionsForSelect({
                       label: "template_name",
@@ -748,6 +828,20 @@ const ReportForm1 = () => {
                     size="middle"
                     style={{ width: "100%" }}
                   />
+                </Form.Item>
+              </Col>
+              <Col
+                className="form-login form-user"
+                xs={24}
+                sm={24}
+                md={24}
+                lg={24}
+                xl={24}
+              >
+                <Form.Item name={"name"}
+                  rules={[{ required: true, message: 'Please Input!' }]}
+                >
+                  <Input placeholder="ชื่อรายงาน" />
                 </Form.Item>
               </Col>
             </Row>

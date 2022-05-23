@@ -5,29 +5,22 @@ import { EditOutlined, EyeOutlined, SettingOutlined, PlusOutlined, FileSearchOut
 import { tem1, tem2 } from '../../../../template-mock'
 import { LIST_TEMPLATES, ListTemplateAction } from '../../../redux/actions/TemplateAction'
 import SetOptionsForSelect, { SetOptionsForSelectSetLable } from '../../items/SetOptionsForSelect'
-import { clearStorege, getStorage } from "../../../screens/state/localStorage";
+import { clearStorege, getStorage } from "../../state/localStorage";
 import {
   ConfirmModalEditText,
   SuccessModal,
   ErrorModalMassageHtml,
 } from "../../items/Modal";
-import { SaveFormAction, ListFormAction, LIST_FORM, UpdateFormAction } from "../../../redux/actions/FormAction";
+import { SaveFormAction, ListFormAction, LIST_FORM, UpdateFormAction, ListForm2Action, LIST_FROM_2 } from "../../../redux/actions/FormAction";
 import {
   StoreTemplateAction,
   STORE_TEMPLATE,
 } from "../../../redux/actions/StoreSearchAction";
-import FormReport from './FormReport'
-import FormUpload from "./FormUpload";
+import { UpdateTempateAction } from '../../../redux/actions/TemplateAction'
 
 const { Text, Link } = Typography;
 const { RangePicker } = DatePicker;
 const { Step } = Steps;
-const temp_columns = [
-  {
-    title: <Text className="big6-title">รายการ</Text>,
-    align: 'center',
-  }
-];
 
 const ManageTemplate = () => {
   const dispatch = useDispatch()
@@ -39,56 +32,21 @@ const ManageTemplate = () => {
   const [form2] = Form.useForm();
   const listTemplateMaster = useSelector(state => state?.main?.[LIST_TEMPLATES])
   const listForm = useSelector(state => state?.main?.[LIST_FORM])
+  const listForm2 = useSelector(state => state?.main?.[LIST_FROM_2])
   const [listTemplate, setListTemplate] = useState([])
-  const [columns, setColumns] = useState(temp_columns)
-  const [currentPage, setCurrentPage] = useState(1);
-  const [dataSource, setDataSource] = useState([])
+  const [currentPage1, setCurrentPage1] = useState(1);
+  const [currentPage2, setCurrentPage2] = useState(1);
+  const [dataSource1, setDataSource1] = useState([])
+  const [dataSource2, setDataSource2] = useState([])
   const [listField, setListField] = useState([]);
   const [profile, setProfile] = useState({})
   const [listComponent, setListComponent] = useState([]);
   const [step, setStep] = useState(0);
-  const [listFormComponent, setListFormComponent] = useState([]);
   const [listTableForm, setListTableForm] = useState([]);
   const [showConfigPage, setShowConfigPage] = useState(false);
   const storeTemplate = useSelector(
     (state) => state?.storeSearchReducer?.[STORE_TEMPLATE]
   );
-
-  const propsStatus =
-  {
-    "id": "00000",
-    "index": 4000,
-    "key": "OKRs_Status",
-    "size": "long",
-    "type": "select",
-    "align": "left",
-    "permission": 2,
-    "label": "สถานะ",
-    "required": true,
-    "options": [
-      {
-        "index": 1,
-        "label": "สิ้นสุดโครงการ",
-        "value": 1
-      },
-      {
-        "index": 2,
-        "label": "Reject to แผนปฏิบัติการ",
-        "value": 6
-      },
-      {
-        "index": 3,
-        "label": "Reject to แผนงบประมาณ",
-        "value": 7
-      },
-      {
-        "index": 4,
-        "label": "Reject to ผู้ใช้งาน",
-        "value": 8
-      }
-    ],
-    "labelPosition": "vertical"
-  }
 
   const layout = {
     labelCol: { span: 24 },
@@ -104,34 +62,61 @@ const ManageTemplate = () => {
 
   useEffect(() => {
     if (listTemplateMaster) {
-      let list = listTemplateMaster.result?.filter(l => l.status === "1");
+      let list = listTemplateMaster.result?.filter(l => l.status === "1" && l.type_id !== "3");
       setListTemplate(list)
     }
   }, [listTemplateMaster])
 
   useEffect(() => {
     if (listForm) {
-      setListFormComponent(listForm.result?.filter(l => l.step_id !== "3" && l.step_id !== "8"))
+      let d1 = []
+      let list = listForm.result?.filter(l => l.type_id === "1");
+      list.map(f => {
+        let obj = {}
+        obj.component = f.component
+        obj.templateId = f?.templateId ?? f?.template_id
+        obj.templateName = f?.templateName ?? f?.template_name
+        obj.stepName = f?.stepName ?? f?.step_name
+        obj.typeId = f?.typeId ?? f?.type_id
+        obj.id = f?.id
+        obj.stepId = f?.stepId ?? f?.step_id
+        obj.status = f?.status
+        obj.name = f?.name
+        obj.updatedBy = f?.updatedBy ?? f?.updated_by
+        obj.formStatus = f?.form_status ?? f?.formStatus
+        d1.push(obj)
+      })
+      setDataSource1(d1)
     }
   }, [listForm])
 
   useEffect(() => {
-    if (listFormComponent) {
-      setPage()
+    if (listForm2) {
+      let d2 = []
+      let list = listForm2.result
+      list.map(f => {
+        let obj = {}
+        obj.component = f.component
+        obj.templateId = f?.templateId ?? f?.template_id
+        obj.templateName = f?.templateName ?? f?.template_name
+        obj.stepName = f?.stepName ?? f?.step_name
+        obj.typeId = f?.typeId ?? f?.type_id
+        obj.id = f?.id
+        obj.stepId = f?.stepId ?? f?.step_id
+        obj.status = f?.status
+        obj.name = f?.name
+        obj.updatedBy = f?.updatedBy ?? f?.updated_by
+        d2.push(obj)
+      })
+      setDataSource2(d2)
     }
-  }, [listFormComponent])
+  }, [listForm2])
 
   async function handleListMaster() {
     let p = getStorage('profile')
-    console.log(p)
     dispatch(await ListTemplateAction({}))
     dispatch(await ListFormAction({ roleId: p.role_id, str: '', username: p.username }))
-  }
-
-  const handleClickCancel = () => {
-    setIsModalAddEditVisible(false);
-    setIsModal2(false)
-    form2.resetFields()
+    dispatch(await ListForm2Action({ roleId: p.role_id, typeId: 2, isParent: 1 }))
   }
 
   const newTemplate = () => {
@@ -139,12 +124,204 @@ const ManageTemplate = () => {
     setAddEditTitle('เลือกใช้ Template')
   }
 
+  const handleTable1Change = (pagination, filters, sorter) => {
+    setCurrentPage1(pagination.current)
+  };
+
+  const handleTable2Change = (pagination, filters, sorter) => {
+    setCurrentPage2(pagination.current)
+  };
+
+  const columns = [
+    {
+      title: "ลำดับ",
+      dataIndex: 'id',
+      align: "center",
+      width: 30,
+      render: (val, record, index) => {
+        return {
+          // props: {
+          //   style: { color: 'red' }
+          // },
+          children: <Text strong style={{ color: (!val ? 'red' : 'black') }}>{((record.typeId === '1' ? currentPage1 : currentPage2) - 1) * 10 + index + 1}</Text>
+        };
+      }
+    },
+    {
+      title: "ชื่อ Template",
+      dataIndex: "templateName",
+      align: "left",
+      width: 100,
+      render: (_, record) => record?.templateName,
+    },
+    {
+      title: "ชื่อรายงาน",
+      dataIndex: "name",
+      align: "left",
+      width: 100,
+      render: (_, record) => record?.name,
+    },
+    {
+      title: "Step",
+      dataIndex: "stepName",
+      align: "left",
+      width: 80,
+      render: (_, record) => record?.stepName,
+    },
+    {
+      title: "สถานะ",
+      dataIndex: "status",
+      align: "left",
+      width: 80,
+    },
+    {
+      title: "รายละเอียด",
+      dataIndex: "component",
+      align: "left",
+      width: 150,
+      // render: (obj) => setTableContent(obj)
+      render: (obj) => {
+        let comp = obj?.filter(i => profile.role_id === '1' ? i.permission === 3 || i.permission === 4 : i.permission === parseInt(profile.role_id))
+        let content = []
+        comp.map(item => {
+          content.push(
+            <>
+              <Text>{item.label + " : "}</Text>
+              <Text strong>{(item.value ?? '-') + " "}</Text>
+            </>
+          )
+        })
+        return {
+          children: content
+        }
+      }
+    },
+    {
+      title: "Action",
+      fixed: "right",
+      align: "center",
+      width: 100,
+      render: (record) => {
+        // console.log('profile', profile, record)
+        let canEdit = (record?.stepId === '11' && profile?.role_id === '3') || (record?.stepId === '10' && profile?.role_id === '4') || (record?.stepId === '6' && profile?.role_id === '3') || (record?.stepId === '7' && profile?.role_id === '4') ? false : true
+        // console.log('canEdit', canEdit)
+        return (
+          <>
+            <Button
+              disabled={!canEdit || (record?.typeId !== '2' && record?.id && record?.stepId !== '1' && record?.stepId !== '2' && record?.stepId !== '10' && record?.stepId !== '11' && record?.stepId !== '6' && record?.stepId !== '7') ? true : false}
+              type="primary"
+              className="pre-button"
+              onClick={() => {
+                handleClickEdit(record)
+              }}
+            >
+              <Text className="big6-title">manage</Text>
+            </Button>
+            {record.typeId === '1' ?
+              <Button
+                disabled={!canEdit || (record?.stepId !== '1' && record?.stepId !== '2' && record?.stepId !== '10' && record?.stepId !== '11'  && record?.stepId !== '6' && record?.stepId !== '7') || !record?.id ? true : false}
+                type="primary"
+                className={record?.id ? "pre-button" : "nol-button"}
+                onClick={() =>
+                  handleUpStep(record)
+                }
+              >
+                <Text className="big6-title">ส่งไปแบบรายงาน</Text>
+              </Button>
+              : null}
+          </>
+        )
+      },
+    },
+  ];
+
+  const handleUpStep = (record) => {
+    upStep(record)
+    // ConfirmModalEditText(upStep(record), conditionUpStep());
+  }
+
+  async function upStep(record) {
+    setIsLoading(true);
+    console.log('upStep', record)
+    let data = { ...record }
+    if (record.stepId === '10' || record.stepId === '11') {
+      if(!record.formStatus || record.formStatus === '0'){
+        data.stepId = record.stepId === '10' ? 11 : 10
+        data.status = 3
+      } else {
+        data.stepId = 3
+      }
+    } else {
+      data.stepId = (record.stepId === '6' || record.stepId === '7' || record.stepId === '8' ? 4 : parseInt(record.stepId) + 1)
+    }
+    let res = await UpdateFormAction(data);
+    if (res.error === null) {
+      SuccessModal("Success");
+      handleListMaster()
+    } else {
+      ErrorModalMassageHtml(res.error.message);
+    }
+    setIsLoading(false);
+  }
+
+  const setTableContent = (component) => {
+    console.log('setTableContent', component)
+    let data = []
+    component.map(item => {
+      let obj = {}
+      obj.label = item.label
+      obj.key = item.key
+      obj.value = item.value
+      data.push(obj);
+    })
+    let col = [
+      {
+        title: "Label",
+        dataIndex: "label",
+        align: "left",
+      },
+      {
+        title: "Key",
+        dataIndex: "key",
+        align: "left",
+      },
+      {
+        title: "Value",
+        dataIndex: "value",
+        align: "left"
+      },
+    ]
+    return (
+      <>
+        <Table
+          className='sub-table-user custom-table-dashboard'
+          rowKey={(record, index) => record.id}
+          style={{ whiteSpace: 'pre' }}
+          loading={isLoading}
+          scroll={{ x: 'max-content' }}
+          size="small"
+          bordered
+          dataSource={data}
+          pagination={false}
+          columns={col} />
+      </>
+    )
+  }
+
+  const handleClickCancel = () => {
+    setIsModalAddEditVisible(false);
+    setIsModal2(false)
+    form2.resetFields()
+    form.resetFields()
+  }
+
   const handleClickEdit = (record) => {
-    console.log("handleClickEdit", record)
+    console.log("handleClickEdit", profile.role_id, record)
     form2.setFieldsValue({ ['name']: record.name })
     setStep(record.stepId === '6' || record.stepId === '7' || record.stepId === '8' ? 3 : record.stepId - 1)
     setListComponent(record)
     let l = record?.component?.filter(i => profile.role_id === '1' ? i.permission === 3 || i.permission === 4 : i.permission === parseInt(profile.role_id))
+    console.log("handleClickEdit", l)
     setLayoutTemplate(l)
     setIsModal2(true);
     setAddEditTitle(profile?.role?.role_name)
@@ -218,8 +395,13 @@ const ManageTemplate = () => {
       data.templateName = obj?.template_name
       data.typeId = obj?.type_id
       data.stepId = profile.role_id === '1' ? 2 : 1
+      data.stepName = 'สร้างแบบรายงาน'
       data.id = null
-      setListFormComponent([data, ...listFormComponent])
+      if (obj?.type_id === "1") {
+        setDataSource1([data, ...dataSource1])
+      } else if (obj?.type_id === "2") {
+        setDataSource2([data, ...dataSource2])
+      }
       handleClickCancel()
     } else {
       form.validateFields()
@@ -235,39 +417,12 @@ const ManageTemplate = () => {
     }
   };
 
-  const handleUpStep = (record) => {
-    upStep(record)
-    // ConfirmModalEditText(upStep(record), conditionUpStep());
-  }
   const conditionSave = () => {
     return {
       title: "Confirm",
       content: "Are you sure you want to save ?",
     };
   };
-
-  const conditionUpStep = () => {
-    return {
-      title: "Confirm",
-      content: "Are you sure you want to Update Step ?",
-    };
-  };
-
-  async function upStep(record) {
-    setIsLoading(true);
-    console.log('upStep', record)
-    let data = { ...record }
-    data.stepId = (record.stepId === '6' || record.stepId === '7' || record.stepId === '8' ? 4 : parseInt(record.stepId) + 1)
-    let res = await UpdateFormAction(data);
-    if (res.error === null) {
-      SuccessModal("Success");
-      handleListMaster()
-    } else {
-      ErrorModalMassageHtml(res.error.message);
-    }
-    setIsLoading(false);
-  }
-
 
   const onSubmit = async () => {
     console.log('start onSubmit', form2.getFieldsValue(), listComponent)
@@ -279,19 +434,21 @@ const ManageTemplate = () => {
       let c = components.find(k => k.key === key)
       if (c) {
         c.value = form2.getFieldValue(key)
-      } 
-      
-      if (key === 'OKRs_Status'){
-        let value = form2.getFieldValue(key)
-        if(value === 1){
-          data.status = 1
-          data.stepId = 5
-        }else {
-          data.status = null
-          data.stepId = value
-        }
       }
-    });    
+    });
+    if (data.typeId === '2' && (data.stepId === '1' || data.stepId === 1)) {
+      data.stepId = 9
+    } else if (data.typeId === '1' && profile?.role_id === '3' && (data.stepId === '1' || data.stepId === 1)) {
+      data.stepId = 10
+    } else if (data.typeId === '1' && profile?.role_id === '4' && (data.stepId === '1' || data.stepId === 1)) {
+      data.stepId = 11
+    }
+
+    if (!data.stepId) {
+      data.stepId = 1
+    }
+
+    data.status = 0
     data.name = form2.getFieldValue('name')
     data.component = components
     try {
@@ -299,6 +456,9 @@ const ManageTemplate = () => {
         res = await UpdateFormAction(data);
       } else {
         res = await SaveFormAction(data);
+        let obj = listTemplate.find(template => template.id === data.templateId)
+        obj.isUsed = true
+        res = await UpdateTempateAction(obj);
       }
       if (res.error === null) {
         SuccessModal("Success");
@@ -308,317 +468,59 @@ const ManageTemplate = () => {
       }
     } catch (err) {
       console.error(err)
+      console.error(res)
       ErrorModalMassageHtml(err);
     }
     handleClickCancel()
     setIsLoading(false);
   }
-
-  const handleClickView = (record) => {
-    console.log("handleClickEdit", record)
-    setListComponent(record)
-    setIsLoading(true);
-    setShowConfigPage(true);
-    setTemplate(record);
-    setIsLoading(false);
-  }
-
-  const handleClickValidated = (record) => {
-    console.log("handleClickValidated", record)
-    let status = {...propsStatus}
-    if(record.status){
-      if(record.status === "1"){
-        Object.assign(status,{value: 1})
-      }else {
-        Object.assign(status,{value: parseInt(record.stepId)})
-      }
-    }
-    form2.setFieldsValue({ ['name']: record.name })
-    setStep(record.stepId - 1)
-    setListComponent(record)
-    let l = record?.component?.filter(i => profile.role_id === '1' ? i.permission === 3 || i.permission === 4 : i.permission === parseInt(profile.role_id))
-    setLayoutTemplate([...l, status])
-    setIsModal2(true);
-    setAddEditTitle(profile?.role?.role_name)
-  }
-  async function setTemplate(data) {
-    dispatch(await StoreTemplateAction(data));
-  }
-
-  const setPage = () => {
-    let list = []
-    console.log('setPage', listFormComponent)
-    if (listFormComponent) {
-      listFormComponent?.map((obj) => {
-        let components = obj?.component
-        components?.sort((a, b) => (a.index > b.index) ? 1 : -1)
-        let col = []
-        let data = {}
-        data.component = components
-        data.templateId = obj?.templateId ?? obj?.template_id
-        data.templateName = obj?.templateName
-        data.typeId = obj?.typeId ?? obj?.type_id
-        data.id = obj?.id
-        data.stepId = obj?.stepId ?? obj?.step_id
-        data.status = obj?.status
-        data.name = obj?.name
-        col.push({
-          title: ' Report Name ',
-          align: 'center',
-          dataIndex: 'name',
-        })
-        col.push({
-          title: ' Status ',
-          align: 'center',
-          dataIndex: 'id',
-          render: (val) => {
-            if (!val) {
-              return {
-                props: {
-                  style: { color: 'red' }
-                },
-                children: <Text strong style={{ color: 'red' }}>unSeve</Text>
-              };
-            } else {
-              return {
-                props: {
-                  style: { color: 'green' }
-                },
-                children: <Text strong style={{ color: 'green' }}>Seved</Text>
-              };
-            }
-          }
-        })
-        components.map(component => {
-          col.push({
-            title: ' ' + component.label + ' ',
-            align: 'center',
-            dataIndex: component.key,
-            render: (_, record) => {
-              let c = record.component.find(k => k.key === component.key)
-              return {
-                props: {
-                  style: { color: 'green' }
-                },
-                children: <Text strong style={{ color: 'black' }}>{c.value}</Text>
-              };
-            }
-          })
-        })
-        col.push({
-          title: 'Action',
-          align: 'center',
-          fixed: 'right',
-          render: (_, record) =>
-            <div className="text-center">
-              {record?.stepId === '4' || record?.stepId === '5' ?
-                <>
-                  <Button
-                    type="primary"
-                    className={record?.stepId === '5' ? "appr-button" : "pre-button"}
-                    onClick={() => {
-                      handleClickView(record)
-                    }
-                    }
-                  >
-                    <Text className="big6-title">รายงาน</Text>
-                    {/* <EditOutlined /> */}
-                  </Button>
-                  <Button
-                    type="primary"
-                    className={record?.status !== '1' ? "pre-button" : "nol-button"}
-                    disabled={record?.id ? false : true}
-                    onClick={() =>
-                      handleClickValidated(record)
-                    }
-                  >
-                    <Text className="big6-title">manage</Text>
-                    {/* <EditOutlined /> */}
-                  </Button>
-                </>
-                :
-                <>
-                  <Button
-                    type="primary"
-                    className="pre-button"
-                    onClick={() => {
-                      handleClickEdit(record)
-                    }
-                    }
-                  >
-                    <Text className="big6-title">manage</Text>
-                    {/* <EditOutlined /> */}
-                  </Button>
-                  <Button
-                    type="primary"
-                    className={record?.id ? "pre-button" : "nol-button"}
-                    disabled={record?.id ? false : true}
-                    onClick={() =>
-                      handleUpStep(record)
-                    }
-                  >
-                    <Text className="big6-title">ส่งไปแบบรายงาน</Text>
-                    {/* <EditOutlined /> */}
-                  </Button>
-                </>
-              }
-            </div>
-        })
-        let field = (
-          <>
-            <Table
-              className='table-user custom-table-dashboard'
-              rowKey={(record, index) => record.id}
-              style={{ whiteSpace: 'pre' }}
-              loading={isLoading}
-              scroll={{ x: 'max-content' }}
-              size="small"
-              bordered
-              dataSource={[data]}
-              pagination={false}
-              columns={col} />
-          </>
-        )
-        list.push(field)
-      })
-    } else {
-      list.push(
-        <Table
-          className='table-user custom-table-dashboard'
-          rowKey={(record, index) => record.key}
-          style={{ whiteSpace: 'pre' }}
-          loading={isLoading}
-          scroll={{ x: 'max-content' }}
-          size="small"
-          bordered
-          dataSource={[]}
-          pagination={false}
-          pageSize={10}
-          columns={columns} />
-      )
-    }
-    setListTableForm(list)
-  }
   return (
     <>
-      {showConfigPage ? (
-        <>
-          <PageHeader
-            style={{ padding: "0px" }}
-            onBack={() => {
-              setShowConfigPage(false);
-              setTemplate({});
-            }}
-            title="Back"
-          />
-          <Row gutter={24} className="row-inquiry-customer">
-            <FormReport form={form2} />
-            <FormUpload form={form2} />
-          </Row>
-          {storeTemplate?.stepId !== '5' ?
-            <Row gutter={24} className="row-inquiry-customer">
-              <Col span={24} style={{ textAlign: "center" }}>
-                <Button
-                  className='btn-event btn-color-cancel'
-                  style={{ margin: "0 8px" }}
-                  onClick={() => {
-                    handleClickCancel();
-                  }}
-                  danger
-                >
-                  ยกเลิก
-                </Button>
-                <Button
-                  className='btn-event btn-color-ok'
-                  type="primary"
-                  danger
-                  htmlType="submit"
-                  onClick={saveForm}
-                  loading={isLoading}
-                >
-                  บันทึก
-                </Button>
-              </Col>
-            </Row>
-            : null}
-        </>
-      ) :
-        <Card title={"Manage Report"} className="rounded" >
-          <Row gutter={24}>
-            <Col span={24} style={{ textAlign: "right" }} >
-              <Button type="primary" shape="circle" size="large"
-                onClick={newTemplate} className="ggar-button"
-              >
-                <PlusOutlined className="big3-title" />
-              </Button>
-            </Col >
-            <Col span={24} style={{ textAlign: "center" }}>
-              {listTableForm}
-            </Col>
-          </Row >
-        </Card>
-      }
-      <div>
-        <Modal
-          className="card-m-tem"
-          closable={true}
-          title={addEditTitle}
-          visible={isModal2}
-          width={"50%"}
-          centered={true}
-          footer={null}
-          onCancel={handleClickCancel}
-        >
-          <Form form={form2} {...layout} >
-            <Row>
-              <Col xs={24} sm={24} md={24} lg={24} xl={24} style={{ paddingBottom: '15px' }}>
-                <Steps current={step} percent={60}>
-                  <Step title="Admin1 กรอกข้อมูล" />
-                  <Step title="Admin2 กรอกข้อมูล" />
-                  <Step title="ผู้ใช้งาน กรอกข้อมูล" />
-                  <Step title="Validate" />
-                </Steps>
-              </Col>
-            </Row>
-            <Row>
-              <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-                <Form.Item
-                  label='Report Name'
-                  name={"name"}
-                  rules={[{ required: true, message: 'Report Name is required' }]}
-                >
-                  <Input />
-                </Form.Item>
-              </Col>
-              {listField}
-            </Row>
-            <Row gutter={24} className="row-inquiry-customer">
-              <Col span={24} style={{ textAlign: "center" }}>
-                <Button
-                  className='btn-event btn-color-cancel'
-                  style={{ margin: "0 8px" }}
-                  onClick={() => {
-                    handleClickCancel();
-                  }}
-                  danger
-                >
-                  ยกเลิก
-                </Button>
-                <Button
-                  className='btn-event btn-color-ok'
-                  type="primary"
-                  danger
-                  htmlType="submit"
-                  onClick={saveForm}
-                  loading={isLoading}
-                >
-                  ยืนยัน
-                </Button>
-              </Col>
-            </Row>
-          </Form>
-        </Modal>
-      </div>
+      <Card title={"Manage Report"} className="rounded">
+        <Row gutter={24} className="row-inquiry-customer">
+          <Col span={24} style={{ textAlign: "right" }} >
+            <Button type="primary" shape="circle" size="large"
+              onClick={newTemplate} className="ggar-button"
+            >
+              <PlusOutlined className="big3-title" />
+            </Button>
+          </Col >
+          <Col span={24} style={{ textAlign: "left" }}>
+            <Text strong>แบบรายงานที่ 1</Text>
+            <Table
+              className="table-user custom-table-dashboard"
+              rowKey={(record, index) => record.key}
+              style={{ whiteSpace: "pre" }}
+              loading={isLoading}
+              scroll={{ x: "max-content", y: 250 }}
+              size="small"
+              bordered={false}
+              dataSource={dataSource1}
+              onChange={handleTable1Change}
+              pagination={true}
+              pageSize={10}
+              columns={columns}
+            />
+          </Col>
+          <Col span={24} style={{ textAlign: "left" }}>
+            <Text strong>แบบรายงานที่ 2</Text>
+            <Table
+              className="table-user custom-table-dashboard"
+              rowKey={(record, index) => record.key}
+              style={{ whiteSpace: "pre" }}
+              loading={isLoading}
+              scroll={{ x: "max-content", y: 250 }}
+              size="small"
+              bordered={false}
+              dataSource={dataSource2}
+              onChange={handleTable2Change}
+              pagination={true}
+              pageSize={10}
+              columns={columns}
+            />
+          </Col>
+        </Row>
+      </Card>
 
       <div>
         <Modal
@@ -673,6 +575,68 @@ const ManageTemplate = () => {
                   danger
                   htmlType="submit"
                   onClick={onSubmitNewReport}
+                  loading={isLoading}
+                >
+                  ยืนยัน
+                </Button>
+              </Col>
+            </Row>
+          </Form>
+        </Modal>
+      </div>
+
+      <div>
+        <Modal
+          className="card-m-tem"
+          closable={true}
+          title={addEditTitle}
+          visible={isModal2}
+          width={"50%"}
+          centered={true}
+          footer={null}
+          onCancel={handleClickCancel}
+        >
+          <Form form={form2} {...layout} >
+            <Row>
+              <Col xs={24} sm={24} md={24} lg={24} xl={24} style={{ paddingBottom: '15px' }}>
+                <Steps current={step} percent={60}>
+                  <Step title="Admin1 กรอกข้อมูล" />
+                  <Step title="Admin2 กรอกข้อมูล" />
+                  <Step title="ผู้ใช้งาน กรอกข้อมูล" />
+                  <Step title="Validate" />
+                </Steps>
+              </Col>
+            </Row>
+            <Row>
+              <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                <Form.Item
+                  label='Report Name'
+                  name={"name"}
+                  rules={[{ required: true, message: 'Report Name is required' }]}
+                >
+                  <Input />
+                </Form.Item>
+              </Col>
+              {listField}
+            </Row>
+            <Row gutter={24} className="row-inquiry-customer">
+              <Col span={24} style={{ textAlign: "center" }}>
+                <Button
+                  className='btn-event btn-color-cancel'
+                  style={{ margin: "0 8px" }}
+                  onClick={() => {
+                    handleClickCancel();
+                  }}
+                  danger
+                >
+                  ยกเลิก
+                </Button>
+                <Button
+                  className='btn-event btn-color-ok'
+                  type="primary"
+                  danger
+                  htmlType="submit"
+                  onClick={saveForm}
                   loading={isLoading}
                 >
                   ยืนยัน

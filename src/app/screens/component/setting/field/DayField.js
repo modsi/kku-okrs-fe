@@ -5,6 +5,7 @@ import { Card, Row, Col, Button, Typography, Table, Form, Input, Radio, Space, I
 import logo from "../../../../../assets/images/favicon-96x96.png"
 import { STORE_TEMPLATE, StoreTemplateAction } from "../../../../redux/actions/StoreSearchAction"
 import { v4 as uuidv4 } from "uuid";
+import { QuestionCircleOutlined } from "@ant-design/icons";
 
 const { Text, Link } = Typography;
 const DayField = ({ form }) => {
@@ -110,7 +111,7 @@ const DayField = ({ form }) => {
                     </Col>
                     <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                       <Form.Item
-                        label="Key"
+                        label={<><Text>Key </Text><Link href="https://docs.google.com/spreadsheets/d/1j33CZdrzh4W1PkZb_G-3LtaYSOhGp84vD0QC844LFPg/edit?usp=sharing" target="key ที่ใช้ในการออก dashboard" ><QuestionCircleOutlined /></Link></>}
                         name="key"
                         rules={[
                           { required: true, message: "Please input Key!" },

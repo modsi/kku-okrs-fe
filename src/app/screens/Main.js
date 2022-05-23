@@ -23,6 +23,7 @@ import logoProfile from "../../assets/images/icon/pixlr-bg-result.png";
 import logoLogOut from "../../assets/images/icon/log-out.png";
 
 import { SaveFormAction, ListFormAction, LIST_FORM, UpdateFormAction } from "../redux/actions/FormAction";
+import { UpdateAccAction } from '../redux/actions/UserAction'
 
 const { Text, Link } = Typography;
 const { Header, Content, Footer, Sider } = Layout;
@@ -44,31 +45,31 @@ const Main = () => {
     }
 
     useEffect(() => {
-        console.log(profile)
-        if (profile?.role?.priority === '1') {
-            let c = listForm?.result?.filter(l => l.step_id !== "3" && l.step_id !== "5" && l.step_id !== "8" && l.step_id !== "1")
-            setCount2(c?.length)
-        } else if (profile?.role?.priority === '2') {
-            let c = listForm?.result?.filter(l => l.step_id === "4")
-            setCount2(c?.length)
-        } else if (profile?.role?.priority === '3') {
-            let c
-            if (profile?.role_id === '3') {
-                c = listForm?.result?.filter(l => l.step_id === "2" || l.step_id === "7")
-            } else if (profile?.role_id === '4') {
-                c = listForm?.result?.filter(l => l.step_id === "2" || l.step_id === "6")
-            }
-            setCount2(c?.length)
-        }
+        // if (profile?.role?.priority === '1') {
+        //     let c = listForm?.result?.filter(l => l.step_id !== "3" && l.step_id !== "5" && l.step_id !== "8" && l.step_id !== "1")
+        //     setCount2(c?.length)
+        // } else if (profile?.role?.priority === '2') {
+        //     let c = listForm?.result?.filter(l => l.step_id === "4")
+        //     setCount2(c?.length)
+        // } else if (profile?.role?.priority === '3') {
+        //     let c
+        //     if (profile?.role_id === '3') {
+        //         c = listForm?.result?.filter(l => l.step_id === "2" || l.step_id === "7")
+        //     } else if (profile?.role_id === '4') {
+        //         c = listForm?.result?.filter(l => l.step_id === "2" || l.step_id === "6")
+        //     }
+        //     setCount2(c?.length)
+        // }
 
-        let c = listForm?.result?.filter(l => (l.step_id === "8" || l.step_id === "3") && l.type_id === '1')
-        setCount31(c?.length)
-        c = listForm?.result?.filter(l => (l.step_id === "8" || l.step_id === "3") && l.type_id === '2')
-        setCount32(c?.length)
+        // let c = listForm?.result?.filter(l => (l.step_id === "8" || l.step_id === "3") && l.type_id === '1')
+        // setCount31(c?.length)
+        // c = listForm?.result?.filter(l => (l.step_id === "8" || l.step_id === "3") && l.type_id === '2')
+        // setCount32(c?.length)
 
     }, [listForm, profile])
 
     useEffect(() => {
+        checkToken()
         if (!getStorage('profile') || !getStorage('token')) {
             routeChange()
         } else {
@@ -77,13 +78,25 @@ const Main = () => {
             handleListMaster()
             if (p?.role?.priority === '1') {
                 setKey(['7']);
-                setContent(<Template />);            
+                setContent(<Template />);
             } else {
                 setKey(['1']);
                 setContent(<Dashboard />);
             }
         }
     }, [])
+
+    async function checkToken() {
+        try {
+            if (getStorage('profile')) {
+                let res = await UpdateAccAction(getStorage('profile'))
+            } else {
+                routeChange()
+            }
+        } catch (e) {
+            routeChange()
+        }
+    }
 
     async function handleListMaster() {
         let p = getStorage('profile')
@@ -172,7 +185,7 @@ const Main = () => {
                                 Manage Report
                             </Badge>
                         </Menu.Item>
-                        <Menu.Item key="4" icon={<FileTextOutlined />}  hidden={profile?.role?.priority === '3' || profile?.role?.priority === '5'}>
+                        <Menu.Item key="4" icon={<FileTextOutlined />} hidden={profile?.role?.priority === '3' || profile?.role?.priority === '5'}>
                             <Badge count={count31} offset={[20, 5]} >
                                 Report Form 1
                             </Badge>
