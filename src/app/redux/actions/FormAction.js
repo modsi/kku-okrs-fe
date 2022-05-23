@@ -1,4 +1,4 @@
-import { SaveFormService, GetFormeService, UpdateFormService, SaveComplateFormService, ExportFormCsv, ExportFormWord } from '../../services/MainService'
+import { GetFormTemplateService, SaveFormService, GetFormeService, UpdateFormService, SaveComplateFormService, ExportFormCsv, ExportFormWord } from '../../services/MainService'
 import { Payload } from '../../utils/Payload'
 import { clearStorege, getStorage } from "../../screens/state/localStorage";
 
@@ -12,9 +12,10 @@ export const SaveFormAction = async (data) => {
 }
 
 export const UpdateFormAction = async (data) => {
+  data.status = data.formStatus ?? (!data.status || !isNaN(+data.status) ? data.status : 0)
   const result = await UpdateFormService(data)
-  console.log('UpdateFormAction', result?.data?.data[0])
-  if (result?.data?.data[0].id) {
+  console.log('UpdateFormAction', result)
+  if (result?.data?.error === null && result?.data?.data[0].id) {
     let r = await SaveCompalteFormAction(result?.data?.data[0].id, data);
   }
   return result?.data
@@ -71,10 +72,11 @@ export const ExportFormWordAction = async (data) => {
 }
 
 export const SaveCompalteFormAction = async (id, data) => {
+  console.log('SaveCompalteFormAction',data)
   let obj = {}
   let component = []
   data.component.map((c) => {
-    console.log('component', c)
+    // console.log('component', c)
     let o = {
       label: c.label,
       key: c.key
@@ -83,6 +85,13 @@ export const SaveCompalteFormAction = async (id, data) => {
       o.approvedFlag = 1
       o.approvedBy = getStorage('profile')?.username
     }
+    if (c.key === 'OKRs_Status') {
+      let v = c.value
+      let label = c.options.find(k => k.value = v)?.label
+      o.value = v
+      o.labelValue = label
+      component.push(o)
+    } else 
     if (c.value && Array.isArray(c.value)) {
       c.value.map((v) => {
         o.label = v.label
@@ -132,3 +141,104 @@ export const ListFormAction = async (data = {}) => {
     return Payload({ params: [], type: LIST_FORM })
   }
 }
+
+export const LIST_FROM_TEMPLATES = 'list_form_template'
+export const ListFormTemplateAction = async (data = {}) => {
+  try {    
+    const result = await GetFormTemplateService(data)    
+    const params = {
+      [LIST_FROM_TEMPLATES]: {
+        result: result?.data?.data,
+        totalData: result?.data?.data?.totalItems
+      }
+    }
+    return Payload({ params: params, type: LIST_FROM_TEMPLATES })
+  } catch (e) {
+    console.error(e)
+    return Payload({ params: [], type: LIST_FROM_TEMPLATES })
+  }
+}
+
+export const LIST_FROM_2 = 'list_form_2'
+export const ListForm2Action = async (data = {}) => {
+  try {    
+    const result = await GetFormTemplateService(data)    
+    const params = {
+      [LIST_FROM_2]: {
+        result: result?.data?.data,
+        totalData: result?.data?.data?.totalItems
+      }
+    }
+    return Payload({ params: params, type: LIST_FROM_2 })
+  } catch (e) {
+    console.error(e)
+    return Payload({ params: [], type: LIST_FROM_2 })
+  }
+}
+
+export const propsIds =
+  {
+    "id": "00001",
+    "index": 0,
+    "key": "OKRs_Ids",
+    "size": "long",
+    "type": "title",
+    "align": "left",
+    "labelPosition": "vertical"
+  }
+
+  export const propsStatus =
+  {
+    "id": "00000",
+    "index": 4000,
+    "key": "OKRs_Status",
+    "size": "long",
+    "type": "select",
+    "align": "left",
+    "permission": 2,
+    "label": "สถานะ",
+    "required": true,
+    "options": [
+      {
+        "index": 1,
+        "label": "สิ้นสุดโครงการ",
+        "value": 1
+      },
+      {
+        "index": 2,
+        "label": "ส่งคืนแผนปฏิบัติการแก้ไข",
+        "value": 6
+      },
+      {
+        "index": 3,
+        "label": "ส่งคืนแผนงบประมาณแก้ไข",
+        "value": 7
+      },
+      {
+        "index": 4,
+        "label": "ส่งคืนผู้ใช้งานแก้ไข",
+        "value": 8
+      },
+      {
+        "index": 5,
+        "label": "ส่งคืนเจ้าของเรื่อง",
+        "value": 10
+      },
+      {
+        "index": 6,
+        "label": "ส่งเงินยืม",
+        "value": 11
+      },
+      {
+        "index": 7,
+        "label": "เบิกจ่ายโครงการ",
+        "value": 12
+      },
+      {
+        "index": 7,
+        "label": "อื่นๆ",
+        "value": 13
+      }
+    ],
+    "labelPosition": "vertical"
+  }

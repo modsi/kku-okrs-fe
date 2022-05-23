@@ -21,7 +21,7 @@ export const ListTemplateAction = async (data = {}) => {
       page: 0,
       size: 1000000
     }
-    console.log('GetTemplateService >> onSearch', onSearch)
+    // console.log('GetTemplateService >> onSearch', onSearch)
     const result = await GetTemplateService(onSearch)    
     const params = {
       [LIST_TEMPLATES]: {

@@ -12,7 +12,7 @@ const FORM__URL = `${API_ENDPOINT}/form`
 const REPORT_URL = `https://e-project.kku.ac.th/api/report/`
 
 export const ListInstitutions = async () => {
-    return await get(`${MANAGE_URL}/institution`)
+    return await get(`${MANAGE_URL}/institution`)     
 }
 
 export const ListRoles = async () => {
@@ -93,4 +93,9 @@ export const ExportFormCsv = async (formId) => {
 
 export const ExportFormWord = async (formId) => {
     return await downloadFile(`${REPORT_URL}complete_report_doc?formId=${formId}`)
+
+}
+
+export const GetFormTemplateService = async(data = {})=>{
+    return await get(`${FORM__URL}/list_form_template?typeId=${data?.typeId}&roleId=${data?.roleId}&isParent=${data?.isParent}`)
 }

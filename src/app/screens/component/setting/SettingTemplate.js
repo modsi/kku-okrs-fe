@@ -180,6 +180,7 @@ const SettingTemplate = ({ data }) => {
               <Col span={12} style={{ textAlign: "right" }}>
                 {!isEdit ? (
                   <Button
+                    disabled={data.is_used === true ? true : false}
                     className="pre-button"
                     style={{ marginBottom: "10px" }}
                     onClick={() => setIsEdit(true)}

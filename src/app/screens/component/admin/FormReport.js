@@ -2,54 +2,14 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from "react-router-dom";
 import { Card, Row, Col, Button, Typography, Table, Form, Input, Radio, Space, Image, InputNumber, Checkbox, Select, DatePicker, Upload, message } from 'antd';
-import {
-  UploadOutlined,
-  EditOutlined,
-  EyeOutlined,
-  SettingOutlined,
-  PlusOutlined,
-} from "@ant-design/icons";
-import { DATE_FULL, DATE_NORMAL } from "../../../utils/Elements";
-import {
-  FaIndent,
-  FaAdn,
-  FaAdversal,
-  FaBuromobelexperte,
-  FaCalendarDay,
-  FaCalendarAlt,
-  FaFileUpload,
-  FaCalculator,
-  FaCheckSquare,
-  FaList,
-  FaRecordVinyl,
-  FaLink,
-  FaMailBulk,
-  FaPhoneAlt,
-} from "react-icons/fa";
-import moment from "moment";
+import { UploadOutlined } from "@ant-design/icons";
 import {
   StoreTemplateAction,
   STORE_TEMPLATE,
 } from "../../../redux/actions/StoreSearchAction";
-import {
-  LIST_TYPE_TEPM,
-  LIST_FIELD_TEPM,
-  ListFieldMasterTemplateAction,
-} from "../../../redux/actions/ListMasterAction";
-import SetOptionsForSelect, {
-  SetOptionsForSelectSetLable,
-} from "../../items/SetOptionsForSelect";
-import {
-  ConfirmModalEditText,
-  SuccessModal,
-  ErrorModalMassageHtml,
-} from "../../items/Modal";
-import { SaveTempateAction } from "../../../redux/actions/TemplateAction";
-import {
-  LIST_TEMPLATES,
-  ListTemplateAction,
-} from "../../../redux/actions/TemplateAction";
+import { getStorage } from "../../state/localStorage";
 import logo from "../../../../assets/images/favicon-96x96.png"
+import moment from "moment";
 
 const { Text, Link } = Typography;
 const { RangePicker } = DatePicker;
@@ -107,7 +67,8 @@ const FormReport = ({ form }) => {
   }, [storeTemplate]);
 
   const setLayoutTemplate = (store) => {
-    console.log('start setLayoutTemplate', store)
+    let profile = getStorage("profile");
+    console.log('start setLayoutTemplate', profile, store)
     let listField = []
     let components = []
     if (store?.component) {
@@ -115,6 +76,7 @@ const FormReport = ({ form }) => {
       components.sort((a, b) => (a.index > b.index) ? 1 : -1)
     }
     components?.map((currentItem) => {
+      let isDisabled = (currentItem.permission && (profile.role_id !== '1' && currentItem.permission !== parseInt(profile.role_id)) ? true : false)
       let size = currentItem.size === 'long' ? 24 : 12
       const formItemLayout =
         currentItem.isSubTitle ? {
@@ -156,13 +118,14 @@ const FormReport = ({ form }) => {
                 // rules={[{ required: currentItem.required ? true : false, message: 'Please input ' + currentItem?.label }]}
                 >
                   {currentItem.type === 'textArea' ?
-                    (<Input.TextArea showCount maxLength={currentItem.maxLength} />)
+                    (<Input.TextArea showCount maxLength={currentItem.maxLength} disabled={isDisabled} />)
                     : currentItem.type === 'inputNumber' ?
-                      (<InputNumber min={currentItem.min} max={currentItem.max} />)
+                      (<InputNumber min={currentItem.min} max={currentItem.max} disabled={isDisabled} />)
                       : currentItem.type === 'checkbox' ?
-                        (<Checkbox.Group options={currentItem.options} />)
+                        (<Checkbox.Group options={currentItem.options} disabled={isDisabled} />)
                         : currentItem.type === 'select' ?
                           (<Select
+                            disabled={isDisabled}
                             mode={currentItem.mode}
                             placeholder="Please select"
                             style={{ width: '100%' }}
@@ -170,21 +133,22 @@ const FormReport = ({ form }) => {
                           />)
                           : currentItem.type === 'radio' ?
                             (<Radio.Group
+                              disabled={isDisabled}
                               options={currentItem.options}
                             />)
                             : currentItem.type === 'day' ?
-                              (<DatePicker />)
+                              (<DatePicker disabled={isDisabled} />)
                               : currentItem.type === 'date_time' ?
-                                (<DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />)
+                                (<DatePicker showTime format="YYYY-MM-DD HH:mm:ss" disabled={isDisabled} />)
                                 : currentItem.type === 'range_date' ?
-                                  (<RangePicker />)
+                                  (<RangePicker disabled={isDisabled} />)
                                   : currentItem.type === 'upload' ?
                                     (<Upload {...propsUpload}>
-                                      <Button icon={<UploadOutlined />}>Click to Upload</Button>
+                                      <Button icon={<UploadOutlined />} disabled={isDisabled}>Click to Upload</Button>
                                     </Upload>)
                                     // : currentItem.type === 'email' ?
                                     // (<Input placeholder="Please enter email." onChange={(e) => form.validateFields()} />)                                                                                        
-                                    : (<Input />)
+                                    : (<Input disabled={isDisabled} />)
                   }
                 </Form.Item>
                 )}
@@ -193,8 +157,12 @@ const FormReport = ({ form }) => {
         </>
       )
       listField.push(field)
-      form.setFieldsValue({[currentItem.key] : currentItem.value})
-    })    
+      if (currentItem.type === 'day' || currentItem.type === 'date_time') {
+        form.setFieldsValue({ [currentItem.key]: moment(currentItem.value) })
+      } else {
+        form.setFieldsValue({ [currentItem.key]: currentItem.value })
+      }
+    })
     setListField(listField)
   }
 

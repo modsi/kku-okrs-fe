@@ -188,6 +188,20 @@ div#root {
   border-color: #fff;
 }
 
+.ggar2-button {
+  background: #3984f4;
+  color: #ede5df;
+  height: auto !important;
+  border-color: #fff;
+}
+
+.ggar2-button:hover,
+.ggar2-button:focus {
+  color: #a5b0fc;
+  background: #1c35f3;
+  border-color: rgb(231, 212, 212);
+}
+
 .ant-badge{
   color: rgba(0, 0, 0, 0.5);
 }

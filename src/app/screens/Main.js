@@ -23,6 +23,7 @@ import logoProfile from "../../assets/images/icon/pixlr-bg-result.png";
 import logoLogOut from "../../assets/images/icon/log-out.png";
 
 import { SaveFormAction, ListFormAction, LIST_FORM, UpdateFormAction } from "../redux/actions/FormAction";
+import { UpdateAccAction } from '../redux/actions/UserAction'
 
 const { Text, Link } = Typography;
 const { Header, Content, Footer, Sider } = Layout;
@@ -44,49 +45,58 @@ const Main = () => {
     }
 
     useEffect(() => {
-        console.log(profile)
-        if (profile?.role?.priority === '1') {
-            let c = listForm?.result?.filter(l => l.step_id !== "3" && l.step_id !== "5" && l.step_id !== "8" && l.step_id !== "1")
-            setCount2(c?.length)
-        } else if (profile?.role?.priority === '2') {
-            let c = listForm?.result?.filter(l => l.step_id === "4")
-            setCount2(c?.length)
-        } else if (profile?.role?.priority === '3') {
-            let c
-            if (profile?.role_id === '3') {
-                c = listForm?.result?.filter(l => l.step_id === "2" || l.step_id === "7")
-            } else if (profile?.role_id === '4') {
-                c = listForm?.result?.filter(l => l.step_id === "2" || l.step_id === "6")
-            }
-            setCount2(c?.length)
-        }
+        // if (profile?.role?.priority === '1') {
+        //     let c = listForm?.result?.filter(l => l.step_id !== "3" && l.step_id !== "5" && l.step_id !== "8" && l.step_id !== "1")
+        //     setCount2(c?.length)
+        // } else if (profile?.role?.priority === '2') {
+        //     let c = listForm?.result?.filter(l => l.step_id === "4")
+        //     setCount2(c?.length)
+        // } else if (profile?.role?.priority === '3') {
+        //     let c
+        //     if (profile?.role_id === '3') {
+        //         c = listForm?.result?.filter(l => l.step_id === "2" || l.step_id === "7")
+        //     } else if (profile?.role_id === '4') {
+        //         c = listForm?.result?.filter(l => l.step_id === "2" || l.step_id === "6")
+        //     }
+        //     setCount2(c?.length)
+        // }
 
-        let c = listForm?.result?.filter(l => (l.step_id === "8" || l.step_id === "3") && l.type_id === '1')
-        setCount31(c?.length)
-        c = listForm?.result?.filter(l => (l.step_id === "8" || l.step_id === "3") && l.type_id === '2')
-        setCount32(c?.length)
+        // let c = listForm?.result?.filter(l => (l.step_id === "8" || l.step_id === "3") && l.type_id === '1')
+        // setCount31(c?.length)
+        // c = listForm?.result?.filter(l => (l.step_id === "8" || l.step_id === "3") && l.type_id === '2')
+        // setCount32(c?.length)
 
     }, [listForm, profile])
 
     useEffect(() => {
+        checkToken()
         if (!getStorage('profile') || !getStorage('token')) {
             routeChange()
         } else {
             let p = getStorage('profile')
             setProfile(p)
             handleListMaster()
-            if (p?.role?.priority < 2) {
-                setKey(['6']);
-                setContent(<User />);
-            } else if (p?.role?.priority < 4) {
-                setKey(['3']);
-                setContent(<Admin />);
+            if (p?.role?.priority === '1') {
+                setKey(['7']);
+                setContent(<Template />);
             } else {
                 setKey(['1']);
                 setContent(<Dashboard />);
             }
         }
     }, [])
+
+    async function checkToken() {
+        try {
+            if (getStorage('profile')) {
+                let res = await UpdateAccAction(getStorage('profile'))
+            } else {
+                routeChange()
+            }
+        } catch (e) {
+            routeChange()
+        }
+    }
 
     async function handleListMaster() {
         let p = getStorage('profile')
@@ -170,47 +180,34 @@ const Main = () => {
                             <Menu.Item key="2-3">สาขาวิชา</Menu.Item>
                             <Menu.Item key="2-4">ศูนย์</Menu.Item>
                         </SubMenu>
-                        {profile?.role?.priority < 4 ?
+                        <Menu.Item key="3" icon={<AuditOutlined />} hidden={profile?.role?.priority !== '3' && profile?.role?.priority !== '1'}>
+                            <Badge count={count2} offset={[20, 5]} >
+                                Manage Report
+                            </Badge>
+                        </Menu.Item>
+                        <Menu.Item key="4" icon={<FileTextOutlined />} hidden={profile?.role?.priority === '3' || profile?.role?.priority === '5'}>
+                            <Badge count={count31} offset={[20, 5]} >
+                                Report Form 1
+                            </Badge>
+                        </Menu.Item>
+                        <Menu.Item key="5" icon={<FileTextOutlined />} hidden={profile?.role?.priority === '3' || profile?.role?.priority === '5'}>
+                            <Badge count={count32} offset={[20, 5]} >
+                                Report Form 2
+                            </Badge>
+                        </Menu.Item>
 
-                            <Menu.Item key="3" icon={<AuditOutlined />}>
-                                <Badge count={count2} offset={[20, 5]} >
-                                    Manage Report
-                                </Badge>
-                            </Menu.Item>
-
-                            : null}
-                        {profile?.role?.priority === '4' || profile?.role?.priority === '1' ?
-                            <>
-                                <Menu.Item key="4" icon={<FileTextOutlined />}>
-                                    <Badge count={count31} offset={[20, 5]} >
-                                        Report Form 1
-                                    </Badge>
-                                </Menu.Item>
-                                <Menu.Item key="5" icon={<FileTextOutlined />}>
-                                    <Badge count={count32} offset={[20, 5]} >
-                                        Report Form 2
-                                    </Badge>
-                                </Menu.Item>
-                            </>
-                            : null
-                        }
-                        {profile?.role?.priority < 5 ?
-                            <Menu.Item key="8" icon={<FolderOpenOutlined />}>
-                                Data History
-                            </Menu.Item>
-                            : null
-                        }
+                        <Menu.Item key="8" icon={<FolderOpenOutlined />} hidden={profile?.role?.priority === '5'}>
+                            Data History
+                        </Menu.Item>
                     </Menu.ItemGroup>
-                    {profile?.role?.priority < 2 ?
-                        <Menu.ItemGroup title='Management'>
-                            <Menu.Item key="6" icon={<UserOutlined />}>
-                                User
-                            </Menu.Item>
-                            <Menu.Item key="7" icon={<GroupOutlined />}>
-                                Template
-                            </Menu.Item>
-                        </Menu.ItemGroup>
-                        : null}
+                    <Menu.ItemGroup title='Management' hidden={profile?.role?.priority !== '1'}>
+                        <Menu.Item key="6" icon={<UserOutlined />}>
+                            User
+                        </Menu.Item>
+                        <Menu.Item key="7" icon={<GroupOutlined />}>
+                            Template
+                        </Menu.Item>
+                    </Menu.ItemGroup>
                 </Menu>
             </Sider>
             <Layout>
