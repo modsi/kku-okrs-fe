@@ -34,6 +34,7 @@ const Template = () => {
   const [showConfigPage, setShowConfigPage] = useState(false);
   const [showViewPage, setShowViewPage] = useState(false);
   const [showSettingPage, setShowSettingPage] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
   const [isModalAddEditVisible, setIsModalAddEditVisible] = useState(false);
   const [addEditTitle, setAddEditTitle] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -85,8 +86,8 @@ const Template = () => {
       align: "center",
       width: 80,
       render: (_, record) => record?.updatedate !== null
-            ? moment(record.updatedate).format(DATE_FULL)
-            : null,
+        ? moment(record.updatedate).format(DATE_FULL)
+        : null,
     },
     {
       title: "Status",
@@ -109,27 +110,29 @@ const Template = () => {
       fixed: "right",
       align: "center",
       width: 100,
-      render: (record) => ( 
+      render: (record) => (
         <div className="text-center">
-          <Button
-            type="link"
-            className="text-danger btn-view"
-            onClick={() => handleClickView(record)}
-          >
-            <EyeOutlined />
-            <Text>View</Text>
-          </Button>
+          {record?.is_used ?
+            <Button
+              type="link"
+              className="text-danger btn-view"
+              onClick={() => handleClickView(record)}
+            >
+              <EyeOutlined />
+              <Text>View</Text>
+            </Button>
+            :
+            <Button
+              style={{ marginLeft: "5px", borderRadius: ".5rem" }}
+              onClick={() => handleClickEdit(record)}
+            >
+              <EditFilled />
+              <Text>Edit</Text>
+            </Button>
+          }
           <Button
             style={{ marginLeft: "5px", borderRadius: ".5rem" }}
-            // onClick={() => handleClickView(record)}            
-            disabled={record?.is_used === true ? true : false}
-          >
-            <EditFilled />
-            <Text>Edit</Text>
-          </Button>
-          <Button
-            style={{ marginLeft: "5px", borderRadius: ".5rem" }}
-            onClick={() => handleClickEdit(record)}
+            onClick={() => handleClickConfig(record)}
           >
             <SettingOutlined />
             Permission
@@ -139,11 +142,24 @@ const Template = () => {
     },
   ];
 
-  const handleClickEdit = (record) => {
+  const handleClickConfig = (record) => {
     setShowSettingPage(true);
     console.log("record >> ", record);
     setData(record);
   };
+
+  const handleClickEdit = (record) => {
+    setIsLoading(true);
+    setShowConfigPage(true);
+    console.log("record >> ", record);
+    setIsEdit(true);
+    setTemplate(record)
+    setIsLoading(false);
+  };
+
+  async function setTemplate(data) {
+    dispatch(await StoreTemplateAction(data));
+  }
 
   const handleClickView = (record) => {
     setIsLoading(true);
@@ -179,12 +195,6 @@ const Template = () => {
     dispatch(await ListTemplateAction(data));
   }
 
-  // console.log(dataSource)
-
-  async function setTemplate(data) {
-    dispatch(await StoreTemplateAction(data));
-  }
-
   const searchTemplate = (e) => {
     listTemplate({ str: e.target.value });
   };
@@ -210,11 +220,12 @@ const Template = () => {
             onBack={() => {
               setShowConfigPage(false);
               setTemplate({});
+              setIsEdit(false);
             }}
             title="Back"
           />
           {/* <FormReport form={form} /> */}
-          <ConfigTemplate />
+          <ConfigTemplate isEdit={isEdit} />
         </>
       ) : showSettingPage ? (
         <>

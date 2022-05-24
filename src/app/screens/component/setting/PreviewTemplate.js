@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from "react-router-dom";
 import { Card, Row, Col, Button, Typography, Table, Form, Input, Radio, Space, Image, InputNumber, Checkbox, Select, DatePicker, Upload, message } from 'antd';
-import { DeleteFilled, UploadOutlined } from "@ant-design/icons";
+import { DeleteFilled, UploadOutlined, EditFilled } from "@ant-design/icons";
 import { DATE_FULL, DATE_NORMAL } from '../../../utils/Elements'
 import moment from 'moment';
 import logo from "../../../../assets/images/favicon-96x96.png"
@@ -35,7 +35,7 @@ const PreviewTemplate = () => {
 
     const remove = (id) => {
         console.log('remove ', id);
-        let store = [...storeTemplate?.components?.filter((item) => {
+        let store = [...storeTemplate?.component?.filter((item) => {
             if (item.id !== id) {
                 return (
                     true
@@ -75,7 +75,7 @@ const PreviewTemplate = () => {
         if (data?.y !== 0) {
             let c = Math.round(data?.y / 100)
             // console.log(c);
-            let tmp = [...storeTemplate?.components]
+            let tmp = [...storeTemplate?.component]
             // console.log(tmp);
             let tmpO = tmp?.find(item => item.id === data?.node.id);
             let newIndex = tmpO.index + c
@@ -107,8 +107,8 @@ const PreviewTemplate = () => {
         console.log('start setLayoutTemplate')
         let listField = []
         let components = []
-        if (storeTemplate?.components) {
-            components = [...storeTemplate?.components]
+        if (storeTemplate?.component) {
+            components = [...storeTemplate?.component]
             components.sort((a, b) => (a.index > b.index) ? 1 : -1)
         }
         components?.map((currentItem) => {
@@ -144,6 +144,7 @@ const PreviewTemplate = () => {
                                     <Row>
                                         <Col xs={24} sm={24} md={2} lg={2} xl={2} >
                                             {storeTemplate?.templateId ? null :
+                                            <>
                                                 <Button
                                                     type="link"
                                                     disabled={currentItem.required ? true : false}
@@ -154,6 +155,17 @@ const PreviewTemplate = () => {
                                                 >
                                                     <DeleteFilled />
                                                 </Button>
+                                                <br />
+                                                <Button
+                                                    type="link"
+                                                    style={{ padding: '0px', color: 'red' }}
+                                                    // onClick={() =>
+                                                    //     remove(currentItem.id)
+                                                    // }
+                                                >
+                                                    <EditFilled />
+                                                </Button>
+                                                </>
                                             }
                                         </Col>
                                         <Col xs={24} sm={24} md={22} lg={22} xl={22} >

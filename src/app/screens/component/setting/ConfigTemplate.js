@@ -70,14 +70,14 @@ import {
   SuccessModal,
   ErrorModalMassageHtml,
 } from "../../items/Modal";
-import { SaveTempateAction } from "../../../redux/actions/TemplateAction";
+import { SaveTempateAction, UpdateTempateAction } from "../../../redux/actions/TemplateAction";
 import {
   LIST_TEMPLATES,
   ListTemplateAction,
 } from "../../../redux/actions/TemplateAction";
 
 const { Text, Link } = Typography;
-const ConfigTemplate = () => {
+const ConfigTemplate = ( {isEdit}) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [form] = Form.useForm();
@@ -195,17 +195,18 @@ const ConfigTemplate = () => {
 
   useEffect(() => {
     handleClickCancel();
-    if (storeTemplate?.templateId) {
-      setTemplateId(storeTemplate?.templateId);
+    if (storeTemplate?.id) {
+      setTemplateId(storeTemplate?.id);
       form.setFieldsValue({
-        ["templateType"]: storeTemplate.templateType,
-        ["templateName"]: storeTemplate.templateName,
+        ["templateType"]: storeTemplate.type_id,
+        ["templateName"]: storeTemplate.template_name,
       });
+      console.log("useEffect - > useEffect");
     }
   }, [storeTemplate]);
 
   useEffect(() => {
-    if (listType && !templateId) {
+    if (!isEdit && listType && !templateId) {
       console.log("useEffect - > listType");
       form.setFieldsValue({ ["templateType"]: listType[0].id });
       handleListMaster(listType[0].id);
@@ -214,8 +215,8 @@ const ConfigTemplate = () => {
 
   useEffect(() => {
     // console.log('useEffect - > listField', templateId)
-    if (listField && !templateId) {
-      // console.log('useEffect - > listField')
+    if (!isEdit &&  listField && !templateId) {
+      console.log('useEffect - > listField')
       let components = [];
       listField.map((field, index) => {
         let obj = {
@@ -229,7 +230,7 @@ const ConfigTemplate = () => {
         Object.assign(obj, field.properties);
         components.push(obj);
       });
-      setTemplate({ ...storeTemplate, components: components });
+      setTemplate({ ...storeTemplate, component: components });
     }
   }, [listField]);
 
@@ -261,7 +262,7 @@ const ConfigTemplate = () => {
 
   async function onFinish() {
     setIsLoading(true);
-    let store = storeTemplate?.components ?? [];
+    let store = storeTemplate?.component ?? [];
     let data = {};
     data.type_id = form.getFieldValue("templateType");
     data.name = form.getFieldValue("templateName");
@@ -270,8 +271,7 @@ const ConfigTemplate = () => {
     let res = {};
     if (templateId) {
       data.id = templateId;
-      data.updated_datetime = moment().format(DATE_FULL);
-      // res = await UpdateAccAction(data)
+      res = await UpdateTempateAction(data);
     } else {
       res = await SaveTempateAction(data);
     }
@@ -292,7 +292,7 @@ const ConfigTemplate = () => {
     <>
       <div className="container-user">
         <Card
-          title={(templateId ? "View" : "Create") + " Template"}
+          title={(templateId ? "Edit" : "Create") + " Template"}
           className="rounded"
         >
           <Row gutter={[16, 16]}>
@@ -306,7 +306,6 @@ const ConfigTemplate = () => {
                     >
                       <Input
                         className="form-search"
-                        disabled={templateId ? true : false}
                         placeholder="Enter Template Name"
                         size="large"
                         // onChange={setTemplateName}
@@ -325,7 +324,6 @@ const ConfigTemplate = () => {
                       ]}
                     >
                       <Radio.Group
-                        disabled={templateId ? true : false}
                         size="small"
                         options={SetOptionsForSelect({
                           label: "name",
@@ -338,7 +336,6 @@ const ConfigTemplate = () => {
                     </Form.Item>
                   </Col>
                   <Col xs={24} md={8} style={{ textAlign: "center" }}>
-                    {templateId ? null : (
                       <Button
                         type="primary"
                         loading={isLoading}
@@ -353,7 +350,6 @@ const ConfigTemplate = () => {
                       >
                         บันทึก
                       </Button>
-                    )}
                   </Col>
                 </Row>
               </Form>
@@ -368,7 +364,6 @@ const ConfigTemplate = () => {
                   textAlign: "left",
                   borderRadius: "0px",
                 }}
-                disabled={templateId ? true : false}
                 onClick={setTitleField}
               >
                 <FaIndent style={{ paddingRight: "3px", marginRight: "5px" }} />{" "}
@@ -381,7 +376,6 @@ const ConfigTemplate = () => {
                   textAlign: "left",
                   borderRadius: "0px",
                 }}
-                disabled={templateId ? true : false}
                 onClick={setTextField}
               >
                 <FaAdn style={{ paddingRight: "3px", marginRight: "5px" }} />{" "}
@@ -394,7 +388,6 @@ const ConfigTemplate = () => {
                   textAlign: "left",
                   borderRadius: "0px",
                 }}
-                disabled={templateId ? true : false}
                 onClick={setTextAreaField}
               >
                 <FaAdversal
@@ -409,7 +402,6 @@ const ConfigTemplate = () => {
                   textAlign: "left",
                   borderRadius: "0px",
                 }}
-                disabled={templateId ? true : false}
                 onClick={setNumberField}
               >
                 <FaCalculator
@@ -424,7 +416,6 @@ const ConfigTemplate = () => {
                   textAlign: "left",
                   borderRadius: "0px",
                 }}
-                disabled={templateId ? true : false}
                 onClick={setCheckboxField}
               >
                 <FaCheckSquare
@@ -439,7 +430,6 @@ const ConfigTemplate = () => {
                   textAlign: "left",
                   borderRadius: "0px",
                 }}
-                disabled={templateId ? true : false}
                 onClick={setSelectField}
               >
                 <FaList style={{ paddingRight: "3px", marginRight: "5px" }} />{" "}
@@ -452,7 +442,6 @@ const ConfigTemplate = () => {
                   textAlign: "left",
                   borderRadius: "0px",
                 }}
-                disabled={templateId ? true : false}
                 onClick={setRadioField}
               >
                 <FaRecordVinyl
@@ -468,7 +457,6 @@ const ConfigTemplate = () => {
                   textAlign: "left",
                   borderRadius: "0px",
                 }}
-                disabled={templateId ? true : false}
                 onClick={setDayField}
               >
                 <FaCalendarDay
@@ -483,7 +471,6 @@ const ConfigTemplate = () => {
                   textAlign: "left",
                   borderRadius: "0px",
                 }}
-                disabled={templateId ? true : false}
                 onClick={setDateTimeField}
               >
                 <FaCalendarAlt
@@ -498,7 +485,6 @@ const ConfigTemplate = () => {
                   textAlign: "left",
                   borderRadius: "0px",
                 }}
-                disabled={templateId ? true : false}
                 onClick={setRangeDateField}
               >
                 <FaCalendarAlt
@@ -513,7 +499,6 @@ const ConfigTemplate = () => {
                   textAlign: "left",
                   borderRadius: "0px",
                 }}
-                disabled={templateId ? true : false}
                 onClick={setTableField}
               >
                 <FaBuromobelexperte
@@ -521,21 +506,20 @@ const ConfigTemplate = () => {
                 />{" "}
                 Table
               </Button>
-              <Button
+              {/* <Button
                 type="primary"
                 style={{
                   width: "100%",
                   textAlign: "left",
                   borderRadius: "0px",
                 }}
-                disabled={templateId ? true : false}
                 onClick={setUploadField}
               >
                 <FaFileUpload
                   style={{ paddingRight: "3px", marginRight: "5px" }}
                 />{" "}
                 Upload
-              </Button>
+              </Button> */}
             </Col>
             <Col xs={24} md={18} lg={20}>
               <PreviewTemplate />
