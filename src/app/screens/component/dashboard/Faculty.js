@@ -225,7 +225,7 @@ const Faculty = (props) => {
                 unit={"โครงการ"}
               />
             </Col>
-            <Col xs={0} sm={0} md={1} lg={1}></Col>
+            <Col xs={0} sm={0} md={1} lg={1} style={{maxWidth: '2%'}}></Col>
             <Col xs={24} sm={24} md={12} lg={12} className="box-plan">
               <PieFull
                 title={"สรุปงบประมาณ"}
@@ -277,7 +277,7 @@ const Faculty = (props) => {
                 unit={"รายการ"}
               />
             </Col>
-            <Col xs={0} sm={0} md={1} lg={1}></Col>
+            <Col xs={0} sm={0} md={1} lg={1} style={{maxWidth: '2%'}}></Col>
             <Col xs={24} sm={24} md={13} lg={13} className="box-plan">
               <RadarPlot
                 title={"สรุปงบประมาณ"}
@@ -325,7 +325,7 @@ const Faculty = (props) => {
                 unit={"รายการ"}
               />
             </Col>
-            <Col xs={0} sm={0} md={1} lg={1}></Col>
+            <Col xs={0} sm={0} md={1} lg={1} style={{maxWidth: '2%'}}></Col>
             <Col xs={24} sm={24} md={13} lg={13} className="box-plan">
               <RadarPlot
                 title={"สรุปงบประมาณ"}

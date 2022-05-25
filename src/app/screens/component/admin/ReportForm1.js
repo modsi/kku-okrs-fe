@@ -350,7 +350,7 @@ const ReportForm1 = () => {
       dataIndex: "no",
       key: "no",
       align: "center",
-      width: 40,
+      width: 50,
       fixed: "center",
     },
     {
@@ -358,7 +358,7 @@ const ReportForm1 = () => {
       dataIndex: "OKRs_Ids",
       key: "OKRs_Ids",
       align: "center",
-      width: 80,
+      width: 100,
       render: (_, record) => record?.OKRs_Ids,
     },
     {
@@ -366,8 +366,8 @@ const ReportForm1 = () => {
       dataIndex: "OKRs_Date",
       key: "OKRs_Date",
       align: "center",
-      width: 80,
-      render: (_, record) => record?.OKRs_Date ? moment(record?.OKRs_Date).format('yyyy-MM-DD') : null,
+      width: 100,
+      render: (_, record) => record?.OKRs_Date ? moment(record?.OKRs_Date).format('DD/MM/YYYY') : null,
     },
     {
       title: "เลขที่หนังสือรับ อว",
@@ -473,6 +473,7 @@ const ReportForm1 = () => {
                   onClick={() =>
                     handleClickValidated(record.record_data)
                   }
+                  style={{width: '60%'}}
                 >
                   <Text className="big6-title">manage</Text>
                 </Button>
@@ -574,7 +575,7 @@ const ReportForm1 = () => {
                           : currentItem.type === 'day' ?
                             (<DatePicker />)
                             : currentItem.type === 'date_time' ?
-                              (<DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />)
+                              (<DatePicker showTime format="DD/MM/YYYY HH:mm:ss" />)
                               : currentItem.type === 'range_date' ?
                                 (<RangePicker />)
                                 : (<Input />)
@@ -712,7 +713,7 @@ const ReportForm1 = () => {
                 </Button>
               </Col >
               : null}
-            <Col span={24} style={{ textAlign: "center" }}>
+            <Col span={24} style={{ textAlign: "center",marginTop: 15 }}>
               {/* {listTableForm} */}
 
               <Table

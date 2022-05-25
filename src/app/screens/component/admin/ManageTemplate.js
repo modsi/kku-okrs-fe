@@ -137,7 +137,7 @@ const ManageTemplate = () => {
       title: "ลำดับ",
       dataIndex: 'id',
       align: "center",
-      width: 30,
+      width: 60,
       render: (val, record, index) => {
         return {
           // props: {
@@ -151,34 +151,37 @@ const ManageTemplate = () => {
       title: "ชื่อ Template",
       dataIndex: "templateName",
       align: "left",
-      width: 100,
+      width: 180,
       render: (_, record) => record?.templateName,
     },
     {
       title: "ชื่อรายงาน",
       dataIndex: "name",
       align: "left",
-      width: 100,
+      width: 180,
       render: (_, record) => record?.name,
     },
     {
       title: "Step",
       dataIndex: "stepName",
       align: "left",
-      width: 80,
+      width: 100,
       render: (_, record) => record?.stepName,
     },
     {
       title: "สถานะ",
       dataIndex: "status",
       align: "left",
-      width: 80,
+      width: 100,
     },
     {
       title: "รายละเอียด",
       dataIndex: "component",
       align: "left",
       width: 150,
+      ellipsis: {
+        showTitle: false,
+      },
       // render: (obj) => setTableContent(obj)
       render: (obj) => {
         let comp = obj?.filter(i => profile.role_id === '1' ? i.permission === 3 || i.permission === 4 : i.permission === parseInt(profile.role_id))
@@ -219,7 +222,7 @@ const ManageTemplate = () => {
             </Button>
             {record.typeId === '1' ?
               <Button
-                disabled={!canEdit || (record?.stepId !== '1' && record?.stepId !== '2' && record?.stepId !== '10' && record?.stepId !== '11'  && record?.stepId !== '6' && record?.stepId !== '7') || !record?.id ? true : false}
+                disabled={!canEdit || (record?.stepId !== '1' && record?.stepId !== '2' && record?.stepId !== '10' && record?.stepId !== '11' && record?.stepId !== '6' && record?.stepId !== '7') || !record?.id ? true : false}
                 type="primary"
                 className={record?.id ? "pre-button" : "nol-button"}
                 onClick={() =>
@@ -245,7 +248,7 @@ const ManageTemplate = () => {
     console.log('upStep', record)
     let data = { ...record }
     if (record.stepId === '10' || record.stepId === '11') {
-      if(!record.formStatus || record.formStatus === '0'){
+      if (!record.formStatus || record.formStatus === '0') {
         data.stepId = record.stepId === '10' ? 11 : 10
         data.status = 3
       } else {
@@ -367,7 +370,7 @@ const ManageTemplate = () => {
                           : currentItem.type === 'day' ?
                             (<DatePicker />)
                             : currentItem.type === 'date_time' ?
-                              (<DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />)
+                              (<DatePicker showTime format="DD/MM/YYYY HH:mm:ss" />)
                               : currentItem.type === 'range_date' ?
                                 (<RangePicker />)
                                 : (<Input />)
@@ -478,15 +481,17 @@ const ManageTemplate = () => {
     <>
       <Card title={"Manage Report"} className="rounded">
         <Row gutter={24} className="row-inquiry-customer">
-          <Col span={24} style={{ textAlign: "right" }} >
+          <Col span={12} style={{marginTop:10}}>
+            <Text strong style={{ color: 'rgba(0, 0, 0, 0.5)'}}>แบบรายงานที่ 1</Text>
+          </Col>
+          <Col span={12} style={{ textAlign: "right" }} >
             <Button type="primary" shape="circle" size="large"
               onClick={newTemplate} className="ggar-button"
             >
               <PlusOutlined className="big3-title" />
             </Button>
           </Col >
-          <Col span={24} style={{ textAlign: "left" }}>
-            <Text strong>แบบรายงานที่ 1</Text>
+          <Col span={24} style={{ textAlign: "left",marginTop: 10 }}>
             <Table
               className="table-user custom-table-dashboard"
               rowKey={(record, index) => record.key}
@@ -503,11 +508,11 @@ const ManageTemplate = () => {
             />
           </Col>
           <Col span={24} style={{ textAlign: "left" }}>
-            <Text strong>แบบรายงานที่ 2</Text>
+            <Text strong style={{ color: 'rgba(0, 0, 0, 0.5)'}}>แบบรายงานที่ 2</Text>
             <Table
               className="table-user custom-table-dashboard"
               rowKey={(record, index) => record.key}
-              style={{ whiteSpace: "pre" }}
+              style={{ whiteSpace: "pre",marginTop: 18 }}
               loading={isLoading}
               scroll={{ x: "max-content", y: 250 }}
               size="small"

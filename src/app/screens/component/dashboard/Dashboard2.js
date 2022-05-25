@@ -339,7 +339,7 @@ const Dashboard2 = () => {
                 unit={"โครงการ"}
               />
             </Col>
-            <Col xs={0} sm={0} md={1} lg={1}></Col>
+            <Col xs={0} sm={0} md={1} lg={1} style={{maxWidth: '2%'}}></Col>
             <Col xs={24} sm={24} md={13} lg={13} className="box-plan">
               <PieFull
                 title={"สรุปงบประมาณ"}
@@ -388,7 +388,7 @@ const Dashboard2 = () => {
                 unit={"รายการ"}
               />
             </Col>
-            <Col xs={0} sm={0} md={1} lg={1}></Col>
+            <Col xs={0} sm={0} md={1} lg={1} style={{maxWidth: '2%'}}></Col>
             <Col xs={24} sm={24} md={13} lg={13} className="box-plan">
               <RadarPlot
                 title={"สรุปงบประมาณ"}
@@ -436,7 +436,7 @@ const Dashboard2 = () => {
                 unit={"รายการ"}
               />
             </Col>
-            <Col xs={0} sm={0} md={1} lg={1}></Col>
+            <Col xs={0} sm={0} md={1} lg={1} style={{maxWidth: '2%'}}></Col>
             <Col xs={24} sm={24} md={13} lg={13} className="box-plan">
               <RadarPlot
                 title={"สรุปงบประมาณ"}

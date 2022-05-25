@@ -192,7 +192,7 @@ const DateTimeField = ({ form }) => {
                             // name="key"
                             // rules={[{ required: required ? true : false, message: 'Please input ' + title }]}
                           >
-                            <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
+                            <DatePicker showTime format="DD/MM/YYYY HH:mm:ss" />
                           </Form.Item>
                         </Form>
                       </Col>

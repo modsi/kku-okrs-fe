@@ -204,6 +204,7 @@ div#root {
 
 .ant-badge{
   color: rgba(0, 0, 0, 0.5);
+  font-size: 14px !important;
 }
 
 .ggar-button:hover,
@@ -270,6 +271,7 @@ display: inline;
 .ant-menu {
   padding: 10px;
   color: rgba(0, 0, 0, 0.5);
+  border-top: 2px solid #f0f2f5;
 }
 
 .ant-menu .ant-menu-item {
@@ -318,6 +320,14 @@ display: inline;
 
 .ant-menu .ant-menu-item-selected, .ant-menu-submenu-selected {
   /* color: #071A52;  */
+  color: rgba(245, 124, 0, 0.8);
+}
+
+.ant-menu .ant-menu-submenu-title:hover {
+  color: rgba(245, 124, 0, 0.8);
+}
+
+.ant-menu-submenu:hover .ant-menu-submenu-title .ant-menu-submenu-arrow {
   color: rgba(245, 124, 0, 0.8);
 }
 
@@ -423,7 +433,8 @@ display: inline;
 .custom-layout-header {
   width: 100%;
   text-align: right; 
-  padding: 10px 0px 80px 0px;
+  padding: 10px 0px 73px 0px;
+  border-bottom: 2px solid #f0f2f5;
 }
 
 .custom-layout-header .ant-space-vertical {
@@ -501,7 +512,24 @@ display: inline;
   margin: 0px 20px;
 }
 
+.ant-modal {
+  width: 35%;
+}
 
+#login_password {
+  background-color: #fff;
+}
+
+.ant-page-header-back-button {
+  color: rgba(0, 0, 0, 0.5);
+}
+.ant-page-header-heading-title {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.from-search .ant-select-single.ant-select-show-arrow .ant-select-selection-placeholder{
+  font-size: 14px !important;
+}
 
 @media (min-width: 1500px) {
   .grad1 {
@@ -561,6 +589,9 @@ display: inline;
   }
   .big7-title {
     font-size: 14px !important;
+  }
+  .ant-modal {
+    width: 90%;
   }
 }
 

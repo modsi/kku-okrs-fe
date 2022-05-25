@@ -1,21 +1,63 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux'
-import { PageHeader, Modal, Steps, Card, Row, Col, Button, Typography, Table, Form, Input, Radio, Space, Image, InputNumber, Checkbox, Select, DatePicker, Upload, message } from 'antd';
-import { EditOutlined, EyeOutlined, SettingOutlined, PlusOutlined, FileSearchOutlined, PlusCircleFilled } from "@ant-design/icons";
-import { tem1, tem2 } from '../../../../template-mock'
-import { LIST_TEMPLATES, ListTemplateAction } from '../../../redux/actions/TemplateAction'
-import SetOptionsForSelect, { SetOptionsForSelectSetLable } from '../../items/SetOptionsForSelect'
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  PageHeader,
+  Modal,
+  Steps,
+  Card,
+  Row,
+  Col,
+  Button,
+  Typography,
+  Table,
+  Form,
+  Input,
+  Radio,
+  Space,
+  Image,
+  InputNumber,
+  Checkbox,
+  Select,
+  DatePicker,
+  Upload,
+  message,
+} from "antd";
+import {
+  EditOutlined,
+  EyeOutlined,
+  SettingOutlined,
+  PlusOutlined,
+  FileSearchOutlined,
+  PlusCircleFilled,
+} from "@ant-design/icons";
+import { tem1, tem2 } from "../../../../template-mock";
+import {
+  LIST_TEMPLATES,
+  ListTemplateAction,
+} from "../../../redux/actions/TemplateAction";
+import SetOptionsForSelect, {
+  SetOptionsForSelectSetLable,
+} from "../../items/SetOptionsForSelect";
 import { clearStorege, getStorage } from "../../state/localStorage";
 import {
   ConfirmModalEditText,
   SuccessModal,
   ErrorModalMassageHtml,
 } from "../../items/Modal";
-import { propsIds, propsStatus, SaveFormAction, ListForm2Action, LIST_FROM_2, UpdateFormAction, ListFormTemplateAction, LIST_FROM_TEMPLATES } from "../../../redux/actions/FormAction";
+import {
+  propsIds,
+  propsStatus,
+  SaveFormAction,
+  ListForm2Action,
+  LIST_FROM_2,
+  UpdateFormAction,
+  ListFormTemplateAction,
+  LIST_FROM_TEMPLATES,
+} from "../../../redux/actions/FormAction";
 import FormReport from "./FormReport";
 import FormUpload from "./FormUpload";
 import { StoreTemplateAction } from "../../../redux/actions/StoreSearchAction";
-import { UpdateTempateAction } from '../../../redux/actions/TemplateAction'
+import { UpdateTempateAction } from "../../../redux/actions/TemplateAction";
 import moment from "moment";
 
 const { Text, Link } = Typography;
@@ -24,30 +66,34 @@ const { Step } = Steps;
 const temp_columns = [
   {
     title: <Text className="big6-title">รายการ</Text>,
-    align: 'center',
-  }
+    align: "center",
+  },
 ];
 
 const ReportForm2 = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
   const [isModalAddEditVisible, setIsModalAddEditVisible] = useState(false);
   const [isModal3, setIsModal3] = useState(false);
   const [isModal2, setIsModal2] = useState(false);
-  const [addEditTitle, setAddEditTitle] = useState('');
+  const [addEditTitle, setAddEditTitle] = useState("");
   const [form] = Form.useForm();
   const [form2] = Form.useForm();
   const [form3] = Form.useForm();
-  const listTemplateMaster = useSelector(state => state?.main?.[LIST_FROM_TEMPLATES])
-  const listTemplateSpec = useSelector(state => state?.main?.[LIST_TEMPLATES])
-  const listForm = useSelector(state => state?.main?.[LIST_FROM_2])
-  const [listTemplate, setListTemplate] = useState([])
-  const [listTempMaster, setListTempMaster] = useState([])
-  const [columns, setColumns] = useState(temp_columns)
+  const listTemplateMaster = useSelector(
+    (state) => state?.main?.[LIST_FROM_TEMPLATES]
+  );
+  const listTemplateSpec = useSelector(
+    (state) => state?.main?.[LIST_TEMPLATES]
+  );
+  const listForm = useSelector((state) => state?.main?.[LIST_FROM_2]);
+  const [listTemplate, setListTemplate] = useState([]);
+  const [listTempMaster, setListTempMaster] = useState([]);
+  const [columns, setColumns] = useState(temp_columns);
   const [currentPage, setCurrentPage] = useState(1);
-  const [dataSource, setDataSource] = useState([])
+  const [dataSource, setDataSource] = useState([]);
   const [listField, setListField] = useState([]);
-  const [profile, setProfile] = useState({})
+  const [profile, setProfile] = useState({});
   const [listComponent, setListComponent] = useState([]);
   const [step, setStep] = useState(0);
   const [listFormComponent, setListFormComponent] = useState([]);
@@ -58,180 +104,205 @@ const ReportForm2 = () => {
   const layout = {
     labelCol: { span: 24 },
     wrapperCol: { span: 24 },
-    layout: "vertical"
+    layout: "vertical",
   };
 
   useEffect(() => {
-    let p = getStorage('profile')
-    setProfile(p)
-    handleListMaster()
-  }, [])
+    let p = getStorage("profile");
+    setProfile(p);
+    handleListMaster();
+  }, []);
 
   useEffect(() => {
     if (listTemplateSpec) {
-      let list = listTemplateSpec.result?.filter((l) => l.status === "1" && l.type_id === "3");
+      let list = listTemplateSpec.result?.filter(
+        (l) => l.status === "1" && l.type_id === "3"
+      );
       setListTempMaster(list);
     }
   }, [listTemplateSpec]);
 
   useEffect(() => {
     if (listTemplateMaster) {
-      console.log("listTemplateMaster", listTemplateMaster)
-      let list = listTemplateMaster.result
-      setListTemplate(list)
+      console.log("listTemplateMaster", listTemplateMaster);
+      let list = listTemplateMaster.result;
+      setListTemplate(list);
     }
-  }, [listTemplateMaster])
+  }, [listTemplateMaster]);
 
   useEffect(() => {
     if (listForm) {
-      setListFormComponent(listForm.result)
+      setListFormComponent(listForm.result);
     }
-  }, [listForm])
+  }, [listForm]);
 
   useEffect(() => {
     if (listFormComponent) {
-      setPage()
+      setPage();
     }
-  }, [listFormComponent])
+  }, [listFormComponent]);
 
   async function handleListMaster() {
-    let p = getStorage('profile')
-    console.log(p)
-    dispatch(await ListFormTemplateAction({ roleId: p.role_id, typeId: 2, isParent: 1 }))
-    dispatch(await ListForm2Action({ roleId: p.role_id, typeId: 2, isParent: 0 }))
+    let p = getStorage("profile");
+    console.log(p);
+    dispatch(
+      await ListFormTemplateAction({
+        roleId: p.role_id,
+        typeId: 2,
+        isParent: 1,
+      })
+    );
+    dispatch(
+      await ListForm2Action({ roleId: p.role_id, typeId: 2, isParent: 0 })
+    );
     dispatch(await ListTemplateAction({}));
   }
 
   const handleClickCancel = () => {
     setIsModalAddEditVisible(false);
-    setIsModal2(false)
-    setIsModal3(false)
-    form3.resetFields()
-    form2.resetFields()
-    form.resetFields()
+    setIsModal2(false);
+    setIsModal3(false);
+    form3.resetFields();
+    form2.resetFields();
+    form.resetFields();
     setShowConfigPage(false);
     setTemplate({});
-  }
+  };
 
   const newTemplate = () => {
     setIsModalAddEditVisible(true);
-    setAddEditTitle('เลือกใช้รายงาน')
-  }
+    setAddEditTitle("เลือกใช้รายงาน");
+  };
 
   const handleClickEdit = (record) => {
-    console.log("handleClickEdit", record)
-    setListComponent(record)
+    console.log("handleClickEdit", record);
+    setListComponent(record);
     setIsLoading(true);
     setShowConfigPage(true);
     setTemplate(record);
     setIsLoading(false);
-  }
+  };
 
   const setLayoutTemplate = (listComponent) => {
-    console.log('start setLayoutTemplate', listComponent)
-    let listField = []
-    listComponent?.sort((a, b) => (a.index > b.index) ? 1 : -1)
+    console.log("start setLayoutTemplate", listComponent);
+    let listField = [];
+    listComponent?.sort((a, b) => (a.index > b.index ? 1 : -1));
     listComponent?.map((currentItem) => {
-      console.log('value', currentItem.value)
+      console.log("value", currentItem.value);
       let field = (
         <>
-          <Col xs={24} sm={24} md={24} lg={24} xl={24} >
-            {currentItem.type === 'title' ?
-              (<Text style={currentItem.isSubTitle ? { paddingLeft: '50px' } : {}}>{currentItem?.label}</Text>)
-              : (<Form.Item
+          <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+            {currentItem.type === "title" ? (
+              <Text
+                style={currentItem.isSubTitle ? { paddingLeft: "50px" } : {}}
+              >
+                {currentItem?.label}
+              </Text>
+            ) : (
+              <Form.Item
                 className="template-text"
-                labelAlign='left'
-                labelWrap='true'
-                layout={currentItem.labelPosition ?? 'vertical'}
+                labelAlign="left"
+                labelWrap="true"
+                layout={currentItem.labelPosition ?? "vertical"}
                 label={currentItem.label}
                 name={currentItem.key}
-                rules={[{ required: currentItem.required ? true : false, message: 'Please input ' + currentItem?.label }]}
+                rules={[
+                  {
+                    required: currentItem.required ? true : false,
+                    message: "Please input " + currentItem?.label,
+                  },
+                ]}
               >
-                {currentItem.type === 'textArea' ?
-                  (<Input.TextArea showCount maxLength={currentItem.maxLength} />)
-                  : currentItem.type === 'inputNumber' ?
-                    (<InputNumber min={currentItem.min} max={currentItem.max} />)
-                    : currentItem.type === 'checkbox' ?
-                      (<Checkbox.Group options={currentItem.options} />)
-                      : currentItem.type === 'select' ?
-                        (<Select
-                          mode={currentItem.mode}
-                          placeholder="Please select"
-                          style={{ width: '100%' }}
-                          options={currentItem.options}
-                        />)
-                        : currentItem.type === 'radio' ?
-                          (<Radio.Group
-                            options={currentItem.options}
-                          />)
-                          : currentItem.type === 'day' ?
-                            (<DatePicker />)
-                            : currentItem.type === 'date_time' ?
-                              (<DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />)
-                              : currentItem.type === 'range_date' ?
-                                (<RangePicker />)
-                                : (<Input />)
-                }
+                {currentItem.type === "textArea" ? (
+                  <Input.TextArea showCount maxLength={currentItem.maxLength} />
+                ) : currentItem.type === "inputNumber" ? (
+                  <InputNumber min={currentItem.min} max={currentItem.max} />
+                ) : currentItem.type === "checkbox" ? (
+                  <Checkbox.Group options={currentItem.options} />
+                ) : currentItem.type === "select" ? (
+                  <Select
+                    mode={currentItem.mode}
+                    placeholder="Please select"
+                    style={{ width: "100%" }}
+                    options={currentItem.options}
+                  />
+                ) : currentItem.type === "radio" ? (
+                  <Radio.Group options={currentItem.options} />
+                ) : currentItem.type === "day" ? (
+                  <DatePicker />
+                ) : currentItem.type === "date_time" ? (
+                  <DatePicker showTime format="DD/MM/YYYY HH:mm:ss" />
+                ) : currentItem.type === "range_date" ? (
+                  <RangePicker />
+                ) : (
+                  <Input />
+                )}
               </Form.Item>
-              )}
+            )}
           </Col>
         </>
-      )
-      if (currentItem.type === 'day' || currentItem.type === 'date_time') {
-        form2.setFieldsValue({ [currentItem.key]: moment(currentItem.value) })
+      );
+      if (currentItem.type === "day" || currentItem.type === "date_time") {
+        form2.setFieldsValue({ [currentItem.key]: moment(currentItem.value) });
       } else {
-        form2.setFieldsValue({ [currentItem.key]: currentItem.value })
+        form2.setFieldsValue({ [currentItem.key]: currentItem.value });
       }
-      listField.push(field)
-    })
-    setListField(listField)
-  }
+      listField.push(field);
+    });
+    setListField(listField);
+  };
 
   const onSubmitNewReport = async () => {
-    if (form.getFieldValue('template') && form.getFieldValue('name')) {
+    if (form.getFieldValue("template") && form.getFieldValue("name")) {
       ConfirmModalEditText(onSubmitNew, conditionSave());
     } else {
-      form.validateFields()
+      form.validateFields();
     }
-  }
+  };
 
   const onSubmitNew = async () => {
-    console.log('start onSubmitNew', form.getFieldValue('template'), form.getFieldValue('name'))
-    setIsLoading(true)
-    let obj = listTemplate.find(template => template.id === form.getFieldValue('template'))
-    let data = obj
-    data.parentId = obj.id
-    data.name = form.getFieldValue('name')
-    data.stepId = 1
-    data.templateId = obj?.templateId ?? obj?.template_id
-    data.typeId = obj?.typeId ?? obj?.type_id
-    data.status = 0
-    data.id = null
+    console.log(
+      "start onSubmitNew",
+      form.getFieldValue("template"),
+      form.getFieldValue("name")
+    );
+    setIsLoading(true);
+    let obj = listTemplate.find(
+      (template) => template.id === form.getFieldValue("template")
+    );
+    let data = obj;
+    data.parentId = obj.id;
+    data.name = form.getFieldValue("name");
+    data.stepId = 1;
+    data.templateId = obj?.templateId ?? obj?.template_id;
+    data.typeId = obj?.typeId ?? obj?.type_id;
+    data.status = 0;
+    data.id = null;
     let res = {};
     try {
       res = await SaveFormAction(data);
       if (res.error === null) {
         SuccessModal("Success");
-        handleListMaster()
+        handleListMaster();
       } else {
         ErrorModalMassageHtml(res.error.message);
       }
     } catch (err) {
-      console.error(err)
+      console.error(err);
       ErrorModalMassageHtml(err);
     }
-    handleClickCancel()
+    handleClickCancel();
     setIsLoading(false);
-  }
+  };
 
   const saveForm = () => {
     ConfirmModalEditText(onSubmit, conditionSave());
   };
 
   const handleUpStep = (record) => {
-    upStep(record)
+    upStep(record);
     // ConfirmModalEditText(upStep(record), conditionUpStep());
-  }
+  };
   const conditionSave = () => {
     return {
       title: "Confirm",
@@ -248,25 +319,25 @@ const ReportForm2 = () => {
 
   async function upStep(record) {
     setIsLoading(true);
-    console.log('upStep', record)
-    let data = { ...record }
+    console.log("upStep", record);
+    let data = { ...record };
     data.templateId = record?.templateId ?? record?.template_id;
     data.typeId = record?.typeId ?? record?.type_id;
-    data.stepId = 4
-    let components = record?.component
-    let c = components.find(k => k.key === 'OKRs_Ids')
+    data.stepId = 4;
+    let components = record?.component;
+    let c = components.find((k) => k.key === "OKRs_Ids");
     if (!c) {
-      c = propsIds
-      components.push(c)
+      c = propsIds;
+      components.push(c);
     }
     let ids = padLeadingZeros(record?.id, 5);
-    c.label = 'เลขการรับเงิน : ' + ids
-    c.value = ids
+    c.label = "เลขการรับเงิน : " + ids;
+    c.value = ids;
 
     let res = await UpdateFormAction(data);
     if (res.error === null) {
       SuccessModal("Success");
-      handleListMaster()
+      handleListMaster();
     } else {
       ErrorModalMassageHtml(res.error.message);
     }
@@ -280,7 +351,7 @@ const ReportForm2 = () => {
   }
 
   const onSubmit = async () => {
-    console.log('start onSubmit', form2.getFieldsValue(), listComponent)
+    console.log("start onSubmit", form2.getFieldsValue(), listComponent);
     setIsLoading(true);
     let res = {};
     let data = listComponent;
@@ -291,39 +362,41 @@ const ReportForm2 = () => {
     data.stepId = listComponent?.stepId ?? listComponent?.step_id;
     data.name = listComponent?.name;
     data.status = 0;
-    let components = listComponent?.component
+    let components = listComponent?.component;
     Object.keys(form2.getFieldsValue()).forEach(function (key) {
-      let c = components.find(k => k.key === key)
+      let c = components.find((k) => k.key === key);
       if (c) {
         c.value = form2.getFieldValue(key);
       }
 
-      if (key === 'OKRs_Status') {
-        console.log('OKRs_Status', c)
-        if(c===null || c===undefined){
-          console.log('add c')
-          c = propsStatus
-          c.options = (propsStatus.options.filter(l => l.value !== 6 && l.value !== 7))
-          components.push(c)
+      if (key === "OKRs_Status") {
+        console.log("OKRs_Status", c);
+        if (c === null || c === undefined) {
+          console.log("add c");
+          c = propsStatus;
+          c.options = propsStatus.options.filter(
+            (l) => l.value !== 6 && l.value !== 7
+          );
+          components.push(c);
         }
-        let value = form2.getFieldValue(key)        
-        c.value = propsStatus.options.find(k => k.value === value)?.label
+        let value = form2.getFieldValue(key);
+        c.value = propsStatus.options.find((k) => k.value === value)?.label;
         if (value === 1) {
-          data.status = 1
-          data.stepId = 5
+          data.status = 1;
+          data.stepId = 5;
         } else if (value < 10) {
-          data.status = 0
-          data.stepId = value
+          data.status = 0;
+          data.stepId = value;
         } else {
-          data.status = 0
-          data.stepId = 4
-        }        
+          data.status = 0;
+          data.stepId = 4;
+        }
       }
     });
-    if (data.stepId === '1' || data.stepId === 1) {
-      data.stepId = 3
+    if (data.stepId === "1" || data.stepId === 1) {
+      data.stepId = 3;
     }
-    data.component = components
+    data.component = components;
     try {
       if (listComponent.id) {
         res = await UpdateFormAction(data);
@@ -332,17 +405,17 @@ const ReportForm2 = () => {
       }
       if (res.error === null) {
         SuccessModal("Success");
-        handleListMaster()
+        handleListMaster();
       } else {
         ErrorModalMassageHtml(res.error.message);
       }
     } catch (err) {
-      console.error(err)
+      console.error(err);
       ErrorModalMassageHtml(err);
     }
-    handleClickCancel()
+    handleClickCancel();
     setIsLoading(false);
-  }
+  };
 
   const setPage = () => {
     let list = [];
@@ -353,49 +426,49 @@ const ReportForm2 = () => {
         components?.sort((a, b) => (a.index > b.index ? 1 : -1));
         let col = [];
         let colData = {
-          'no': i + 1,
-          'id': obj?.id,
-          'OKRs_Ids': '',
-          'OKRs_Date': '',
-          'OKRs_BookNumber': '',
-          'OKRs_Project': '',
-          'OKRs_Title': '',
-          'OKRs_Value': '',
-          'OKRs_Unit_Value': '',
-          'OKRs_Success': '',
-          'OKRs_Budget_2': '',
-          'OKRs_FinanceNumber': '',
-          'OKRs_Officer': '',
-          'OKRs_Status': '',
-          'record_data': obj
-        }
+          no: i + 1,
+          id: obj?.id,
+          OKRs_Ids: "",
+          OKRs_Date: "",
+          OKRs_BookNumber: "",
+          OKRs_Project: "",
+          OKRs_Title: "",
+          OKRs_Value: "",
+          OKRs_Unit_Value: "",
+          OKRs_Success: "",
+          OKRs_Budget_2: "",
+          OKRs_FinanceNumber: "",
+          OKRs_Officer: "",
+          OKRs_Status: "",
+          record_data: obj,
+        };
 
         components.map((component) => {
-          if (component.key === 'OKRs_Title') {
+          if (component.key === "OKRs_Title") {
             colData.OKRs_Title = component.value;
-          } else if (component.key === 'OKRs_Ids') {
+          } else if (component.key === "OKRs_Ids") {
             colData.OKRs_Ids = component.value;
-          } else if (component.key === 'OKRs_Date') {
+          } else if (component.key === "OKRs_Date") {
             colData.OKRs_Date = component.value;
-          } else if (component.key === 'OKRs_BookNumber') {
+          } else if (component.key === "OKRs_BookNumber") {
             colData.OKRs_BookNumber = component.value;
-          } else if (component.key === 'OKRs_Project') {
+          } else if (component.key === "OKRs_Project") {
             colData.OKRs_Project = component.value;
-          } else if (component.key === 'OKRs_Project') {
+          } else if (component.key === "OKRs_Project") {
             colData.OKRs_Project = component.value;
-          } else if (component.key === 'OKRs_Value') {
+          } else if (component.key === "OKRs_Value") {
             colData.OKRs_Value = component.value;
-          } else if (component.key === 'OKRs_Unit_Value') {
+          } else if (component.key === "OKRs_Unit_Value") {
             colData.OKRs_Unit_Value = component.value;
-          } else if (component.key === 'OKRs_Success') {
+          } else if (component.key === "OKRs_Success") {
             colData.OKRs_Success = component.value;
-          } else if (component.key === 'OKRs_Budget_2') {
+          } else if (component.key === "OKRs_Budget_2") {
             colData.OKRs_Budget_2 = component.value;
-          } else if (component.key === 'OKRs_FinanceNumber') {
+          } else if (component.key === "OKRs_FinanceNumber") {
             colData.OKRs_FinanceNumber = component.value;
-          } else if (component.key === 'OKRs_Officer') {
+          } else if (component.key === "OKRs_Officer") {
             colData.OKRs_Officer = component.value;
-          } else if (component.key === 'OKRs_Status') {
+          } else if (component.key === "OKRs_Status") {
             colData.OKRs_Status = component.value;
           }
         });
@@ -403,10 +476,9 @@ const ReportForm2 = () => {
         list.push(colData);
       });
     } else {
-
     }
     setListTableForm(list);
-  }
+  };
 
   async function setTemplate(data) {
     dispatch(await StoreTemplateAction(data));
@@ -422,9 +494,13 @@ const ReportForm2 = () => {
       fixed: "center",
       render: (val, record, index) => {
         return {
-          children: <Text strong style={{ color: (!record?.id ? 'red' : 'black') }}>{val}</Text>
+          children: (
+            <Text strong style={{ color: !record?.id ? "red" : "black" }}>
+              {val}
+            </Text>
+          ),
         };
-      }
+      },
     },
     {
       title: "เลขการรับเงิน",
@@ -440,7 +516,10 @@ const ReportForm2 = () => {
       key: "OKRs_Date",
       align: "center",
       width: 80,
-      render: (_, record) => record?.OKRs_Date ? moment(record?.OKRs_Date).format('yyyy-MM-DD') : null,
+      render: (_, record) =>
+        record?.OKRs_Date
+          ? moment(record?.OKRs_Date).format("DD/MM/YYYY")
+          : null,
     },
     {
       title: "เลขที่หนังสือรับ อว",
@@ -472,7 +551,10 @@ const ReportForm2 = () => {
       key: "OKRs_Value",
       align: "left",
       width: 80,
-      render: (_, record) => record?.OKRs_Value ? record?.OKRs_Value + ' ' + record?.OKRs_Unit_Value : '',
+      render: (_, record) =>
+        record?.OKRs_Value
+          ? record?.OKRs_Value + " " + record?.OKRs_Unit_Value
+          : "",
     },
     {
       title: "ความสำเร็จ",
@@ -528,13 +610,20 @@ const ReportForm2 = () => {
       render: (record) => {
         return (
           <>
-            {(profile?.role?.priority === '1' || profile?.role?.priority === '2') && (record?.record_data?.step_id === '4' || record?.record_data?.step_id === '5') ?
+            {(profile?.role?.priority === "1" ||
+              profile?.role?.priority === "2") &&
+            (record?.record_data?.step_id === "4" ||
+              record?.record_data?.step_id === "5") ? (
               <>
                 <Button
                   type="primary"
-                  className={record?.record_data?.step_id === '5' ? "appr-button" : "pre-button"}
+                  className={
+                    record?.record_data?.step_id === "5"
+                      ? "appr-button"
+                      : "pre-button"
+                  }
                   onClick={() => {
-                    handleClickView(record.record_data)
+                    handleClickView(record.record_data);
                   }}
                 >
                   <Text className="big6-title">รายงาน</Text>
@@ -542,17 +631,21 @@ const ReportForm2 = () => {
                 <Button
                   type="primary"
                   className="pre-button"
-                  onClick={() =>
-                    handleClickValidated(record.record_data)
-                  }
+                  onClick={() => handleClickValidated(record.record_data)}
                 >
                   <Text className="big6-title">manage</Text>
                 </Button>
               </>
-              :
+            ) : (
               <div className="text-center">
                 <Button
-                  disabled={record?.record_data?.step_id === '1' || record?.record_data?.step_id === '3' || record?.record_data?.step_id === '8' ? false : true}
+                  disabled={
+                    record?.record_data?.step_id === "1" ||
+                    record?.record_data?.step_id === "3" ||
+                    record?.record_data?.step_id === "8"
+                      ? false
+                      : true
+                  }
                   type="primary"
                   className="pre-button"
                   onClick={() => {
@@ -562,7 +655,13 @@ const ReportForm2 = () => {
                   <Text className="big6-title">รายงาน</Text>
                 </Button>
                 <Button
-                  disabled={record?.record_data?.step_id === '1' || record?.record_data?.step_id === '3' || record?.record_data?.step_id === '8' ? false : true}
+                  disabled={
+                    record?.record_data?.step_id === "1" ||
+                    record?.record_data?.step_id === "3" ||
+                    record?.record_data?.step_id === "8"
+                      ? false
+                      : true
+                  }
                   type="primary"
                   className={record?.id ? "pre-button" : "nol-button"}
                   onClick={() => handleUpStep(record.record_data)}
@@ -570,86 +669,98 @@ const ReportForm2 = () => {
                   <Text className="big6-title">ส่งไปแบบรายงาน</Text>
                 </Button>
               </div>
-            }
+            )}
           </>
-        )
+        );
       },
-    }
+    },
   ];
 
   const handleClickView = (record) => {
-    console.log("handleClickView", record)
-    setListComponent(record)
+    console.log("handleClickView", record);
+    setListComponent(record);
     setIsLoading(true);
     setShowViewPage(true);
     setTemplate(record);
     setIsLoading(false);
-  }
+  };
 
   const handleClickValidated = (record) => {
-    console.log("handleClickValidated", record)
-    let status = { ...propsStatus }
-    status.options = (propsStatus.options.filter(l => l.value !== 6 && l.value !== 7))
+    console.log("handleClickValidated", record);
+    let status = { ...propsStatus };
+    status.options = propsStatus.options.filter(
+      (l) => l.value !== 6 && l.value !== 7
+    );
     if (record.status) {
       if (record.status === "1") {
-        Object.assign(status, { value: 1 })
+        Object.assign(status, { value: 1 });
       } else {
-        Object.assign(status, { value: parseInt(record.stepId) })
+        Object.assign(status, { value: parseInt(record.stepId) });
       }
     }
-    form2.setFieldsValue({ ['name']: record.name })
-    setStep(record.stepId - 1)
-    setListComponent(record)
-    let l = record?.component?.filter(i => profile.role_id === '1' ? i.permission === 3 || i.permission === 4 : i.permission === parseInt(profile.role_id))
-    setLayoutTemplate([...l, status])
+    form2.setFieldsValue({ ["name"]: record.name });
+    setStep(record.stepId - 1);
+    setListComponent(record);
+    let l = record?.component?.filter((i) =>
+      profile.role_id === "1"
+        ? i.permission === 3 || i.permission === 4
+        : i.permission === parseInt(profile.role_id)
+    );
+    setLayoutTemplate([...l, status]);
     setIsModal2(true);
-    setAddEditTitle(profile?.role?.role_name)
-  }  
+    setAddEditTitle(profile?.role?.role_name);
+  };
 
   const newSpecTemplate = () => {
     setIsModal3(true);
-    setAddEditTitle('เลือกใช้ Template')
-  }
+    setAddEditTitle("เลือกใช้ Template");
+  };
 
   const onSubmitNewSpecReport = async () => {
-    if (form3.getFieldValue('template') && form3.getFieldValue('name')) {
+    if (form3.getFieldValue("template") && form3.getFieldValue("name")) {
       ConfirmModalEditText(onSubmitNewSpec, conditionSave());
     } else {
-      form3.validateFields()
+      form3.validateFields();
     }
-  }
+  };
 
   const onSubmitNewSpec = async () => {
-    console.log('start onSubmitNewSpec', form3.getFieldValue('template'), form3.getFieldValue('name'))
-    setIsLoading(true)
-    let obj = listTempMaster.find(template => template.id === form3.getFieldValue('template'))
-    let data = {}
-    data.name = form3.getFieldValue('name')
-    data.stepId = 3
-    data.templateId = obj?.id 
-    data.typeId = 2
-    data.status = 0
-    data.component = obj?.component
-    data.parentId = 0
-    data.id = null
+    console.log(
+      "start onSubmitNewSpec",
+      form3.getFieldValue("template"),
+      form3.getFieldValue("name")
+    );
+    setIsLoading(true);
+    let obj = listTempMaster.find(
+      (template) => template.id === form3.getFieldValue("template")
+    );
+    let data = {};
+    data.name = form3.getFieldValue("name");
+    data.stepId = 3;
+    data.templateId = obj?.id;
+    data.typeId = 2;
+    data.status = 0;
+    data.component = obj?.component;
+    data.parentId = 0;
+    data.id = null;
     let res = {};
     try {
       res = await SaveFormAction(data);
       if (res.error === null) {
-        obj.isUsed = true
+        obj.isUsed = true;
         res = await UpdateTempateAction(obj);
         SuccessModal("Success");
-        handleListMaster()
+        handleListMaster();
       } else {
         ErrorModalMassageHtml(res.error.message);
       }
     } catch (err) {
-      console.error(err)
+      console.error(err);
       ErrorModalMassageHtml(err);
     }
-    handleClickCancel()
+    handleClickCancel();
     setIsLoading(false);
-  }
+  };
 
   return (
     <>
@@ -709,21 +820,31 @@ const ReportForm2 = () => {
       ) : (
         <Card title={"Report Form 2"} className="rounded">
           <Row gutter={24} className="row-inquiry-customer">
-            {profile?.role?.priority === '1' || profile?.role?.priority === '4' ?
-              <Col span={24} style={{ textAlign: "right" }} >                
-                <Button type="primary" shape="round" icon={<PlusOutlined />}
-                  onClick={newSpecTemplate} className="ggar2-button"
-                >
-                  รายงานพิเศษ
-                </Button>
-                <Button type="primary" shape="round" icon={<PlusOutlined />}
-                  onClick={newTemplate} className="ggar-button"
+            {profile?.role?.priority === "1" ||
+            profile?.role?.priority === "4" ? (
+              <Col span={24} style={{ textAlign: "right" }}>
+                <Button
+                  type="primary"
+                  shape="round"
+                  icon={<PlusOutlined />}
+                  onClick={newTemplate}
+                  className="ggar-button"
                 >
                   รายงาน
                 </Button>
-              </Col >
-              : null}
-            <Col span={24} style={{ textAlign: "left" }}>
+                &nbsp;&nbsp;
+                <Button
+                  type="primary"
+                  shape="round"
+                  icon={<PlusOutlined />}
+                  onClick={newSpecTemplate}
+                  className="ggar2-button"
+                >
+                  รายงานพิเศษ
+                </Button>
+              </Col>
+            ) : null}
+            <Col span={24} style={{ textAlign: "left", marginTop: 15 }}>
               <Table
                 className="table-user custom-table-dashboard"
                 rowKey={(record, index) => record.id}
@@ -751,9 +872,16 @@ const ReportForm2 = () => {
           footer={null}
           onCancel={handleClickCancel}
         >
-          <Form form={form2} {...layout} >
+          <Form form={form2} {...layout}>
             <Row>
-              <Col xs={24} sm={24} md={24} lg={24} xl={24} style={{ paddingBottom: '15px' }}>
+              <Col
+                xs={24}
+                sm={24}
+                md={24}
+                lg={24}
+                xl={24}
+                style={{ paddingBottom: "15px" }}
+              >
                 <Steps current={step} percent={60}>
                   <Step title="Admin1 กรอกข้อมูล" />
                   <Step title="Admin2 กรอกข้อมูล" />
@@ -765,9 +893,11 @@ const ReportForm2 = () => {
             <Row>
               <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                 <Form.Item
-                  label='Report Name'
+                  label="Report Name"
                   name={"name"}
-                  rules={[{ required: true, message: 'Report Name is required' }]}
+                  rules={[
+                    { required: true, message: "Report Name is required" },
+                  ]}
                 >
                   <Input />
                 </Form.Item>
@@ -777,7 +907,7 @@ const ReportForm2 = () => {
             <Row gutter={24} className="row-inquiry-customer">
               <Col span={24} style={{ textAlign: "center" }}>
                 <Button
-                  className='btn-event btn-color-cancel'
+                  className="btn-event btn-color-cancel"
                   style={{ margin: "0 8px" }}
                   onClick={() => {
                     handleClickCancel();
@@ -787,7 +917,7 @@ const ReportForm2 = () => {
                   ยกเลิก
                 </Button>
                 <Button
-                  className='btn-event btn-color-ok'
+                  className="btn-event btn-color-ok"
                   type="primary"
                   danger
                   htmlType="submit"
@@ -823,8 +953,9 @@ const ReportForm2 = () => {
                 lg={24}
                 xl={24}
               >
-                <Form.Item name={"template"}
-                  rules={[{ required: true, message: 'Please Select!' }]}
+                <Form.Item
+                  name={"template"}
+                  rules={[{ required: true, message: "Please Select!" }]}
                 >
                   <Select
                     options={SetOptionsForSelect({
@@ -846,8 +977,9 @@ const ReportForm2 = () => {
                 lg={24}
                 xl={24}
               >
-                <Form.Item name={"name"}
-                  rules={[{ required: true, message: 'Please Input!' }]}
+                <Form.Item
+                  name={"name"}
+                  rules={[{ required: true, message: "Please Input!" }]}
                 >
                   <Input placeholder="ชื่อรายงาน" />
                 </Form.Item>
@@ -902,8 +1034,9 @@ const ReportForm2 = () => {
                 lg={24}
                 xl={24}
               >
-                <Form.Item name={"template"}
-                  rules={[{ required: true, message: 'Please Select!' }]}
+                <Form.Item
+                  name={"template"}
+                  rules={[{ required: true, message: "Please Select!" }]}
                 >
                   <Select
                     options={SetOptionsForSelect({
@@ -925,8 +1058,9 @@ const ReportForm2 = () => {
                 lg={24}
                 xl={24}
               >
-                <Form.Item name={"name"}
-                  rules={[{ required: true, message: 'Please Input!' }]}
+                <Form.Item
+                  name={"name"}
+                  rules={[{ required: true, message: "Please Input!" }]}
                 >
                   <Input placeholder="ชื่อรายงาน" />
                 </Form.Item>
@@ -961,5 +1095,5 @@ const ReportForm2 = () => {
       </div>
     </>
   );
-}
+};
 export default ReportForm2;

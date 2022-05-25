@@ -27,10 +27,10 @@
 }
 .plots-grap .center-box {
   margin: 0;
-  position: absolute;
+  /* position: absolute;
   top: 50%;
   -ms-transform: translateY(-50%);
-  transform: translateY(-50%);
+  transform: translateY(-50%); */
   text-align: center;
   width: 100%;
   /* margin-top: 20px; */
@@ -70,6 +70,14 @@
     font-family: "InteMedium" !important;
     font-size: 13px !important;
     padding-left: 10px;
+}
+
+.custom-table-dashboard .ant-table-tbody .ant-table-cell .ant-typography {
+    font-size: 13px !important;
+}
+
+.custom-table-dashboard .ant-table-tbody .ant-table-cell .ant-typography strong {
+    font-size: 13px !important;
 }
 
 .custom-table-dashboard .ant-table.ant-table-small .ant-table-title, .ant-table.ant-table-small .ant-table-footer, .ant-table.ant-table-small .ant-table-thead > tr > th, .ant-table.ant-table-small .ant-table-tbody > tr > td, .ant-table.ant-table-small tfoot > tr > th, .ant-table.ant-table-small tfoot > tr > td {

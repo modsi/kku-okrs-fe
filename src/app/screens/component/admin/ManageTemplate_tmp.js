@@ -190,7 +190,7 @@ const ManageTemplate = () => {
                           : currentItem.type === 'day' ?
                             (<DatePicker />)
                             : currentItem.type === 'date_time' ?
-                              (<DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />)
+                              (<DatePicker showTime format="DD/MM/YYYY HH:mm:ss" />)
                               : currentItem.type === 'range_date' ?
                                 (<RangePicker />)
                                 : (<Input />)

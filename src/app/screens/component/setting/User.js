@@ -260,11 +260,11 @@ const User = () => {
                           className="form-search"
                           placeholder="Search by name or email"
                           size="small"
-                          suffix={
-                            <SearchOutlined
-                              style={{ color: "rgba(0,0,0,.45)" }}
-                            />
-                          }
+                          // suffix={
+                          //   <SearchOutlined
+                          //     style={{ color: "rgba(0,0,0,.45)" }}
+                          //   />
+                          // }
                           onPressEnter={searchUser}
                         />
                       </Col>
@@ -280,7 +280,7 @@ const User = () => {
             </Col>
             <Col span={24} style={{ textAlign: "center" }}>
               <Table
-                className="table-user"
+                className="table-user custom-table-dashboard"
                 rowKey={(record, index) => record.key}
                 style={{ whiteSpace: "pre" }}
                 loading={isLoading}

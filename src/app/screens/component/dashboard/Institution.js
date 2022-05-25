@@ -200,7 +200,7 @@ const Institution = () => {
                             <Col xs={24} sm={24} md={10} lg={10}>
                                 <PieFull title={'สรุปจำนวนโครงการที่ดำเนินการแล้ว'} width={200} height={200} data={dataSummary} dataColor={['#f6c863', '#ef5261']} dataTextColor={['#A15219', '#45B649']} text={true} pie={false} unit={'โครงการ'} />
                             </Col>
-                            <Col xs={0} sm={0} md={1} lg={1}></Col>
+                            <Col xs={0} sm={0} md={1} lg={1} style={{maxWidth: '2%'}}></Col>
                             <Col xs={24} sm={24} md={13} lg={13} className="box-plan">
                                 <PieFull title={'สรุปงบประมาณ'} data={dataBudget} width={200} height={200} dataColor={['#ef5261', '#f6c863']} backgroundColor={'linear-gradient(90deg, rgba(161, 255, 206, 0.25) 0.76%, rgba(250, 255, 209, 0.25) 100%)'} dataTextColor={['#ef5261', '#f6c863']} unit={'บาท'} />
                             </Col>

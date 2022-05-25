@@ -300,7 +300,7 @@ const History = () => {
                     <Col span={24} >
                         <div style={{ textAlign: "center" }}>
                             <Table
-                                className='table-user'
+                                className='table-user custom-table-dashboard'
                                 rowKey={(record, index) => record.key}
                                 style={{ whiteSpace: 'pre' }}
                                 loading={isLoading}

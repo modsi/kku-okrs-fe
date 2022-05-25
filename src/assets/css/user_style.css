@@ -184,34 +184,68 @@
     color: #fff;
 }
 
-.container-user .ant-pagination-item {
+ .ant-pagination-item {
     background: #fff;
-    border: 0px;
-    border-radius: 10px;
+    /* border: 0px; */
+    border: 1px solid #FFA45C;
+    /* border-radius: 10px; */
     padding-top: 3px;
 }
 
-.container-user .ant-pagination-item a{
+.ant-pagination-item:hover{
+    border: 1px solid #FFA45C;
+}
+
+ .ant-pagination-item a{
+    color: #000;
+    font-size: 11px !important;
+}
+
+.ant-pagination-item a:hover{
     color: #000;
 }
 
-.container-user .ant-pagination-item-active a {
-    color: #fff;
+ .ant-pagination-item-active a {
+    color: #FFA45C;
+    font-size: 11px !important;
 }
 
-.container-user .ant-pagination-item-active {
-    background: #FFA45C;
-    border: 0px;
-    border-radius: 10px;
+.ant-pagination-item-active a:hover {
+    color: #000;
+    /* font-size: 11px !important; */
+}
+
+ .ant-pagination-item-active {
+    /* background: #FFA45C; */
+    /* border: 0px; */
+    /* border-radius: 10px; */
     padding-top: 3px;
 }
 
-.container-user .ant-pagination.mini .ant-pagination-prev, .ant-pagination.mini .ant-pagination-next {
-    margin-right: 20px;
+ .ant-pagination.mini .ant-pagination-prev, .ant-pagination.mini .ant-pagination-next {
+    margin-right: 5px;
 }
 
-.container-user .ant-pagination.mini .ant-pagination-prev, .ant-pagination.mini .ant-pagination-next {
-    margin-left: 20px;
+ .ant-pagination.mini .ant-pagination-prev, .ant-pagination.mini .ant-pagination-next {
+    margin-left: 5px;
+}
+
+.ant-pagination-prev {
+    border: 1px solid #FFA45C;
+}
+
+ .ant-pagination-next {
+    border: 1px solid #FFA45C;
+}
+
+.anticon-left:hover {
+    color: #FFA45C;
+    /* border: 1px solid #FFA45C; */
+}
+
+ .anticon-right:hover {
+    color: #FFA45C;
+    /* border: 1px solid #FFA45C; */
 }
 
 .form-user {
@@ -242,6 +276,14 @@
     /* width: 400px; */
     font-size: 14px !important;
 }
+
+.userModal .ant-card-body {
+    padding: 15px;
+  }
+  
+  .userModal .ant-modal-header {
+    padding: 16px 24px 0px 24px;
+  }
 
 @media (max-width: 1367px) {
     .userModal .ant-card-body {

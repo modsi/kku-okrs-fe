@@ -139,7 +139,7 @@ const FormReport = ({ form }) => {
                             : currentItem.type === 'day' ?
                               (<DatePicker disabled={isDisabled} />)
                               : currentItem.type === 'date_time' ?
-                                (<DatePicker showTime format="YYYY-MM-DD HH:mm:ss" disabled={isDisabled} />)
+                                (<DatePicker showTime format="DD/MM/YYYY HH:mm:ss" disabled={isDisabled} />)
                                 : currentItem.type === 'range_date' ?
                                   (<RangePicker disabled={isDisabled} />)
                                   : currentItem.type === 'upload' ?

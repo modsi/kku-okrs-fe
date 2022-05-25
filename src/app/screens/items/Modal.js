@@ -126,7 +126,7 @@ export const ErrorModal = (errorActive) => {
   console.log(`error render`, errorActive);
   Modal.error({
     title: errorActive.title,
-    width: '35%',
+    // width: '90%',
     centered: true,
     content: errorActive.data(),
   });
@@ -135,7 +135,7 @@ export const ErrorModal = (errorActive) => {
 export const ErrorModalMassage = (massage) => {
   Modal.error({
     title: "Error",
-    width: '35%',
+    // width: '90%',
     centered: true,
     content: massage,
   });
@@ -144,7 +144,7 @@ export const ErrorModalMassage = (massage) => {
 export const ErrorModalMassageHtml = (massage) => {
   Modal.error({
     title: "Warning",
-    width: '35%',
+    // width: '90%',
     centered: true,
     content: <div dangerouslySetInnerHTML={{ __html: massage }} />
   });

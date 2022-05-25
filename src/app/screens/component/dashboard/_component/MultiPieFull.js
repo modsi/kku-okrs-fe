@@ -4,8 +4,8 @@ import { Card, Row, Col, Space, Button } from "antd";
 import { Pie, measureTextWidth } from "@ant-design/plots";
 const MultiPieFull = (props) => {
     const {
-        width = 300,
-        height = 300,
+        width = 200,
+        height = 200,
         titleFirst = "",
         title = "",
         data1 = [],

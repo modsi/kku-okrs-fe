@@ -4,8 +4,8 @@ import { Card, Row, Col, Space, Button } from "antd";
 import { Pie, measureTextWidth } from "@ant-design/plots";
 const PieFull = (props) => {
   const {
-    width = 300,
-    height = 300,
+    width = 200,
+    height = 200,
     titleFirst = "",
     title = "",
     data = [],
@@ -99,11 +99,24 @@ const PieFull = (props) => {
         <span className="head-plots-second">{title}</span>
       )}
       <Row lg={24} className="box-plols-detail">
+      {pie && (
+          <Col
+            xs={24}
+            sm={24}
+            md={showAll ? 8 : 24}
+            lg={showAll ? 8 : 24}
+            className="box-plols"
+            style={{ width: width, height: height }}
+          >
+            <Pie {...config} />
+          </Col>
+        )}
+        
         <Col
           xs={24}
           sm={24}
-          md={showAll ? 8 : helfData ? 24 : 12}
-          lg={showAll ? 8 : helfData ? 24 : 12}
+          md={showAll ? 8 : helfData ? 24 : 24}
+          lg={showAll ? 8 : helfData ? 24 : 24}
         >
           <Row
             xs={24}
@@ -207,19 +220,6 @@ const PieFull = (props) => {
               <br />
               <span className="unit-text-plots">{unit}</span>
             </div>
-          </Col>
-        )}
-
-        {pie && (
-          <Col
-            xs={24}
-            sm={24}
-            md={showAll ? 8 : 12}
-            lg={showAll ? 8 : 12}
-            className="box-plols"
-            style={{ width: width, height: height }}
-          >
-            <Pie {...config} />
           </Col>
         )}
 
