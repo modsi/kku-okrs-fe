@@ -55,7 +55,7 @@ const EmailField = ({ form }) => {
     const onSubmit = async () => {
         // console.log(form.getFieldValue())    
         if (form.getFieldValue('label') && form.getFieldValue('size') && form.getFieldValue('key')) {
-            let store = storeTemplate?.components ?? []
+            let store = storeTemplate?.component ?? []
             let components = store
             let max = store.length > 0 ? Math.max(...store.map(({ index }) => index)) : 0;
             let obj = {
@@ -74,7 +74,7 @@ const EmailField = ({ form }) => {
             setTitle('Label Text Field')
             setSize(2)
             setFormLayout('vertical')
-            setTemplate({ ...storeTemplate, components: components })
+            setTemplate({ ...storeTemplate, component: components })
             form2.resetFields();
         } else {
             form.validateFields()
