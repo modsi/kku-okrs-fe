@@ -77,9 +77,11 @@ const Dashboard2 = () => {
   }, [storeListDashboard]);
 
   async function handleListDashboard() {
-    dispatch(await ListDashboardTwoAction().then(value => {
-      setStoreListDashboard(value.payload.list_dashboard);
-    }));
+    dispatch(
+      await ListDashboardTwoAction().then((value) => {
+        setStoreListDashboard(value.payload.list_dashboard);
+      })
+    );
   }
 
   const gridStyle = {
@@ -325,51 +327,59 @@ const Dashboard2 = () => {
             </span>
           </div>
 
-          <Row style={{ paddingBottom: "20px" }}>
-            <Col xs={24} sm={24} md={10} lg={10}>
-              <PieFull
-                title={"สรุปจำนวนโครงการที่ดำเนินการแล้ว"}
-                width={200}
-                height={200}
-                data={dataSummary}
-                dataColor={["#f6c863", "#ef5261"]}
-                dataTextColor={["#A15219", "#45B649"]}
-                text={true}
-                pie={false}
-                unit={"โครงการ"}
-              />
+          <Row>
+          
+            <Col xs={24} sm={24} md={16} lg={16}>
+              <Card type="inner">
+                <Table
+                  className="table-user custom-table-dashboard fix-height radius"
+                  rowKey={(record, index) => record.key}
+                  style={{ whiteSpace: "pre" }}
+                  loading={isLoading}
+                  scroll={{ x: "max-content" }}
+                  size="small"
+                  dataSource={dataStrategy}
+                  columns={columns}
+                />
+              </Card>
             </Col>
-            <Col xs={0} sm={0} md={1} lg={1} style={{maxWidth: '2%'}}></Col>
-            <Col xs={24} sm={24} md={13} lg={13} className="box-plan">
-              <PieFull
-                title={"สรุปงบประมาณ"}
-                data={dataBudget}
-                showFormatCurrency={true}
-                width={200}
-                height={200}
-                dataColor={["#ef5261", "#f6c863"]}
-                backgroundColor={
-                  "linear-gradient(90deg, rgba(161, 255, 206, 0.25) 0.76%, rgba(250, 255, 209, 0.25) 100%)"
-                }
-                dataTextColor={["#ef5261", "#f6c863"]}
-                unit={"บาท"}
-              />
+            <Col xs={0} sm={0} md={1} lg={1} style={{ maxWidth: "2%" }}></Col>
+            <Col xs={24} sm={24} md={7} lg={7}>
+              <Row style={{ paddingBottom: "20px" }}>
+                <Col xs={24} sm={24} md={24} lg={24}>
+                  <PieFull
+                    title={"สรุปจำนวนโครงการที่ดำเนินการแล้ว"}
+                    width={200}
+                    height={200}
+                    data={dataSummary}
+                    dataColor={["#f6c863", "#ef5261"]}
+                    dataTextColor={["#A15219", "#45B649"]}
+                    text={true}
+                    pie={false}
+                    unit={"โครงการ"}
+                  />
+                </Col>
+                <Col xs={24} sm={24} md={24} lg={24} className="box-plan" style={{marginTop: 20}}>
+                  <PieFull
+                    title={"สรุปงบประมาณ"}
+                    data={dataBudget}
+                    showFormatCurrency={true}
+                    width={200}
+                    height={200}
+                    dataColor={["#ef5261", "#f6c863"]}
+                    backgroundColor={
+                      "linear-gradient(90deg, rgba(161, 255, 206, 0.25) 0.76%, rgba(250, 255, 209, 0.25) 100%)"
+                    }
+                    dataTextColor={["#ef5261", "#f6c863"]}
+                    unit={"บาท"}
+                  />
+                </Col>
+              </Row>
             </Col>
+            
           </Row>
 
-          <Card type="inner">
-            <Table
-              className="table-user custom-table-dashboard"
-              rowKey={(record, index) => record.key}
-              style={{ whiteSpace: "pre" }}
-              loading={isLoading}
-              scroll={{ x: "max-content" }}
-              size="small"
-              dataSource={dataStrategy}
-              columns={columns}
-            />
-          </Card>
-          <div style={{ padding: "20px 15px 10px 15px" }}>
+          <div style={{ padding: "5px 15px 10px 15px" }}>
             <span className="head-plots" style={{ margin: "10px 0px" }}>
               SDGs (ภาพรวมคณะ)
             </span>
@@ -378,8 +388,8 @@ const Dashboard2 = () => {
             <Col xs={24} sm={24} md={10} lg={10}>
               <PieFull
                 title={"สรุปจำนวนโครงการตาม SDGs"}
-                width={200}
-                height={200}
+                // width={200}
+                // height={200}
                 data={dataSDGs}
                 dataColor={["#f6c863", "#ef5261"]}
                 dataTextColor={["#A15219", "#45B649"]}
@@ -388,14 +398,14 @@ const Dashboard2 = () => {
                 unit={"รายการ"}
               />
             </Col>
-            <Col xs={0} sm={0} md={1} lg={1} style={{maxWidth: '2%'}}></Col>
+            <Col xs={0} sm={0} md={1} lg={1} style={{ maxWidth: "2%" }}></Col>
             <Col xs={24} sm={24} md={13} lg={13} className="box-plan">
               <RadarPlot
                 title={"สรุปงบประมาณ"}
                 data={listSDGs}
                 showFormatCurrency={true}
-                width={200}
-                height={200}
+                // width={200}
+                height={230}
                 dataColor={["#4E5C8480", "#4E5C8480"]}
                 backgroundColor={
                   "linear-gradient(90deg, rgba(255, 175, 189, 0.25) 0%, rgba(250, 255, 209, 0.25) 100%, rgba(255, 195, 160, 0.25) 100%)"
@@ -436,14 +446,14 @@ const Dashboard2 = () => {
                 unit={"รายการ"}
               />
             </Col>
-            <Col xs={0} sm={0} md={1} lg={1} style={{maxWidth: '2%'}}></Col>
+            <Col xs={0} sm={0} md={1} lg={1} style={{ maxWidth: "2%" }}></Col>
             <Col xs={24} sm={24} md={13} lg={13} className="box-plan">
               <RadarPlot
                 title={"สรุปงบประมาณ"}
                 data={listCenturySkill}
                 showFormatCurrency={true}
                 width={200}
-                height={200}
+                height={230}
                 dataColor={["#4E5C8480", "#4E5C8480"]}
                 backgroundColor={
                   "linear-gradient(90deg, rgba(117, 255, 220, 0.25) 0%, rgba(163, 216, 255, 0.25) 51.04%, rgba(248, 215, 251, 0.25) 100%)"
@@ -475,8 +485,8 @@ const Dashboard2 = () => {
             <Col xs={24} sm={24} md={24} lg={24}>
               <MultiPieFull
                 title={""}
-                width={280}
-                height={280}
+                width={400}
+                height={400}
                 data1={successPlans.complete}
                 data2={successPlans.notComplete}
                 dataColor={["#f6c863", "#ef5261"]}

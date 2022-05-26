@@ -67,34 +67,23 @@ const Graph = (props) => {
       }
       <Row lg={24}>
 
-        <Col xs={24} sm={24} md={8} lg={8} className="box-plols-detail">
-          <div class="center-box">
+        <Col xs={24} sm={24} md={24} lg={24} className="box-plols">
+          <Column {...config} />
+        </Col>
+
+        <Col xs={24} sm={24} md={24} lg={24} className="box-plols-detail">
+          <div style={{textAlign: 'right', marginTop: 25, marginBottom: 5}}>
             {
               data?.act.map((items, gIndex) => {
                 return (
-                  <div>
-                    <span className="text-legend" style={{ color: !dataTextColor ? '#000' : dataTextColor[gIndex] }}>{items.type} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{items.value} &nbsp;&nbsp;%</span>
-                  </div>
+                  <>
+                    <span className="text-legend" style={{ color: !dataTextColor ? '#000' : dataTextColor[gIndex], paddingRight: 20 }}>{items.type} &nbsp;&nbsp;{items.value} &nbsp;%</span>
+                  </>
                 )
 
               })
             }
           </div>
-
-          {
-            showRefresh && (
-              <div class="end-box">
-                <Button shape="round" className="g-button custom-button" >
-                  Refresh
-                </Button>
-              </div>
-            )
-          }
-
-
-        </Col>
-        <Col xs={24} sm={24} md={16} lg={16} className="box-plols">
-          <Column {...config} />
         </Col>
 
         {

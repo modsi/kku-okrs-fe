@@ -19,8 +19,8 @@
 }
 
 .plots-grap .text-legend {
-    font-family: "InterBold" !important;
-    font-size: 15px !important;
+    font-family: "InteMedium" !important;
+    font-size: 14px !important;
 }
 .plots-grap .text-legend-big {
     font-size: 27px !important;
@@ -103,13 +103,26 @@
 
 .fontTitleSub {
     font-weight: bold;
-    font-size: 20px !important;
+    font-size: 18px !important;
     margin-left: 30px;
 }
 
-/* .box-plols-detail {
-    height: 100%;
+.container-dashboard2 .ant-card {
+    border-radius: 15px;
+}
+
+.container-dashboard2 .ant-card .fix-height{
+    height: 620px;
+}
+
+/* .table-radius {
+    border-radius: 10px;
 } */
+
+.box-plols-detail {
+    /* height: 100%; */
+    align-items: center;
+}
 
 @media (max-width: 600px) {
     .box-plols-detail {

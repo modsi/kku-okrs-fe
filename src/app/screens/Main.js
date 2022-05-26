@@ -220,7 +220,7 @@ const Main = () => {
                             <Text className="small-text" style={{ textAlign: 'left', color: 'rgba(0, 0, 0, 0.5)' }}> {profile?.role?.role_name} </Text>
                         </Space>
 
-                        <Button type="link" style={{ color: 'orange', marginTop: '15px' }} onClick={logout} >
+                        <Button type="link" style={{ color: 'orange', marginTop: '10px' }} onClick={logout} >
                             {/* <LogoutOutlined /> */}
                             <Image src={logoLogOut} className="custom-image-logout" preview={false} />
                         </Button>

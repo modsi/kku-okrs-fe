@@ -250,7 +250,7 @@ const History = () => {
         <div className='container-user'>
             <Card title={"Data History"} className="rounded container-card" >
                 <Row gutter={24} className="row-inquiry-customer">
-                    <Col span={24} style={{ textAlign: "left", marginBottom: '5px' }}>
+                    <Col span={24} style={{ textAlign: "left" }}>
                         <Row>
                             <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                                 <div style={{ float: 'right' }}>

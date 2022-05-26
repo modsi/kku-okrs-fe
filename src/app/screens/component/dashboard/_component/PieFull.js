@@ -99,7 +99,7 @@ const PieFull = (props) => {
         <span className="head-plots-second">{title}</span>
       )}
       <Row lg={24} className="box-plols-detail">
-      {pie && (
+        {pie && (
           <Col
             xs={24}
             sm={24}
@@ -111,7 +111,24 @@ const PieFull = (props) => {
             <Pie {...config} />
           </Col>
         )}
-        
+
+        {text && (
+          <Col
+            xs={24}
+            sm={24}
+            md={showAll ? 8 : 24}
+            lg={showAll ? 8 : 24}
+            className="box-plols"
+            style={{ width: width, marginBottom: 20 }}
+          >
+            <div className="center-box" style={{marginTop: 10}}>
+              <span className="text-plots">{countNum}</span>
+              <br />
+              <span className="unit-text-plots">{unit}</span>
+            </div>
+          </Col>
+        )}
+
         <Col
           xs={24}
           sm={24}
@@ -173,17 +190,32 @@ const PieFull = (props) => {
                         </div>
                       </div>
                     ) : (
-                      <span
-                        className="text-legend"
-                        style={{
-                          color: !dataTextColor
-                            ? "#000"
-                            : dataTextColor[gIndex],
-                        }}
-                      >
-                        {items.type} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        {formatCurrency(items.value)} &nbsp;&nbsp;{unit}
-                      </span>
+                      <Row>
+                        <Col xs={12} style={{textAlign: 'left'}}>
+                          <span
+                            className="text-legend"
+                            style={{
+                              color: !dataTextColor
+                                ? "#000"
+                                : dataTextColor[gIndex],
+                            }}
+                          >
+                            {items.type}
+                          </span>
+                        </Col>
+                        <Col xs={12} style={{textAlign: 'right'}}>
+                          <span
+                            className="text-legend"
+                            style={{
+                              color: !dataTextColor
+                                ? "#000"
+                                : dataTextColor[gIndex],
+                            }}
+                          >
+                            {formatCurrency(items.value)} &nbsp;&nbsp;{unit}
+                          </span>
+                        </Col>
+                      </Row>
                     )}
                   </Col>
                   {gIndex == 0 && (
@@ -196,40 +228,7 @@ const PieFull = (props) => {
               );
             })}
           </Row>
-
-          {showRefresh && (
-            <div className="end-box">
-              <Button shape="round" className="g-button custom-button">
-                Refresh
-              </Button>
-            </div>
-          )}
         </Col>
-
-        {text && (
-          <Col
-            xs={24}
-            sm={24}
-            md={showAll ? 8 : 12}
-            lg={showAll ? 8 : 12}
-            className="box-plols"
-            style={{ width: width, height: height }}
-          >
-            <div className="center-box">
-              <span className="text-plots">{countNum}</span>
-              <br />
-              <span className="unit-text-plots">{unit}</span>
-            </div>
-          </Col>
-        )}
-
-        {showRefresh && (
-          <div className="end-box-mobile">
-            <Button shape="round" className="g-button custom-button">
-              Refresh
-            </Button>
-          </div>
-        )}
       </Row>
     </Card>
   );

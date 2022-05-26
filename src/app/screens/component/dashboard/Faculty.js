@@ -213,20 +213,20 @@ const Faculty = (props) => {
           </div>
 
           <Row style={{ paddingBottom: "20px" }}>
-            <Col xs={24} sm={24} md={11} lg={11}>
+            <Col xs={24} sm={24} md={13} lg={13}>
               <PieFull
                 title={"สรุปจำนวนโครงการที่ดำเนินการแล้ว"}
                 width={200}
                 height={200}
                 data={dataSummary}
-                dataColor={["#f6c863", "#ef5261"]}
+                dataColor={["#9c00ff", "#f32654", "#349751"]}
                 dataTextColor={["#A15219", "#45B649"]}
                 text={true}
                 unit={"โครงการ"}
               />
             </Col>
             <Col xs={0} sm={0} md={1} lg={1} style={{maxWidth: '2%'}}></Col>
-            <Col xs={24} sm={24} md={12} lg={12} className="box-plan">
+            <Col xs={24} sm={24} md={10} lg={10} className="box-plan">
               <PieFull
                 title={"สรุปงบประมาณ"}
                 data={dataBudget}
@@ -284,7 +284,7 @@ const Faculty = (props) => {
                 data={listSDGs}
                 showFormatCurrency={true}
                 width={200}
-                height={200}
+                height={230}
                 dataColor={["#4E5C8480", "#4E5C8480"]}
                 backgroundColor={
                   "linear-gradient(90deg, rgba(255, 175, 189, 0.25) 0%, rgba(250, 255, 209, 0.25) 100%, rgba(255, 195, 160, 0.25) 100%)"
@@ -332,7 +332,7 @@ const Faculty = (props) => {
                 data={listCenturySkill}
                 showFormatCurrency={true}
                 width={200}
-                height={200}
+                height={230}
                 dataColor={["#4E5C8480", "#4E5C8480"]}
                 backgroundColor={
                   "linear-gradient(90deg, rgba(117, 255, 220, 0.25) 0%, rgba(163, 216, 255, 0.25) 51.04%, rgba(248, 215, 251, 0.25) 100%)"

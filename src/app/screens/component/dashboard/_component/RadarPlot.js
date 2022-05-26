@@ -161,12 +161,12 @@ const RadarPlot = (props) => {
                 </div>
 
               </Col>
-              {gIndex == 0 && (
+              {/* {gIndex == 0 && (
                 <Col
                   md={1}
                   style={{ borderLeft: "3px solid #4E5C8480" }}
                 ></Col>
-              )}
+              )} */}
             </>
           </Row>
 
@@ -175,10 +175,10 @@ const RadarPlot = (props) => {
         <Col
           xs={24}
           sm={24}
-          md={11}
-          lg={11}
+          md={12}
+          lg={12}
           className="box-plols"
-          style={{ width: width, height: height }}
+          style={{ width: width, height: height,borderLeft: "1.5px solid #4E5C8480" }}
         >
           <Radar {...config} />
         </Col>

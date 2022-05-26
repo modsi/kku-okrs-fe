@@ -197,12 +197,12 @@
 }
 
  .ant-pagination-item a{
-    color: #000;
+    color: rgba(0, 0, 0, 0.5);
     font-size: 11px !important;
 }
 
 .ant-pagination-item a:hover{
-    color: #000;
+    color: rgba(0, 0, 0, 0.5);
 }
 
  .ant-pagination-item-active a {
@@ -230,13 +230,13 @@
     margin-left: 5px;
 }
 
-.ant-pagination-prev {
+/* .ant-pagination-prev {
     border: 1px solid #FFA45C;
 }
 
  .ant-pagination-next {
     border: 1px solid #FFA45C;
-}
+} */
 
 .anticon-left:hover {
     color: #FFA45C;

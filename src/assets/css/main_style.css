@@ -438,7 +438,7 @@ display: inline;
 }
 
 .custom-layout-header .ant-space-vertical {
-  margin-top: 30px; 
+  margin-top: 20px; 
 }
 
 .custom-layout-header .ant-space-item {
@@ -446,11 +446,11 @@ display: inline;
   text-align: left;
 }
 .custom-image-profile {
-  width: 70px;
+  width: 60px;
 }
 
 .custom-image-logout {
-  width: 35px;
+  width: 30px;
 }
 
 .ant-form-item-label {

@@ -167,15 +167,15 @@ const Dashboard = () => {
           <Row style={{ paddingBottom: "20px" }}>
             <Col xs={24} sm={24} md={8} lg={8}>
               <PieFull
-                titleFirst={"ผลการดำเนินงานตาม OKRs"}
+                title={"ผลการดำเนินงานตาม OKRs"}
                 data={dataOKRs}
-                backgroundColor={"rgba(255, 164, 92, 0.25)"}
+                // backgroundColor={"rgba(255, 164, 92, 0.25)"}
                 dataColor={["#f6c863", "#ef5261"]}
                 dataTextColor={["#A15219", "#45B649"]}
               />
             </Col>
             <Col xs={0} sm={0} md={1} lg={1} style={{ maxWidth: "2%" }}></Col>
-            <Col xs={24} sm={24} md={7} lg={7} className="box-plan">
+            <Col xs={24} sm={24} md={8} lg={8} className="box-plan">
               <PieFull
                 title={"ผลการดำเนินงานตามแผนปฏิบัติการ"}
                 data={dataPlan}
@@ -189,21 +189,21 @@ const Dashboard = () => {
               <PieFull
                 title={"ความสำเร็จของแผน"}
                 data={dataSuccess}
-                width={250}
-                height={250}
+                // width={250}
+                // height={250}
                 dataTextColor={["#A15219", "#45B649"]}
                 innerRadius={0.6}
               />
             </Col>
           </Row>
           <Row>
-            <Col xs={24} sm={24} md={11} lg={11}>
+            <Col xs={24} sm={24} md={24} lg={24}>
               <div style={{ paddingBottom: "20px" }}>
                 <Graph
                   title={"สรุปจำนวนโครงการตามประเด็นยุทธศาสตร์คณะ"}
                   data={dataStrategic}
                   dataColor={"#fd8e61"}
-                  dataTextColor={["#45B649", "#45B649"]}
+                  dataTextColor={["#A15219", "#45B649"]}
                 />
               </div>
               <div style={{ paddingBottom: "20px" }}>
@@ -211,7 +211,7 @@ const Dashboard = () => {
                   title={"สรุปจำนวนโครงการตามเสาหลักมหาวิทยาลัย"}
                   data={dataPllar}
                   dataColor={"#fd8e61"}
-                  dataTextColor={["#EC0E0E", "#EC0E0E"]}
+                  dataTextColor={["#A15219", "#45B649"]}
                 />
               </div>
               <div style={{ paddingBottom: "20px" }}>
@@ -219,7 +219,7 @@ const Dashboard = () => {
                   title={"สรุปจำนวนโครงการตาม SDGs"}
                   data={dataSDG}
                   dataColor={"#fd8e61"}
-                  dataTextColor={["#BA1EBD", "#BA1EBD"]}
+                  dataTextColor={["#A15219", "#45B649"]}
                 />
               </div>
               <div style={{ paddingBottom: "20px" }}>
@@ -227,12 +227,12 @@ const Dashboard = () => {
                   title={"สรุปจำนวนโครงการตาม 21 Century Skill"}
                   data={dataCenturySkill}
                   dataColor={"#fd8e61"}
-                  dataTextColor={["#1EBD67", "#1EBD67"]}
+                  dataTextColor={["#A15219", "#45B649"]}
                 />
               </div>
             </Col>
             <Col xs={0} sm={0} md={1} lg={1} style={{ maxWidth: "2%" }}></Col>
-            <Col xs={24} sm={24} md={12} lg={12}>
+            <Col xs={24} sm={24} md={7} lg={7}>
               <div style={{ paddingBottom: "20px" }}>
                 <PieFull
                   title={"ความสำเร็จของแผน"}
@@ -243,7 +243,10 @@ const Dashboard = () => {
                   innerRadius={0.6}
                 />
               </div>
-              <div>
+            </Col>
+            <Col xs={0} sm={0} md={1} lg={1} style={{ maxWidth: "2%" }}></Col>
+            <Col xs={24} sm={24} md={16} lg={16}>
+            <div>
                 <Card className="rounded ">
                   <div style={{ padding: "0px 15px 15px 15px" }}>
                     <span className="head-plots" style={{ margin: "10px 0px" }}>
