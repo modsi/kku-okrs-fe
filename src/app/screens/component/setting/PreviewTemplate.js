@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from "react-router-dom";
-import { Card, Row, Col, Button, Typography, Table, Form, Input, Radio, Space, Image, InputNumber, Checkbox, Select, DatePicker, Upload, message } from 'antd';
+import { Modal, Card, Row, Col, Button, Typography, Table, Form, Input, Radio, Space, Image, InputNumber, Checkbox, Select, DatePicker, Upload, message } from 'antd';
 import { DeleteFilled, UploadOutlined, EditFilled } from "@ant-design/icons";
 import { DATE_FULL, DATE_NORMAL } from '../../../utils/Elements'
 import moment from 'moment';
@@ -9,6 +9,17 @@ import logo from "../../../../assets/images/favicon-96x96.png"
 import { STORE_TEMPLATE, StoreTemplateAction } from "../../../redux/actions/StoreSearchAction"
 import Draggable from "react-draggable";
 import CardDraggable from '../../items/CardDraggable'
+import NumberField from "./field/NumberField";
+import TitleField from "./field/TitleField";
+import TextField from "./field/TextField";
+import TextAreaField from "./field/TextAreaField";
+import CheckboxField from "./field/CheckboxField";
+import SelectField from "./field/SelectField";
+import RadioField from "./field/RadioField";
+import DayField from "./field/DayField";
+import DateTimeField from "./field/DateTimeField";
+import RangeDateField from "./field/RangeDateField";
+import TableField from "./field/TableField";
 
 const { Text, Link } = Typography;
 const { RangePicker } = DatePicker;
@@ -16,12 +27,15 @@ const PreviewTemplate = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch()
     const [form] = Form.useForm();
+    const [formField] = Form.useForm();
     const [isLoading, setIsLoading] = useState(false);
     const [showConfigPage, setShowConfigPage] = useState(false);
     const [isModalAddEditVisible, setIsModalAddEditVisible] = useState(false);
     const [listField, setListField] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const storeTemplate = useSelector(state => state?.storeSearchReducer?.[STORE_TEMPLATE])
+    const [addEditTitle, setAddEditTitle] = useState("");
+    const [fieldContent, setFieldContent] = useState(null);
 
     const layout = {
         labelCol: { span: 24 },
@@ -31,6 +45,7 @@ const PreviewTemplate = () => {
 
     useEffect(() => {
         setLayoutTemplate()
+        handleClickCancel();
     }, [storeTemplate])
 
     const remove = (id) => {
@@ -42,7 +57,46 @@ const PreviewTemplate = () => {
                 )
             }
         })]
-        setTemplate({ ...storeTemplate, components: store })
+        setTemplate({ ...storeTemplate, component: store })
+    }
+
+    const editContent = (item) => {
+        console.log('editContent ', item);
+        setIsModalAddEditVisible(true);
+        if (item.type === 'inputNumber') {
+            setAddEditTitle("Number Field Component");
+            setFieldContent(<NumberField form={formField} content={item} />);
+        } else if (item.type === 'title') {
+            setAddEditTitle("Title Field Component");
+            setFieldContent(<TitleField form={formField} content={item} />);
+        } else if (item.type === 'input') {
+            setAddEditTitle("Text Field Component");
+            setFieldContent(<TextField form={formField} content={item} />);
+        } else if (item.type === 'textArea') {
+            setAddEditTitle("Text Area Field Component");
+            setFieldContent(<TextAreaField form={formField} content={item} />);
+        } else if (item.type === 'checkbox') {
+            setAddEditTitle("Checkbox Field Component");
+            setFieldContent(<CheckboxField form={formField} content={item} />);
+        } else if (item.type === 'select') {
+            setAddEditTitle("Select Field Component");
+            setFieldContent(<SelectField form={formField} content={item} />);
+        } else if (item.type === 'radio') {
+            setAddEditTitle("Radio Field Component");
+            setFieldContent(<RadioField form={formField} content={item} />);
+        } else if (item.type === 'day') {
+            setAddEditTitle("Day Field Component");
+            setFieldContent(<DayField form={formField} content={item} />);
+        } else if (item.type === 'date_time') {
+            setAddEditTitle("Date/Time Field Component");
+            setFieldContent(<DateTimeField form={formField} content={item} />);
+        } else if (item.type === 'range_date') {
+            setAddEditTitle("Range Date Field Component");
+            setFieldContent(<RangeDateField form={formField} content={item} />);
+        } else if (item.type === 'table') {
+            setAddEditTitle("Table Component");
+            setFieldContent(<TableField form={formField} content={item} />);
+        }
     }
 
     async function setTemplate(data) {
@@ -99,12 +153,12 @@ const PreviewTemplate = () => {
                     }
                 })
             }
-            setTemplate({ ...storeTemplate, components: components })
+            setTemplate({ ...storeTemplate, component: components })
         }
     }
 
     const setLayoutTemplate = () => {
-        console.log('start setLayoutTemplate')
+        console.log('start preview setLayoutTemplate')
         let listField = []
         let components = []
         if (storeTemplate?.component) {
@@ -144,27 +198,27 @@ const PreviewTemplate = () => {
                                     <Row>
                                         <Col xs={24} sm={24} md={2} lg={2} xl={2} >
                                             {storeTemplate?.templateId ? null :
-                                            <>
-                                                <Button
-                                                    type="link"
-                                                    disabled={currentItem.required ? true : false}
-                                                    style={{ padding: '0px', color: currentItem.required ? 'gray' : 'red' }}
-                                                    onClick={() =>
-                                                        remove(currentItem.id)
-                                                    }
-                                                >
-                                                    <DeleteFilled />
-                                                </Button>
-                                                <br />
-                                                <Button
-                                                    type="link"
-                                                    style={{ padding: '0px', color: 'red' }}
-                                                    // onClick={() =>
-                                                    //     remove(currentItem.id)
-                                                    // }
-                                                >
-                                                    <EditFilled />
-                                                </Button>
+                                                <>
+                                                    <Button
+                                                        type="link"
+                                                        disabled={currentItem.required ? true : false}
+                                                        style={{ padding: '0px', color: currentItem.required ? 'gray' : 'red' }}
+                                                        onClick={() =>
+                                                            remove(currentItem.id)
+                                                        }
+                                                    >
+                                                        <DeleteFilled />
+                                                    </Button>
+                                                    <br />
+                                                    <Button
+                                                        type="link"
+                                                        style={{ padding: '0px', color: 'red' }}
+                                                        onClick={() =>
+                                                            editContent(currentItem)
+                                                        }
+                                                    >
+                                                        <EditFilled />
+                                                    </Button>
                                                 </>
                                             }
                                         </Col>
@@ -307,6 +361,12 @@ const PreviewTemplate = () => {
             </>
         )
     }
+
+    const handleClickCancel = () => {
+        formField.resetFields();
+        setIsModalAddEditVisible(false);
+    };
+
     return (
         <>
             <Card title={""} className="rounded" >
@@ -337,6 +397,20 @@ const PreviewTemplate = () => {
                 </Row>
 
             </Card>
+
+            <div>
+                <Modal
+                    closable={true}
+                    title={addEditTitle}
+                    visible={isModalAddEditVisible}
+                    width={"70%"}
+                    centered={true}
+                    footer={null}
+                    onCancel={handleClickCancel}
+                >
+                    <>{fieldContent}</>
+                </Modal>
+            </div>
         </>
     )
 }

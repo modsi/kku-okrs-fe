@@ -52,7 +52,7 @@ const UploadField = ({ form }) => {
     const onSubmit = async () => {
         // console.log(form.getFieldValue())    
         if (form.getFieldValue('label') && form.getFieldValue('size')) {
-            let store = storeTemplate?.components ?? []
+            let store = storeTemplate?.component ?? []
             let components = store
             let max = store.length > 0 ? Math.max(...store.map(({ index }) => index)) : 0;
             let obj = {
@@ -71,7 +71,7 @@ const UploadField = ({ form }) => {
             setTitle('Label Text Field')
             setSize(2)
             setFormLayout('horizontal')
-            setTemplate({ ...storeTemplate, components: components })
+            setTemplate({ ...storeTemplate, component: components })
             form2.resetFields();
         } else {
             form.validateFields()
