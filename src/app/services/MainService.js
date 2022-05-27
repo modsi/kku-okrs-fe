@@ -70,6 +70,10 @@ export const UpdateTemplateService = async (data = {}) => {
     return await post(`${TEMPLATE__URL}/update_component_template`, data)
 }
 
+export const setIsusedTemplateService = async (data = {}) => {
+    return await post(`${TEMPLATE__URL}/set_isused_template`, data)
+}
+
 export const SaveFormService = async (data = {}) => {
     return await post(`${FORM__URL}/create_form`, data)
 }

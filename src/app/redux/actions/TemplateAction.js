@@ -1,4 +1,4 @@
-import { SaveTemplateService, GetTemplateService, UpdateTemplateService } from '../../services/MainService'
+import { SaveTemplateService, GetTemplateService, UpdateTemplateService, setIsusedTemplateService } from '../../services/MainService'
 import { Payload } from '../../utils/Payload'
 
 
@@ -12,6 +12,10 @@ export const UpdateTempateAction = async (data) => {
   return result?.data
 }
 
+export const SetIsusedAction = async (data) => {
+  const result = await setIsusedTemplateService(data)
+  return result?.data
+}
 
 export const LIST_TEMPLATES = 'list_template'
 export const ListTemplateAction = async (data = {}) => {
