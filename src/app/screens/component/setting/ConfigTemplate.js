@@ -312,7 +312,7 @@ const ConfigTemplate = ( {isEdit}) => {
                       />
                     </Form.Item>
                   </Col>
-                  <Col xs={24} md={8}>
+                  <Col xs={24} md={12}>
                     <Form.Item
                       name="templateType"
                       style={{ textAlign: "center" }}
@@ -335,12 +335,12 @@ const ConfigTemplate = ( {isEdit}) => {
                       />
                     </Form.Item>
                   </Col>
-                  <Col xs={24} md={8} style={{ textAlign: "center" }}>
+                  <Col xs={24} md={4} style={{ textAlign: "right", paddingRight: 10 }}>
                       <Button
                         type="primary"
                         loading={isLoading}
                         style={{
-                          width: "25%",
+                          width: "50%",
                           background: "#389e0d",
                           borderColor: "#389e0d",
                           borderRadius: ".5rem",
