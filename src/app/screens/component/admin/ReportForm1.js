@@ -44,7 +44,8 @@ import {
   SuccessModal,
   ErrorModalMassageHtml,
 } from "../../items/Modal";
-import { propsIds, propsStatus,
+import {
+  propsIds, propsStatus, propsSuccess,
   SaveFormAction,
   ListFormAction,
   LIST_FORM,
@@ -220,22 +221,46 @@ const ReportForm1 = () => {
     data.stepId = listComponent?.stepId ?? listComponent?.step_id;
     data.status = listComponent?.status;
     data.name = listComponent?.name;
-    let components = listComponent?.component;
+    let components = listComponent?.component
     Object.keys(form2.getFieldsValue()).forEach(function (key) {
       let c = components.find((k) => k.key === key);
       if (c) {
         c.value = form2.getFieldValue(key);
-      } 
+      } else {
+        let s = key.split('#')
+        console.log('s', s)
+        c = components.find((k) => k.key === s[1]);
+        if (c) {
+          console.log('c', c)
+          let v = form2.getFieldValue(key);
+          let vo = {
+            index: parseInt(s[2]),
+            key: s[0],
+            value: v ?? ''
+          }
+          if (!c.value) {
+            c.value = []
+            c.value.push(vo)
+          } else {
+            let old = c.value.find(v => v.index === vo.index && v.key === vo.key)
+            if (!old) {
+              c.value.push(vo)
+            } else {
+              Object.assign(old, vo)
+            }
+          }
+        }
+      }
 
       if (key === 'OKRs_Status') {
         console.log('OKRs_Status', c)
-        if(c===null || c===undefined){
+        if (c === null || c === undefined) {
           console.log('add c')
           c = propsStatus
           components.push(c)
         }
-        let value = form2.getFieldValue(key)        
-        c.value = propsStatus.options.find(k => k.value === value)?.label
+        let value = form2.getFieldValue(key)
+        // c.value = propsStatus.options.find(k => k.value === value)?.label
         if (value === 1) {
           data.status = 1
           data.stepId = 5
@@ -245,9 +270,20 @@ const ReportForm1 = () => {
         } else {
           data.status = 0
           data.stepId = 4
-        }        
+        }
       }
     });
+
+    if (form2.getFieldValue('OKRs_Value') || form2.getFieldValue('OKRs_ResultValue')) {
+      components = components?.filter(f => f.key !== 'OKRs_Success');
+      let s = propsSuccess
+      let b1 = form2.getFieldValue('OKRs_Value') && !isNaN(+form2.getFieldValue('OKRs_Value')) ? form2.getFieldValue('OKRs_Value') : 0
+      let b2 = form2.getFieldValue('OKRs_ResultValue') && !isNaN(+form2.getFieldValue('OKRs_ResultValue')) ? form2.getFieldValue('OKRs_ResultValue') : 0
+      let val = b1 >= b2 ? 'success' : 'failed'
+      s.value = val
+      components.push(s)
+    }
+
     data.name = form2.getFieldValue("name");
     data.component = components;
     try {
@@ -289,7 +325,7 @@ const ReportForm1 = () => {
           'OKRs_Value': '',
           'OKRs_Unit_Value': '',
           'OKRs_Success': '',
-          'OKRs_Budget_2': '',
+          'OKRs_Budget2': '',
           'OKRs_FinanceNumber': '',
           'OKRs_Officer': '',
           'OKRs_Status': '',
@@ -315,8 +351,8 @@ const ReportForm1 = () => {
             colData.OKRs_Unit_Value = component.value;
           } else if (component.key === 'OKRs_Success') {
             colData.OKRs_Success = component.value;
-          } else if (component.key === 'OKRs_Budget_2') {
-            colData.OKRs_Budget_2 = component.value;
+          } else if (component.key === 'OKRs_Budget2') {
+            colData.OKRs_Budget2 = component.value;
           } else if (component.key === 'OKRs_FinanceNumber') {
             colData.OKRs_FinanceNumber = component.value;
           } else if (component.key === 'OKRs_Officer') {
@@ -411,11 +447,11 @@ const ReportForm1 = () => {
     },
     {
       title: "จำนวนเงินขออนุมัติ",
-      dataIndex: "OKRs_Budget_2",
-      key: "OKRs_Budget_2",
+      dataIndex: "OKRs_Budget2",
+      key: "OKRs_Budget2",
       align: "right",
       width: 80,
-      render: (_, record) => record?.OKRs_Budget_2,
+      render: (_, record) => record?.OKRs_Budget2,
     },
     {
       title: "เลขที่คุมยอด",
@@ -439,7 +475,7 @@ const ReportForm1 = () => {
       key: "OKRs_Status",
       align: "center",
       width: 80,
-      render: (_, record) => record?.OKRs_Status,
+      render: (_, record) => record?.record_data?.status,
     },
     {
       title: "Step",
@@ -473,7 +509,7 @@ const ReportForm1 = () => {
                   onClick={() =>
                     handleClickValidated(record.record_data)
                   }
-                  style={{width: '60%'}}
+                  style={{ width: '60%' }}
                 >
                   <Text className="big6-title">manage</Text>
                 </Button>
@@ -481,7 +517,7 @@ const ReportForm1 = () => {
               :
               <div className="text-center">
                 <Button
-                  disabled={profile?.role?.priority === '4' && (record?.record_data?.step_id === '3' || record?.record_data?.step_id === '8') ? false : true}
+                  disabled={(profile?.role?.priority === '1' || profile?.role?.priority === '4') && (record?.record_data?.step_id === '3' || record?.record_data?.step_id === '8') ? false : true}
                   type="primary"
                   className="pre-button"
                   onClick={() => {
@@ -491,7 +527,7 @@ const ReportForm1 = () => {
                   <Text className="big6-title">รายงาน</Text>
                 </Button>
                 <Button
-                  disabled={profile?.role?.priority === '4' && (record?.record_data?.step_id === '3' || record?.record_data?.step_id === '8') ? false : true}
+                  disabled={(profile?.role?.priority === '1' || profile?.role?.priority === '4') && (record?.record_data?.step_id === '3' || record?.record_data?.step_id === '8') ? false : true}
                   type="primary"
                   className={record?.id ? "pre-button" : "nol-button"}
                   onClick={() => handleUpStep(record.record_data)}
@@ -508,9 +544,9 @@ const ReportForm1 = () => {
 
   const handleClickValidated = (record) => {
     console.log("handleClickValidated", record)
-    let l = record?.component?.filter(i => profile.role_id === '1' ? i.permission === 3 || i.permission === 4 : i.permission === parseInt(profile.role_id))
+    let l = record?.component?.filter(i => i.permission === 2)
     let c = l.find((k) => k.key === 'OKRs_Status');
-    console.log("handleClickValidated >> c ", c)
+    console.log("handleClickValidated >> c ", l, c)
     if (!c) {
       let status = { ...propsStatus }
       if (record.status) {
@@ -623,7 +659,7 @@ const ReportForm1 = () => {
     let data = {}
     data.name = form3.getFieldValue('name')
     data.stepId = 3
-    data.templateId = obj?.id 
+    data.templateId = obj?.id
     data.typeId = 1
     data.status = 0
     data.component = obj?.component
@@ -713,7 +749,7 @@ const ReportForm1 = () => {
                 </Button>
               </Col >
               : null}
-            <Col span={24} style={{ textAlign: "center",marginTop: 15 }}>
+            <Col span={24} style={{ textAlign: "center", marginTop: 15 }}>
               {/* {listTableForm} */}
 
               <Table
@@ -758,11 +794,11 @@ const ReportForm1 = () => {
             <Row>
               <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                 <Form.Item
-                  label='Report Name'
+                  label='ชื่อรายงาน'
                   name={"name"}
-                  rules={[{ required: true, message: 'Report Name is required' }]}
+                // rules={[{ required: true, message: 'Report Name is required' }]}
                 >
-                  <Input />
+                  <Input disabled={true} />
                 </Form.Item>
               </Col>
               {listField}

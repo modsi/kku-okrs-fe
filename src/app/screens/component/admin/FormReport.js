@@ -72,7 +72,7 @@ const FormReport = ({ form }) => {
     let listField = []
     let components = []
     if (store?.component) {
-      components = [...store?.component]
+      components = [...(store?.component?.filter(l => l.permission !== 2))]
       components.sort((a, b) => (a.index > b.index) ? 1 : -1)
     }
     components?.map((currentItem) => {
@@ -103,7 +103,7 @@ const FormReport = ({ form }) => {
             {currentItem.type === 'table' ?
               <>
                 <Text>{currentItem.label}</Text>
-                {setTableContent(currentItem.columns, currentItem.rows)}
+                {setTableContent(currentItem.columns, currentItem.rows, currentItem.key, currentItem.value)}
               </>
               : currentItem.type === 'title' ?
                 (<Text style={currentItem.isSubTitle ? { paddingLeft: '50px' } : {}}>{currentItem?.label}</Text>)
@@ -120,7 +120,7 @@ const FormReport = ({ form }) => {
                   {currentItem.type === 'textArea' ?
                     (<Input.TextArea showCount maxLength={currentItem.maxLength} disabled={isDisabled} />)
                     : currentItem.type === 'inputNumber' ?
-                      (<InputNumber min={currentItem.min} max={currentItem.max} disabled={isDisabled} />)
+                      (<InputNumber min={currentItem.min} max={currentItem.max} disabled={currentItem.key === 'OKRs_Budget3' || isDisabled} onChange={(e) => setAutoValue(e.target.value, currentItem.key)} />)
                       : currentItem.type === 'checkbox' ?
                         (<Checkbox.Group options={currentItem.options} disabled={isDisabled} />)
                         : currentItem.type === 'select' ?
@@ -148,7 +148,7 @@ const FormReport = ({ form }) => {
                                     </Upload>)
                                     // : currentItem.type === 'email' ?
                                     // (<Input placeholder="Please enter email." onChange={(e) => form.validateFields()} />)                                                                                        
-                                    : (<Input disabled={isDisabled} />)
+                                    : (<Input disabled={currentItem.key === 'OKRs_Budget3' || isDisabled} onChange={(e) => setAutoValue(e.target.value, currentItem.key)} />)
                   }
                 </Form.Item>
                 )}
@@ -166,15 +166,26 @@ const FormReport = ({ form }) => {
     setListField(listField)
   }
 
-  const setTableContent = (options, row) => {
+  const setAutoValue = (v, key) => {
+    // console.log('setAutoValue', v, key)
+    if (key === 'OKRs_Budget1' || key === 'OKRs_Budget2') {
+      // console.log('setAutoValue', form.getFieldValue('OKRs_Budget1'), form.getFieldValue('OKRs_Budget2'))
+      let b1 = form.getFieldValue('OKRs_Budget1') && !isNaN(+form.getFieldValue('OKRs_Budget1')) ? form.getFieldValue('OKRs_Budget1') : 0
+      let b2 = form.getFieldValue('OKRs_Budget2') && !isNaN(+form.getFieldValue('OKRs_Budget2')) ? form.getFieldValue('OKRs_Budget2') : 0
+      let val = b1 - b2
+      form.setFieldsValue({ OKRs_Budget3: val })
+    }
+  }
+
+  const setTableContent = (options, row, key, value) => {
     let dataSource = []
     let columns = []
     options?.sort((a, b) => (a.index > b.index) ? 1 : -1)
     options.map((item, index) => {
       let col = {
-        title: item.colLabel ?? 'column label',
-        dataIndex: item.colKey ?? ("colKey" + item.index),
-        key: item.colKey ?? ("colKey" + item.index),
+        title: item.colLabel,
+        dataIndex: item.colKey + '#' + key,
+        key: item.colKey,
       }
       columns.push(col);
     })
@@ -184,11 +195,14 @@ const FormReport = ({ form }) => {
       d.key = i
       d.index = i + 1
       columns.map((c) => {
-        Object.assign(d, { [c.dataIndex]: null })
+        // console.log('ccc', c.key, i, value?.find(v => v.index === i + 1 && v.key === c.key))
+        let v = value ? value.find(v => v.index === i + 1 && v.key === c.key)?.value : null
+        form.setFieldsValue({ [c.dataIndex + '#' + (i + 1)]: v })
+        Object.assign(d, { [c.dataIndex + '#' + (i + 1)]: v })
       });
       dataSource.push(d)
     }
-
+    console.log('dataSource', dataSource)
     const EditableCell = ({
       dataIndex,
       index,
@@ -199,12 +213,13 @@ const FormReport = ({ form }) => {
       return (
         <td {...restProps} style={{ padding: '2px' }}>
           <Form.Item
-            name={dataIndex + '_' + record?.index}
+            name={dataIndex + '#' + record?.index}
             style={{ margin: 0, padding: 0 }}
           >
             <Input
               style={{ width: '100%', textAlign: "left" }}
               size="small"
+              onChange={(e) => form.setFieldsValue({ [dataIndex + '#' + record?.index]: e.target.value })}
             />
 
           </Form.Item>

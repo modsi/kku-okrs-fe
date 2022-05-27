@@ -47,6 +47,7 @@ import {
 import {
   propsIds,
   propsStatus,
+  propsSuccess,
   SaveFormAction,
   ListForm2Action,
   LIST_FROM_2,
@@ -361,38 +362,68 @@ const ReportForm2 = () => {
     data.id = listComponent?.id;
     data.stepId = listComponent?.stepId ?? listComponent?.step_id;
     data.name = listComponent?.name;
-    data.status = 0;
-    let components = listComponent?.component;
+    let components = listComponent?.component
     Object.keys(form2.getFieldsValue()).forEach(function (key) {
       let c = components.find((k) => k.key === key);
       if (c) {
         c.value = form2.getFieldValue(key);
+      } else {
+        let s = key.split('#')
+        // console.log('s', s)
+        c = components.find((k) => k.key === s[1]);
+        if (c) {
+          // console.log('c', c)
+          let v = form2.getFieldValue(key);
+          let vo = {
+            index: parseInt(s[2]),
+            key: s[0],
+            value: v ?? ''
+          }
+          if (!c.value) {
+            c.value = []
+            c.value.push(vo)
+          } else {
+            let old = c.value.find(v => v.index === vo.index && v.key === vo.key)
+            if (!old) {
+              c.value.push(vo)
+            } else {
+              Object.assign(old, vo)
+            }
+          }
+        }
       }
 
-      if (key === "OKRs_Status") {
-        console.log("OKRs_Status", c);
+      if (key === 'OKRs_Status') {
+        console.log('OKRs_Status', c)
         if (c === null || c === undefined) {
-          console.log("add c");
-          c = propsStatus;
-          c.options = propsStatus.options.filter(
-            (l) => l.value !== 6 && l.value !== 7
-          );
-          components.push(c);
+          console.log('add c')
+          c = propsStatus
+          components.push(c)
         }
-        let value = form2.getFieldValue(key);
-        c.value = propsStatus.options.find((k) => k.value === value)?.label;
+        let value = form2.getFieldValue(key)
+        // c.value = propsStatus.options.find(k => k.value === value)?.label
         if (value === 1) {
-          data.status = 1;
-          data.stepId = 5;
+          data.status = 1
+          data.stepId = 5
         } else if (value < 10) {
-          data.status = 0;
-          data.stepId = value;
+          data.status = 0
+          data.stepId = value
         } else {
-          data.status = 0;
-          data.stepId = 4;
+          data.status = 0
+          data.stepId = 4
         }
       }
     });
+
+    if (form2.getFieldValue('OKRs_Value') || form2.getFieldValue('OKRs_ResultValue')) {
+      components = components?.filter(f => f.key !== 'OKRs_Success');
+      let s = propsSuccess
+      let b1 = form2.getFieldValue('OKRs_Value') && !isNaN(+form2.getFieldValue('OKRs_Value')) ? form2.getFieldValue('OKRs_Value') : 0
+      let b2 = form2.getFieldValue('OKRs_ResultValue') && !isNaN(+form2.getFieldValue('OKRs_ResultValue')) ? form2.getFieldValue('OKRs_ResultValue') : 0
+      let val = b1 >= b2 ? 'success' : 'failed'
+      s.value = val
+      components.push(s)
+    }
     if (data.stepId === "1" || data.stepId === 1) {
       data.stepId = 3;
     }
@@ -436,7 +467,7 @@ const ReportForm2 = () => {
           OKRs_Value: "",
           OKRs_Unit_Value: "",
           OKRs_Success: "",
-          OKRs_Budget_2: "",
+          OKRs_Budget2: "",
           OKRs_FinanceNumber: "",
           OKRs_Officer: "",
           OKRs_Status: "",
@@ -462,8 +493,8 @@ const ReportForm2 = () => {
             colData.OKRs_Unit_Value = component.value;
           } else if (component.key === "OKRs_Success") {
             colData.OKRs_Success = component.value;
-          } else if (component.key === "OKRs_Budget_2") {
-            colData.OKRs_Budget_2 = component.value;
+          } else if (component.key === "OKRs_Budget2") {
+            colData.OKRs_Budget2 = component.value;
           } else if (component.key === "OKRs_FinanceNumber") {
             colData.OKRs_FinanceNumber = component.value;
           } else if (component.key === "OKRs_Officer") {
@@ -566,11 +597,11 @@ const ReportForm2 = () => {
     },
     {
       title: "จำนวนเงินขออนุมัติ",
-      dataIndex: "OKRs_Budget_2",
-      key: "OKRs_Budget_2",
+      dataIndex: "OKRs_Budget2",
+      key: "OKRs_Budget2",
       align: "right",
       width: 80,
-      render: (_, record) => record?.OKRs_Budget_2,
+      render: (_, record) => record?.OKRs_Budget2,
     },
     {
       title: "เลขที่คุมยอด",
@@ -594,7 +625,7 @@ const ReportForm2 = () => {
       key: "OKRs_Status",
       align: "center",
       width: 80,
-      render: (_, record) => record?.OKRs_Status,
+      render: (_, record) => record?.record_data?.status,
     },
     {
       title: "Step",
@@ -686,27 +717,29 @@ const ReportForm2 = () => {
   };
 
   const handleClickValidated = (record) => {
-    console.log("handleClickValidated", record);
+    // console.log("handleClickValidated", record);
+    let l = record?.component?.filter(i => i.permission === 2)
+    let c = l.find((k) => k.key === 'OKRs_Status');
     let status = { ...propsStatus };
     status.options = propsStatus.options.filter(
       (l) => l.value !== 6 && l.value !== 7
-    );
-    if (record.status) {
-      if (record.status === "1") {
-        Object.assign(status, { value: 1 });
-      } else {
-        Object.assign(status, { value: parseInt(record.stepId) });
+    );  
+    if (!c) {
+      let status = { ...propsStatus }
+      if (record.status) {
+        if (record.status === "1") {
+          Object.assign(status, { value: 1 })
+        } else {
+          Object.assign(status, { value: parseInt(record.stepId) })
+        }
       }
+      setLayoutTemplate([...l, status])
+    } else {
+      setLayoutTemplate(l)
     }
     form2.setFieldsValue({ ["name"]: record.name });
     setStep(record.stepId - 1);
     setListComponent(record);
-    let l = record?.component?.filter((i) =>
-      profile.role_id === "1"
-        ? i.permission === 3 || i.permission === 4
-        : i.permission === parseInt(profile.role_id)
-    );
-    setLayoutTemplate([...l, status]);
     setIsModal2(true);
     setAddEditTitle(profile?.role?.role_name);
   };
@@ -725,11 +758,11 @@ const ReportForm2 = () => {
   };
 
   const onSubmitNewSpec = async () => {
-    console.log(
-      "start onSubmitNewSpec",
-      form3.getFieldValue("template"),
-      form3.getFieldValue("name")
-    );
+    // console.log(
+    //   "start onSubmitNewSpec",
+    //   form3.getFieldValue("template"),
+    //   form3.getFieldValue("name")
+    // );
     setIsLoading(true);
     let obj = listTempMaster.find(
       (template) => template.id === form3.getFieldValue("template")
@@ -893,13 +926,13 @@ const ReportForm2 = () => {
             <Row>
               <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                 <Form.Item
-                  label="Report Name"
+                  label="ชื่อรายงาน"
                   name={"name"}
-                  rules={[
-                    { required: true, message: "Report Name is required" },
-                  ]}
+                  // rules={[
+                  //   { required: true, message: "Report Name is required" },
+                  // ]}
                 >
-                  <Input />
+                  <Input disabled={true} />
                 </Form.Item>
               </Col>
               {listField}

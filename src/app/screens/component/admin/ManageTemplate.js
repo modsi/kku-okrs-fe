@@ -6,17 +6,11 @@ import { tem1, tem2 } from '../../../../template-mock'
 import { LIST_TEMPLATES, ListTemplateAction } from '../../../redux/actions/TemplateAction'
 import SetOptionsForSelect, { SetOptionsForSelectSetLable } from '../../items/SetOptionsForSelect'
 import { clearStorege, getStorage } from "../../state/localStorage";
-import {
-  ConfirmModalEditText,
-  SuccessModal,
-  ErrorModalMassageHtml,
-} from "../../items/Modal";
+import { ConfirmModalEditText, SuccessModal, ErrorModalMassageHtml, } from "../../items/Modal";
 import { SaveFormAction, ListFormAction, LIST_FORM, UpdateFormAction, ListForm2Action, LIST_FROM_2 } from "../../../redux/actions/FormAction";
-import {
-  StoreTemplateAction,
-  STORE_TEMPLATE,
-} from "../../../redux/actions/StoreSearchAction";
-import { UpdateTempateAction } from '../../../redux/actions/TemplateAction'
+import { StoreTemplateAction, STORE_TEMPLATE, } from "../../../redux/actions/StoreSearchAction";
+import { SetIsusedAction } from '../../../redux/actions/TemplateAction'
+import { ListInstitutionsAction, LIST_INSTITUTIONS } from '../../../redux/actions/ListMasterAction'
 
 const { Text, Link } = Typography;
 const { RangePicker } = DatePicker;
@@ -44,9 +38,8 @@ const ManageTemplate = () => {
   const [step, setStep] = useState(0);
   const [listTableForm, setListTableForm] = useState([]);
   const [showConfigPage, setShowConfigPage] = useState(false);
-  const storeTemplate = useSelector(
-    (state) => state?.storeSearchReducer?.[STORE_TEMPLATE]
-  );
+  const storeTemplate = useSelector((state) => state?.storeSearchReducer?.[STORE_TEMPLATE]);
+  const listInstitutions = useSelector(state => state?.main?.[LIST_INSTITUTIONS]);
 
   const layout = {
     labelCol: { span: 24 },
@@ -84,6 +77,7 @@ const ManageTemplate = () => {
         obj.name = f?.name
         obj.updatedBy = f?.updatedBy ?? f?.updated_by
         obj.formStatus = f?.form_status ?? f?.formStatus
+        obj.groupId = f?.groupId ?? f?.group_id
         d1.push(obj)
       })
       setDataSource1(d1)
@@ -106,6 +100,7 @@ const ManageTemplate = () => {
         obj.status = f?.status
         obj.name = f?.name
         obj.updatedBy = f?.updatedBy ?? f?.updated_by
+        obj.groupId = f?.groupId ?? f?.group_id
         d2.push(obj)
       })
       setDataSource2(d2)
@@ -114,6 +109,7 @@ const ManageTemplate = () => {
 
   async function handleListMaster() {
     let p = getStorage('profile')
+    dispatch(await ListInstitutionsAction())
     dispatch(await ListTemplateAction({}))
     dispatch(await ListFormAction({ roleId: p.role_id, str: '', username: p.username }))
     dispatch(await ListForm2Action({ roleId: p.role_id, typeId: 2, isParent: 1 }))
@@ -321,6 +317,7 @@ const ManageTemplate = () => {
   const handleClickEdit = (record) => {
     console.log("handleClickEdit", profile.role_id, record)
     form2.setFieldsValue({ ['name']: record.name })
+    form2.setFieldsValue({ ['group']: record.groupId })
     setStep(record.stepId === '6' || record.stepId === '7' || record.stepId === '8' ? 3 : record.stepId - 1)
     setListComponent(record)
     let l = record?.component?.filter(i => profile.role_id === '1' ? i.permission === 3 || i.permission === 4 : i.permission === parseInt(profile.role_id))
@@ -413,7 +410,7 @@ const ManageTemplate = () => {
   }
 
   const saveForm = () => {
-    if (form2.getFieldValue("name")) {
+    if (form2.getFieldValue("name") && form2.getFieldValue("group")) {
       ConfirmModalEditText(onSubmit, conditionSave());
     } else {
       form2.validateFields();
@@ -439,7 +436,7 @@ const ManageTemplate = () => {
         c.value = form2.getFieldValue(key)
       }
     });
-    if (data.typeId === '2' && (data.stepId === '1' || data.stepId === 1)) {
+    if (data.typeId === '2') {
       data.stepId = 9
     } else if (data.typeId === '1' && profile?.role_id === '3' && (data.stepId === '1' || data.stepId === 1)) {
       data.stepId = 10
@@ -451,17 +448,20 @@ const ManageTemplate = () => {
       data.stepId = 1
     }
 
-    data.status = 0
+    data.status = listComponent?.formStatus ?? 0;
     data.name = form2.getFieldValue('name')
+    data.groupid = form2.getFieldValue('group')
     data.component = components
     try {
       if (listComponent.id) {
         res = await UpdateFormAction(data);
       } else {
         res = await SaveFormAction(data);
-        let obj = listTemplate.find(template => template.id === data.templateId)
-        obj.isUsed = true
-        res = await UpdateTempateAction(obj);
+        let obj = {
+          id: data.templateId,
+          isUse: true
+        }
+        res = await SetIsusedAction(obj);
       }
       if (res.error === null) {
         SuccessModal("Success");
@@ -481,8 +481,8 @@ const ManageTemplate = () => {
     <>
       <Card title={"Manage Report"} className="rounded">
         <Row gutter={24} className="row-inquiry-customer">
-          <Col span={12} style={{marginTop:10}}>
-            <Text strong style={{ color: 'rgba(0, 0, 0, 0.5)'}}>แบบรายงานที่ 1</Text>
+          <Col span={12} style={{ marginTop: 10 }}>
+            <Text strong style={{ color: 'rgba(0, 0, 0, 0.5)' }}>แบบรายงานที่ 1</Text>
           </Col>
           <Col span={12} style={{ textAlign: "right" }} >
             <Button type="primary" shape="circle" size="large"
@@ -491,7 +491,7 @@ const ManageTemplate = () => {
               <PlusOutlined className="big3-title" />
             </Button>
           </Col >
-          <Col span={24} style={{ textAlign: "left",marginTop: 10 }}>
+          <Col span={24} style={{ textAlign: "left", marginTop: 10 }}>
             <Table
               className="table-user custom-table-dashboard"
               rowKey={(record, index) => record.key}
@@ -508,11 +508,11 @@ const ManageTemplate = () => {
             />
           </Col>
           <Col span={24} style={{ textAlign: "left" }}>
-            <Text strong style={{ color: 'rgba(0, 0, 0, 0.5)'}}>แบบรายงานที่ 2</Text>
+            <Text strong style={{ color: 'rgba(0, 0, 0, 0.5)' }}>แบบรายงานที่ 2</Text>
             <Table
               className="table-user custom-table-dashboard"
               rowKey={(record, index) => record.key}
-              style={{ whiteSpace: "pre",marginTop: 18 }}
+              style={{ whiteSpace: "pre", marginTop: 18 }}
               loading={isLoading}
               scroll={{ x: "max-content", y: 250 }}
               size="small"
@@ -615,11 +615,25 @@ const ManageTemplate = () => {
             <Row>
               <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                 <Form.Item
-                  label='Report Name'
+                  label='ชื่อรายงาน'
                   name={"name"}
-                  rules={[{ required: true, message: 'Report Name is required' }]}
+                  rules={[{ required: true, message: 'ชื่อรายงาน is required' }]}
                 >
                   <Input />
+                </Form.Item>
+              </Col>
+              <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                <Form.Item label={"ผู้รับผิดชอบโครงการ"} name={"group"} rules={[{ required: true, message: 'ผู้รับผิดชอบโครงการ is required' }]}>
+                  <Select
+                    options={SetOptionsForSelect({
+                      label: "groupname",
+                      value: "groupid",
+                      data: listInstitutions,
+                    })}
+                    placeholder="-Please select from dropdown-"
+                    size="large"
+                    style={{ width: "100%" }}
+                  />
                 </Form.Item>
               </Col>
               {listField}

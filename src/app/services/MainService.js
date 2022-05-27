@@ -2,7 +2,6 @@ import { httpUtils } from '../utils/HttpUtils'
 
 const { get, post, patch, postTokenKku, postLoginKku, downloadFile } = httpUtils
 const API_KKU = `https://api.kku.ac.th/v2`
-// const API_ENDPOINT = `http://localhost:8080/api`
 const API_ENDPOINT = `https://e-project.kku.ac.th/api`
 const USER_URL = `${API_ENDPOINT}/users`
 const MANAGE_URL = `${API_ENDPOINT}/manage`
@@ -68,6 +67,10 @@ export const GetDashboardTwo = async () => {
 }
 export const UpdateTemplateService = async (data = {}) => {
     return await post(`${TEMPLATE__URL}/update_component_template`, data)
+}
+
+export const setIsusedTemplateService = async (data = {}) => {
+    return await post(`${TEMPLATE__URL}/set_isused_template`, data)
 }
 
 export const SaveFormService = async (data = {}) => {

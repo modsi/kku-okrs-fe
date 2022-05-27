@@ -12,7 +12,7 @@ export const SaveFormAction = async (data) => {
 }
 
 export const UpdateFormAction = async (data) => {
-  data.status = data.formStatus ?? (!data.status || !isNaN(+data.status) ? data.status : 0)
+  // data.status = data.status ?? (data.formStatus ?? (!data.status || !isNaN(+data.status) ? data.status : 0))
   const result = await UpdateFormService(data)
   console.log('UpdateFormAction', result)
   if (result?.data?.error === null && result?.data?.data[0].id) {
@@ -85,13 +85,13 @@ export const SaveCompalteFormAction = async (id, data) => {
       o.approvedFlag = 1
       o.approvedBy = getStorage('profile')?.username
     }
-    if (c.key === 'OKRs_Status') {
-      let v = c.value
-      let label = c.options.find(k => k.value = v)?.label
-      o.value = v
-      o.labelValue = label
-      component.push(o)
-    } else 
+    // if (c.key === 'OKRs_Status') {
+    //   let v = c.value
+    //   let label = propsStatus.options.find(k => k.value === v)?.label
+    //   o.value = v
+    //   o.labelValue = label
+    //   component.push(o)
+    // } else 
     if (c.value && Array.isArray(c.value)) {
       c.value.map((v) => {
         o.label = v.label
@@ -106,8 +106,8 @@ export const SaveCompalteFormAction = async (id, data) => {
       component.push(o)
     } else if (c.type === 'select') {
       let v = c.value
-      let label = c.options.find(k => k.value = v)?.label
-      o.value = v - 1 
+      let label = c.options.find(k => k.value === v)?.label
+      o.value = v 
       o.labelValue = label
       component.push(o)
     } else {
@@ -176,6 +176,17 @@ export const ListForm2Action = async (data = {}) => {
   }
 }
 
+export const propsSuccess =
+  {
+    "id": "00002",
+    "index": 0,
+    "key": "OKRs_Success",
+    "size": "long",
+    "type": "title",
+    "align": "left",
+    "labelPosition": "vertical"
+  }
+
 export const propsIds =
   {
     "id": "00001",
@@ -183,6 +194,7 @@ export const propsIds =
     "key": "OKRs_Ids",
     "size": "long",
     "type": "title",
+    "permission": 2,
     "align": "left",
     "labelPosition": "vertical"
   }
@@ -204,16 +216,16 @@ export const propsIds =
         "label": "สิ้นสุดโครงการ",
         "value": 1
       },
-      {
-        "index": 2,
-        "label": "ส่งคืนแผนปฏิบัติการแก้ไข",
-        "value": 6
-      },
-      {
-        "index": 3,
-        "label": "ส่งคืนแผนงบประมาณแก้ไข",
-        "value": 7
-      },
+      // {
+      //   "index": 2,
+      //   "label": "ส่งคืนแผนปฏิบัติการแก้ไข",
+      //   "value": 6
+      // },
+      // {
+      //   "index": 3,
+      //   "label": "ส่งคืนแผนงบประมาณแก้ไข",
+      //   "value": 7
+      // },
       {
         "index": 4,
         "label": "ส่งคืนผู้ใช้งานแก้ไข",
