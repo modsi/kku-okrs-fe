@@ -46,16 +46,23 @@ const FormUpload = ({ form }) => {
   }
 
   const props = {
-    name: 'file',
-    action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
+    name: 'file_attached',
+    action: 'http://localhost:8080/api/file/upload',
+    data: {
+      formId: '1',
+      componentId: '2',
+      type: 'application/json'
+    },
     headers: {
-      authorization: 'authorization-text',
+      Authorization: 'Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJ1c2VybmFtZSI6ImlhbXN1cGVyIiwiZW1haWwiOiJpYW1zdXBlckBnbWFpbC5jb20iLCJpYXQiOjE2NTM1Nzc0NjEsImV4cCI6MTY1MzY2Mzg2MX0.F9H7CYqCjYdbdVZ35zGOLkUpJUZ6m3vqBN2pO2UNrfR4ORsH4UQIa-iSt8Z3a4Qi8I7NqcW576YBdIyk-BPeyw'
     },
     onChange(info) {
       if (info.file.status !== 'uploading') {
         console.log(info.file, info.fileList);
       }
       if (info.file.status === 'done') {
+        let {componentId , extension, name, url} = info.file.response.data;
+        console.log(`componentId: ${componentId} => ${url}`);
         message.success(`${info.file.name} file uploaded successfully`);
       } else if (info.file.status === 'error') {
         message.error(`${info.file.name} file upload failed.`);

@@ -3,13 +3,13 @@ import { httpUtils } from '../utils/HttpUtils'
 const { get, post, patch, postTokenKku, postLoginKku, downloadFile } = httpUtils
 const API_KKU = `https://api.kku.ac.th/v2`
 // const API_ENDPOINT = `http://localhost:8080/api`
-const API_ENDPOINT = `https://e-project.kku.ac.th/api`
+const API_ENDPOINT = `http://localhost:8080/api`
 const USER_URL = `${API_ENDPOINT}/users`
 const MANAGE_URL = `${API_ENDPOINT}/manage`
 const TEMPLATE__URL = `${API_ENDPOINT}/templates`
 const DASHBOARD_URL = `${API_ENDPOINT}/dashboard`
 const FORM__URL = `${API_ENDPOINT}/form`
-const REPORT_URL = `https://e-project.kku.ac.th/api/report/`
+const REPORT_URL = `http://localhost:8080/api/report/`
 
 export const ListInstitutions = async () => {
     return await get(`${MANAGE_URL}/institution`)     
