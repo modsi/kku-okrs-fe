@@ -48,8 +48,6 @@ const FormUpload = ({ form }) => {
   const props = {
     name: 'file_attached',
     action: 'http://localhost:8080/api/file/upload',
-    multiple: false,
-    listType: 'png',
     data: {
       formId: '1',
       componentId: '2',
@@ -63,6 +61,8 @@ const FormUpload = ({ form }) => {
         console.log(info.file, info.fileList);
       }
       if (info.file.status === 'done') {
+        let {componentId , extension, name, url} = info.file.response.data;
+        console.log(`componentId: ${componentId} => ${url}`);
         message.success(`${info.file.name} file uploaded successfully`);
       } else if (info.file.status === 'error') {
         message.error(`${info.file.name} file upload failed.`);
