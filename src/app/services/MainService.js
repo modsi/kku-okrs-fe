@@ -67,8 +67,8 @@ export const GetDashboardOne = async () => {
     return await get(`${DASHBOARD_URL}/dashboardOne`)
 }
 
-export const GetDashboardTwo = async () => {
-    return await get(`${DASHBOARD_URL}/dashboardTwo`)
+export const GetDashboardTwo = async (data = {}) => {
+    return await get(`${DASHBOARD_URL}/dashboardTwo?pic=${data.pic ? data.pic : ''}`)
 }
 export const UpdateTemplateService = async (data = {}) => {
     return await post(`${TEMPLATE__URL}/update_component_template`, data)

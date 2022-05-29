@@ -7,7 +7,10 @@ export const ListDashboardOneAction = async () => {
     return Payload({ params: { [LIST_DASHBOARD]: result?.data ?? null }, type: LIST_DASHBOARD })
 }
 
-export const ListDashboardTwoAction = async () => {
-    const result = await GetDashboardTwo()
+export const ListDashboardTwoAction = async (data = {}) => {
+    const onSearch = {
+        ...data,
+    }
+    const result = await GetDashboardTwo(onSearch)
     return Payload({ params: { [LIST_DASHBOARD]: result?.data ?? null }, type: LIST_DASHBOARD })
 }

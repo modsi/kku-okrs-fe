@@ -15,7 +15,8 @@ const Faculty = (props) => {
 
     const {
         title = '',
-        subTitle = ''
+        subTitle = '',
+        pic = ''
       } = props;
 
   const dispatch = useDispatch();
@@ -32,11 +33,11 @@ const Faculty = (props) => {
   const [centurySkill, setCenturySkill] = useState([]);
   const [listCenturySkill, setListCenturySkill] = useState([]);
   const [dataStrategy, setDataStrategy] = useState([]);
-  const [successPlans, setSuccessPlan] = useState([]);
+  // const [successPlans, setSuccessPlan] = useState([]);
 
   useEffect(() => {
     handleListDashboard();
-  }, []);
+  }, [pic]);
 
   useEffect(() => {
     if (storeListDashboard && storeListDashboard.data) {
@@ -62,8 +63,8 @@ const Faculty = (props) => {
       if (storeListDashboard.data.centurySkillData)
         setListCenturySkill(storeListDashboard.data.centurySkillData);
 
-      if (storeListDashboard.data.successPlan)
-        setSuccessPlan(storeListDashboard.data.successPlan);
+      // if (storeListDashboard.data.successPlan)
+      //   setSuccessPlan(storeListDashboard.data.successPlan);
 
       setFetchData(true);
     } else {
@@ -72,7 +73,7 @@ const Faculty = (props) => {
   }, [storeListDashboard]);
 
   async function handleListDashboard() {
-    dispatch(await ListDashboardTwoAction().then(value => {
+    dispatch(await ListDashboardTwoAction({pic: pic}).then(value => {
       setStoreListDashboard(value.payload.list_dashboard);
     }));
   }
