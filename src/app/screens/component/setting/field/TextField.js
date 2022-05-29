@@ -141,6 +141,7 @@ const TextField = ({ form, content }) => {
                       ]}
                     >
                       <Input
+                        disabled={content?.required ? true : false}
                         onChange={(e) => {
                           form.setFieldsValue({ ["key"]: e.target.value });
                         }}

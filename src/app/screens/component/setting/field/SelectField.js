@@ -139,14 +139,14 @@ const SelectField = ({ form, content }) => {
       op.label = e.target.value
       form.setFieldsValue({ ["label" + op.index]: e.target.value });
     } else {
-      let op2 = options.find(({ value }) => value === e.target.value)
-      if (!op2 || op2.index === op.index) {
+      // let op2 = options.find(({ index }) => index === e.target.value)
+      // if (!op2 || op2.index === op.index) {
         op.value = e.target.value
         form.setFieldsValue({ ["value" + op.index]: e.target.value });
-      } else {
-        op.value = null
-        form.setFieldsValue({ ["value" + op.index]: null });
-      }
+      // } else {
+      //   op.value = null
+      //   form.setFieldsValue({ ["value" + op.index]: null });
+      // }
     }
     let store = [...options?.filter((item) => {
       if (item.index !== inx) {
@@ -156,6 +156,7 @@ const SelectField = ({ form, content }) => {
       }
     })]
     setOptions([...store, op])
+    form.validateFields()
   };
 
   const DynamicFieldSet = () => {
@@ -201,6 +202,8 @@ const SelectField = ({ form, content }) => {
           </Row>
         </>
       );
+      form.setFieldsValue({ ["label" + item.index]: item.label });
+      form.setFieldsValue({ ["value" + item.index]: item.value && item.value !== "" ? item.value : null });
       listField.push(field);
     });
     setListField(listField);

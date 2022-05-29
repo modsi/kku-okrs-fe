@@ -2,7 +2,8 @@ import { httpUtils } from '../utils/HttpUtils'
 
 const { get, post, patch, postTokenKku, postLoginKku, downloadFile } = httpUtils
 const API_KKU = `https://api.kku.ac.th/v2`
-const API_ENDPOINT = `http://localhost:8080/api`
+// const API_ENDPOINT = `http://localhost:8080/api`
+const API_ENDPOINT = `https://e-project.kku.ac.th/api`
 const USER_URL = `${API_ENDPOINT}/users`
 const MANAGE_URL = `${API_ENDPOINT}/manage`
 const TEMPLATE__URL = `${API_ENDPOINT}/templates`
@@ -83,7 +84,7 @@ export const SaveFormService = async (data = {}) => {
 }
 
 export const GetFormeService = async(data = {})=>{
-    return await get(`${FORM__URL}/list_form?name=${data?.str ?? ''}&roleId=${data?.roleId}&username=${data?.username}&year=${data.year}&group_id=${data.group_id}`)
+    return await get(`${FORM__URL}/list_form?name=${data?.str ?? ''}&userId=${data?.userId}&&roleId=${data?.roleId}&username=${data?.username}&year=${data.year}&group_id=${data.group_id}`)
 }
 
 export const UpdateFormService = async (data = {}) => {
