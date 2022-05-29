@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 import { PageHeader, Modal, Steps, Card, Row, Col, Button, Typography, Table, Form, Input, Radio, Space, Image, InputNumber, Checkbox, Select, DatePicker, Upload, message } from 'antd';
-import { EditOutlined, EyeOutlined, SettingOutlined, PlusOutlined, FileSearchOutlined, PlusCircleFilled } from "@ant-design/icons";
+import { EditOutlined, EyeOutlined, TableOutlined, PlusOutlined, FileSearchOutlined, PlusCircleFilled } from "@ant-design/icons";
 import { tem1, tem2 } from '../../../../template-mock'
 import { LIST_TEMPLATES, ListTemplateAction } from '../../../redux/actions/TemplateAction'
 import SetOptionsForSelect, { SetOptionsForSelectSetLable } from '../../items/SetOptionsForSelect'
 import { clearStorege, getStorage } from "../../state/localStorage";
 import { ConfirmModalEditText, SuccessModal, ErrorModalMassageHtml, } from "../../items/Modal";
-import { SaveFormAction, ListFormAction, LIST_FORM, UpdateFormAction, ListForm2Action, LIST_FROM_2 } from "../../../redux/actions/FormAction";
+import { onFormSubmit, ListFormAction, LIST_FORM, UpdateFormAction, ListForm2Action, LIST_FROM_2 } from "../../../redux/actions/FormAction";
 import { StoreTemplateAction, STORE_TEMPLATE, } from "../../../redux/actions/StoreSearchAction";
 import { SetIsusedAction } from '../../../redux/actions/TemplateAction'
 import { ListInstitutionsAction, LIST_INSTITUTIONS } from '../../../redux/actions/ListMasterAction'
+import LayoutReport from './LayoutReport'
 
 const { Text, Link } = Typography;
 const { RangePicker } = DatePicker;
@@ -36,9 +37,6 @@ const ManageTemplate = () => {
   const [profile, setProfile] = useState({})
   const [listComponent, setListComponent] = useState([]);
   const [step, setStep] = useState(0);
-  const [listTableForm, setListTableForm] = useState([]);
-  const [showConfigPage, setShowConfigPage] = useState(false);
-  const storeTemplate = useSelector((state) => state?.storeSearchReducer?.[STORE_TEMPLATE]);
   const listInstitutions = useSelector(state => state?.main?.[LIST_INSTITUTIONS]);
 
   const layout = {
@@ -78,6 +76,7 @@ const ManageTemplate = () => {
         obj.updatedBy = f?.updatedBy ?? f?.updated_by
         obj.formStatus = f?.form_status ?? f?.formStatus
         obj.groupId = f?.groupId ?? f?.group_id
+        obj.groupTypeId = f?.groupTypeId ?? f?.group_type_id
         d1.push(obj)
       })
       setDataSource1(d1)
@@ -101,6 +100,7 @@ const ManageTemplate = () => {
         obj.name = f?.name
         obj.updatedBy = f?.updatedBy ?? f?.updated_by
         obj.groupId = f?.groupId ?? f?.group_id
+        obj.groupTypeId = f?.groupTypeId ?? f?.group_type_id
         d2.push(obj)
       })
       setDataSource2(d2)
@@ -183,10 +183,15 @@ const ManageTemplate = () => {
         let comp = obj?.filter(i => profile.role_id === '1' ? i.permission === 3 || i.permission === 4 : i.permission === parseInt(profile.role_id))
         let content = []
         comp.map(item => {
+          // console.log('item', item.label, item.value)
           content.push(
             <>
               <Text>{item.label + " : "}</Text>
-              <Text strong>{(item.value ?? '-') + " "}</Text>
+              {Array.isArray(item.value) ?
+                <Text strong><TableOutlined /> </Text>
+                :
+                <Text strong>{(item.value ?? '-') + " "}</Text>
+              }
             </>
           )
         })
@@ -261,51 +266,7 @@ const ManageTemplate = () => {
       ErrorModalMassageHtml(res.error.message);
     }
     setIsLoading(false);
-  }
-
-  const setTableContent = (component) => {
-    console.log('setTableContent', component)
-    let data = []
-    component.map(item => {
-      let obj = {}
-      obj.label = item.label
-      obj.key = item.key
-      obj.value = item.value
-      data.push(obj);
-    })
-    let col = [
-      {
-        title: "Label",
-        dataIndex: "label",
-        align: "left",
-      },
-      {
-        title: "Key",
-        dataIndex: "key",
-        align: "left",
-      },
-      {
-        title: "Value",
-        dataIndex: "value",
-        align: "left"
-      },
-    ]
-    return (
-      <>
-        <Table
-          className='sub-table-user custom-table-dashboard'
-          rowKey={(record, index) => record.id}
-          style={{ whiteSpace: 'pre' }}
-          loading={isLoading}
-          scroll={{ x: 'max-content' }}
-          size="small"
-          bordered
-          dataSource={data}
-          pagination={false}
-          columns={col} />
-      </>
-    )
-  }
+  } 
 
   const handleClickCancel = () => {
     setIsModalAddEditVisible(false);
@@ -322,65 +283,14 @@ const ManageTemplate = () => {
     setListComponent(record)
     let l = record?.component?.filter(i => profile.role_id === '1' ? i.permission === 3 || i.permission === 4 : i.permission === parseInt(profile.role_id))
     console.log("handleClickEdit", l)
-    setLayoutTemplate(l)
+    setLayoutReport(l)
     setIsModal2(true);
     setAddEditTitle(profile?.role?.role_name)
   }
 
-  const setLayoutTemplate = (listComponent) => {
-    console.log('start setLayoutTemplate', listComponent)
-    let listField = []
-    listComponent?.sort((a, b) => (a.index > b.index) ? 1 : -1)
-    listComponent?.map((currentItem) => {
-      console.log('value', currentItem.value)
-      let field = (
-        <>
-          <Col xs={24} sm={24} md={24} lg={24} xl={24} >
-            {currentItem.type === 'title' ?
-              (<Text style={currentItem.isSubTitle ? { paddingLeft: '50px' } : {}}>{currentItem?.label}</Text>)
-              : (<Form.Item
-                className="template-text"
-                labelAlign='left'
-                labelWrap='true'
-                layout={currentItem.labelPosition ?? 'vertical'}
-                label={currentItem.label}
-                name={currentItem.key}
-                rules={[{ required: currentItem.required ? true : false, message: 'Please input ' + currentItem?.label }]}
-              >
-                {currentItem.type === 'textArea' ?
-                  (<Input.TextArea showCount maxLength={currentItem.maxLength} />)
-                  : currentItem.type === 'inputNumber' ?
-                    (<InputNumber min={currentItem.min} max={currentItem.max} />)
-                    : currentItem.type === 'checkbox' ?
-                      (<Checkbox.Group options={currentItem.options} />)
-                      : currentItem.type === 'select' ?
-                        (<Select
-                          mode={currentItem.mode}
-                          placeholder="Please select"
-                          style={{ width: '100%' }}
-                          options={currentItem.options}
-                        />)
-                        : currentItem.type === 'radio' ?
-                          (<Radio.Group
-                            options={currentItem.options}
-                          />)
-                          : currentItem.type === 'day' ?
-                            (<DatePicker />)
-                            : currentItem.type === 'date_time' ?
-                              (<DatePicker showTime format="DD/MM/YYYY HH:mm:ss" />)
-                              : currentItem.type === 'range_date' ?
-                                (<RangePicker />)
-                                : (<Input />)
-                }
-              </Form.Item>
-              )}
-          </Col>
-        </>
-      )
-      form2.setFieldsValue({ [currentItem.key]: currentItem.value })
-      listField.push(field)
-    })
-    setListField(listField)
+  const setLayoutReport = (listComponent) => {
+    console.log('setLayoutReport', listComponent)
+    setListField(<LayoutReport form={form2} store={listComponent} />)
   }
 
   const onSubmitNewReport = async () => {
@@ -425,49 +335,15 @@ const ManageTemplate = () => {
   };
 
   const onSubmit = async () => {
-    console.log('start onSubmit', form2.getFieldsValue(), listComponent)
     setIsLoading(true);
-    let res = {};
-    let data = listComponent;
-    let components = listComponent?.component
-    Object.keys(form2.getFieldsValue()).forEach(function (key) {
-      let c = components.find(k => k.key === key)
-      if (c) {
-        c.value = form2.getFieldValue(key)
-      }
-    });
-    if (data.typeId === '2') {
-      data.stepId = 9
-    } else if (data.typeId === '1' && profile?.role_id === '3' && (data.stepId === '1' || data.stepId === 1)) {
-      data.stepId = 10
-    } else if (data.typeId === '1' && profile?.role_id === '4' && (data.stepId === '1' || data.stepId === 1)) {
-      data.stepId = 11
-    }
-
-    if (!data.stepId) {
-      data.stepId = 1
-    }
-
-    data.status = listComponent?.formStatus ?? 0;
-    data.name = form2.getFieldValue('name')
-    data.groupid = form2.getFieldValue('group')
-    data.component = components
+    let res = {}
     try {
-      if (listComponent.id) {
-        res = await UpdateFormAction(data);
-      } else {
-        res = await SaveFormAction(data);
-        let obj = {
-          id: data.templateId,
-          isUse: true
-        }
-        res = await SetIsusedAction(obj);
-      }
+      res = await onFormSubmit(profile, form2, listComponent);
       if (res.error === null) {
         SuccessModal("Success");
         handleListMaster()
       } else {
-        ErrorModalMassageHtml(res.error.message);
+        ErrorModalMassageHtml(res.error?.message);
       }
     } catch (err) {
       console.error(err)

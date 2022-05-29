@@ -20,6 +20,8 @@ import DayField from "./field/DayField";
 import DateTimeField from "./field/DateTimeField";
 import RangeDateField from "./field/RangeDateField";
 import TableField from "./field/TableField";
+import TargetGroupField from "./field/TargetGroupField";
+import PDCAField from "./field/PDCAField";
 
 const { Text, Link } = Typography;
 const { RangePicker } = DatePicker;
@@ -166,7 +168,7 @@ const PreviewTemplate = () => {
             components.sort((a, b) => (a.index > b.index) ? 1 : -1)
         }
         components?.map((currentItem) => {
-            let size = currentItem.size === 'long' ? 24 : 12
+            let size = (!currentItem.size || currentItem.size === 'long' ? 24 : 12)
             const formItemLayout =
                 currentItem.isSubTitle ? {
                     labelCol: {
@@ -195,86 +197,136 @@ const PreviewTemplate = () => {
                         >
                             <Card id={currentItem.id} >
                                 <Card.Grid style={{ width: '100%' }}>
-                                    <Row>
-                                        <Col xs={24} sm={24} md={2} lg={2} xl={2} >
-                                            {storeTemplate?.templateId ? null :
-                                                <>
-                                                    <Button
-                                                        type="link"
-                                                        disabled={currentItem.required ? true : false}
-                                                        style={{ padding: '0px', color: currentItem.required ? 'gray' : 'red' }}
-                                                        onClick={() =>
-                                                            remove(currentItem.id)
+                                    {currentItem.key === 'OKRs_TargetGroup' ?
+                                        <>
+                                            <Row>
+                                                <Col xs={24} sm={24} md={2} lg={2} xl={2} >
+                                                    {storeTemplate?.templateId ? null :
+                                                        <>
+                                                            <Button
+                                                                type="link"
+                                                                style={{ padding: '0px', color: 'red' }}
+                                                                onClick={() =>
+                                                                    remove(currentItem.id)
+                                                                }
+                                                            >
+                                                                <DeleteFilled />
+                                                            </Button>
+                                                        </>
+                                                    }
+                                                </Col>
+                                                <Col xs={24} sm={24} md={22} lg={22} xl={22} >
+                                                    <TargetGroupField form={formField} content={currentItem} />
+                                                </Col>
+                                            </Row>
+                                        </>
+                                        :
+                                        currentItem.key === 'OKRs_PDCA' ?
+                                            <>
+                                                <Row>
+                                                    <Col xs={24} sm={24} md={2} lg={2} xl={2} >
+                                                        {storeTemplate?.templateId ? null :
+                                                            <>
+                                                                <Button
+                                                                    type="link"
+                                                                    style={{ padding: '0px', color: 'red' }}
+                                                                    onClick={() =>
+                                                                        remove(currentItem.id)
+                                                                    }
+                                                                >
+                                                                    <DeleteFilled />
+                                                                </Button>
+                                                            </>
                                                         }
-                                                    >
-                                                        <DeleteFilled />
-                                                    </Button>
-                                                    <br />
-                                                    <Button
-                                                        type="link"
-                                                        style={{ padding: '0px', color: 'red' }}
-                                                        onClick={() =>
-                                                            editContent(currentItem)
-                                                        }
-                                                    >
-                                                        <EditFilled />
-                                                    </Button>
-                                                </>
-                                            }
-                                        </Col>
-                                        <Col xs={24} sm={24} md={22} lg={22} xl={22} >
-                                            {currentItem.type === 'table' ?
-                                                <>
-                                                    <Text>{currentItem.label}</Text>
-                                                    {setTableContent(currentItem.columns, currentItem.rows)}
-                                                </>
-                                                : currentItem.type === 'title' ?
-                                                    (<Text style={currentItem.isSubTitle ? { paddingLeft: '50px' } : {}}>{currentItem?.label}</Text>)
-                                                    : (<Form.Item
-                                                        className="template-text"
-                                                        labelAlign='left'
-                                                        labelWrap='true'
-                                                        {...formItemLayout}
-                                                        layout={currentItem.labelPosition ?? 'vertical'}
-                                                        label={currentItem.label}
-                                                        name={currentItem.key}
-                                                    // rules={[{ required: currentItem.required ? true : false, message: 'Please input ' + currentItem?.label }]}
-                                                    >
-                                                        {currentItem.type === 'textArea' ?
-                                                            (<Input.TextArea showCount maxLength={currentItem.maxLength} />)
-                                                            : currentItem.type === 'inputNumber' ?
-                                                                (<InputNumber min={currentItem.min} max={currentItem.max} />)
-                                                                : currentItem.type === 'checkbox' ?
-                                                                    (<Checkbox.Group options={currentItem.options} />)
-                                                                    : currentItem.type === 'select' ?
-                                                                        (<Select
-                                                                            mode={currentItem.mode}
-                                                                            placeholder="Please select"
-                                                                            style={{ width: '100%' }}
-                                                                            options={currentItem.options}
-                                                                        />)
-                                                                        : currentItem.type === 'radio' ?
-                                                                            (<Radio.Group
-                                                                                options={currentItem.options}
-                                                                            />)
-                                                                            : currentItem.type === 'day' ?
-                                                                                (<DatePicker />)
-                                                                                : currentItem.type === 'date_time' ?
-                                                                                    (<DatePicker showTime format="DD/MM/YYYY HH:mm:ss" />)
-                                                                                    : currentItem.type === 'range_date' ?
-                                                                                        (<RangePicker />)
-                                                                                        : currentItem.type === 'upload' ?
-                                                                                            (<Upload {...propsUpload}>
-                                                                                                <Button icon={<UploadOutlined />}>Click to Upload</Button>
-                                                                                            </Upload>)
-                                                                                            // : currentItem.type === 'email' ?
-                                                                                            // (<Input placeholder="Please enter email." onChange={(e) => form.validateFields()} />)                                                                                        
-                                                                                            : (<Input />)
-                                                        }
-                                                    </Form.Item>
-                                                    )}
-                                        </Col>
-                                    </Row>
+                                                    </Col>
+                                                    <Col xs={24} sm={24} md={22} lg={22} xl={22} >
+                                                        <PDCAField form={formField} content={currentItem} />
+                                                    </Col>
+                                                </Row>
+                                            </>
+                                            :
+                                            <Row>
+                                                <Col xs={24} sm={24} md={2} lg={2} xl={2} >
+                                                    {storeTemplate?.templateId ? null :
+                                                        <>
+                                                            <Button
+                                                                type="link"
+                                                                disabled={currentItem.required ? true : false}
+                                                                style={{ padding: '0px', color: currentItem.required ? 'gray' : 'red' }}
+                                                                onClick={() =>
+                                                                    remove(currentItem.id)
+                                                                }
+                                                            >
+                                                                <DeleteFilled />
+                                                            </Button>
+                                                            <br />
+                                                            <Button
+                                                                type="link"
+                                                                style={{ padding: '0px', color: 'red' }}
+                                                                onClick={() =>
+                                                                    editContent(currentItem)
+                                                                }
+                                                            >
+                                                                <EditFilled />
+                                                            </Button>
+                                                        </>
+                                                    }
+                                                </Col>
+                                                <Col xs={24} sm={24} md={22} lg={22} xl={22} >
+                                                    {currentItem.type === 'table' ?
+                                                        <>
+                                                            <Text>{currentItem.label}</Text>
+                                                            {setTableContent(currentItem.columns, currentItem.rows)}
+                                                        </>
+                                                        : currentItem.type === 'title' ?
+                                                            (<Text style={currentItem.isSubTitle ? { paddingLeft: '50px' } : {}}>{currentItem?.label}</Text>)
+                                                            : (<Form.Item
+                                                                className="template-text"
+                                                                labelAlign='left'
+                                                                labelWrap='true'
+                                                                {...formItemLayout}
+                                                                layout={currentItem.labelPosition ?? 'vertical'}
+                                                                label={currentItem.label}
+                                                                name={currentItem.key}
+                                                            // rules={[{ required: currentItem.required ? true : false, message: 'Please input ' + currentItem?.label }]}
+                                                            >
+                                                                {currentItem.type === 'textArea' ?
+                                                                    (<Input.TextArea showCount maxLength={currentItem.maxLength} />)
+                                                                    : currentItem.type === 'inputNumber' ?
+                                                                        (<InputNumber min={currentItem.min} max={currentItem.max} />)
+                                                                        : currentItem.type === 'checkbox' ?
+                                                                            (<Checkbox.Group options={currentItem.options} />)
+                                                                            : currentItem.type === 'select' ?
+                                                                                (<Select
+                                                                                    mode={currentItem.mode}
+                                                                                    placeholder="Please select"
+                                                                                    style={{ width: '100%' }}
+                                                                                    options={currentItem.options}
+                                                                                />)
+                                                                                : currentItem.type === 'radio' ?
+                                                                                    (<Radio.Group
+                                                                                        options={currentItem.options}
+                                                                                    />)
+                                                                                    : currentItem.type === 'day' ?
+                                                                                        (<DatePicker />)
+                                                                                        : currentItem.type === 'date_time' ?
+                                                                                            (<DatePicker showTime format="DD/MM/YYYY HH:mm:ss" />)
+                                                                                            : currentItem.type === 'range_date' ?
+                                                                                                (<RangePicker />)
+                                                                                                : currentItem.type === 'upload' ?
+                                                                                                    (<Upload {...propsUpload}>
+                                                                                                        <Button icon={<UploadOutlined />}>Click to Upload</Button>
+                                                                                                    </Upload>)
+                                                                                                    // : currentItem.type === 'email' ?
+                                                                                                    // (<Input placeholder="Please enter email." onChange={(e) => form.validateFields()} />)                                                                                        
+                                                                                                    : (<Input />)
+                                                                }
+                                                            </Form.Item>
+                                                            )}
+                                                </Col>
+                                            </Row>
+
+                                    }
                                 </Card.Grid>
                             </Card>
                         </Draggable>

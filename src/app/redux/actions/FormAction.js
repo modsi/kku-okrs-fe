@@ -1,6 +1,8 @@
 import { GetFormTemplateService, SaveFormService, GetFormeService, UpdateFormService, SaveComplateFormService, ExportFormCsv, ExportFormWord } from '../../services/MainService'
 import { Payload } from '../../utils/Payload'
 import { clearStorege, getStorage } from "../../screens/state/localStorage";
+import { DATE_MM, DATE_NORMAL } from "../../utils/Elements"
+import moment from "moment";
 
 export const SaveFormAction = async (data) => {
   const result = await SaveFormService(data)
@@ -72,7 +74,7 @@ export const ExportFormWordAction = async (data) => {
 }
 
 export const SaveCompalteFormAction = async (id, data) => {
-  console.log('SaveCompalteFormAction',data)
+  console.log('SaveCompalteFormAction', data)
   let obj = {}
   let component = []
   data.component.map((c) => {
@@ -92,7 +94,44 @@ export const SaveCompalteFormAction = async (id, data) => {
     //   o.labelValue = label
     //   component.push(o)
     // } else 
-    if (c.value && Array.isArray(c.value)) {
+    // console.log('component', c)
+    if (c.value && c.key === 'OKRs_Status') {
+      let v = c.value
+      let label = c.options.find(k => k.value === v)?.label
+      o.value = v
+      o.labelValue = label + (v > 9 ? (v === 10 ? (c.date ? (': ' + moment(c.date).format(DATE_NORMAL)) : '') : (c.detail ? (' : ' + c.detail) : '') ) : '')
+      component.push(o)
+    } else if (c.value && c.key === 'OKRs_PDCA') {
+      let ov = '['
+      c.value.map((v) => {
+        ov += (ov === '[' ? '' : ',')
+        ov += '{"month" : "' + (v.month ? (moment(v.month[0]).format(DATE_MM) + '-' + moment(v.month[1]).format(DATE_MM)) : '') + '", "title" : "' + v.title + '", "index": ' + v.index + '}'
+      })
+      ov += ']'
+      o.value = ov
+      console.log('o', ov)
+      component.push(o)
+    } else if (c.value && (c.type === 'table' || c.key === 'OKRs_TargetGroup')) {
+      let ov = '['
+      c.value.map((v) => {
+        ov += (ov === '[' ? '' : ',')
+        ov += '{"key" : "' + (v.key ?? '') + '", "value" : "' + v.value + '", "index": ' + v.index + '}'
+      })
+      ov += ']'
+      o.value = ov
+      console.log('o', ov)
+      component.push(o)
+    } else if (c.value && c.type === 'table') {
+      let ov = '['
+      c.value.map((v) => {
+        ov += (ov === '[' ? '' : ',')
+        ov += '{"key" : "' + v.key + '", "value" : "' + v.value + '", "index": ' + v.index + '}'
+      })
+      ov += ']'
+      o.value = ov
+      console.log('o', ov)
+      component.push(o)
+    } else if (c.value && Array.isArray(c.value)) {
       c.value.map((v) => {
         o.label = v.label
         o.key = v.key
@@ -107,7 +146,7 @@ export const SaveCompalteFormAction = async (id, data) => {
     } else if (c.type === 'select') {
       let v = c.value
       let label = c.options.find(k => k.value === v)?.label
-      o.value = v 
+      o.value = v
       o.labelValue = label
       component.push(o)
     } else {
@@ -117,7 +156,7 @@ export const SaveCompalteFormAction = async (id, data) => {
   })
   obj.formId = id
   obj.component = component
-  console.log(obj)
+  // console.log(obj)
   const result = await SaveComplateFormService(obj)
   return result?.data
 }
@@ -144,8 +183,8 @@ export const ListFormAction = async (data = {}) => {
 
 export const LIST_FROM_TEMPLATES = 'list_form_template'
 export const ListFormTemplateAction = async (data = {}) => {
-  try {    
-    const result = await GetFormTemplateService(data)    
+  try {
+    const result = await GetFormTemplateService(data)
     const params = {
       [LIST_FROM_TEMPLATES]: {
         result: result?.data?.data,
@@ -161,8 +200,8 @@ export const ListFormTemplateAction = async (data = {}) => {
 
 export const LIST_FROM_2 = 'list_form_2'
 export const ListForm2Action = async (data = {}) => {
-  try {    
-    const result = await GetFormTemplateService(data)    
+  try {
+    const result = await GetFormTemplateService(data)
     const params = {
       [LIST_FROM_2]: {
         result: result?.data?.data,
@@ -176,81 +215,303 @@ export const ListForm2Action = async (data = {}) => {
   }
 }
 
+export const propsPic =
+{
+  "id": "00004",
+  "index": 0,
+  "key": "OKRs_PIC",
+  "size": "long",
+  "type": "title",
+  "align": "left",
+  "labelPosition": "vertical",
+  "permission": 0,
+}
+
+export const propsTargetGroupNum =
+{
+  "id": "00003",
+  "index": 0,
+  "key": "OKRs_TargetGroupNum",
+  "label": "จำนวนกลุ่มเป้าหมาย",
+  "permission": 0,
+  "size": "long",
+  "type": "input",
+  "align": "left",
+  "labelPosition": "vertical"
+}
+
 export const propsSuccess =
-  {
-    "id": "00002",
-    "index": 0,
-    "key": "OKRs_Success",
-    "size": "long",
-    "type": "title",
-    "align": "left",
-    "labelPosition": "vertical"
-  }
+{
+  "id": "00002",
+  "index": 0,
+  "key": "OKRs_Success",
+  "size": "long",
+  "type": "title",
+  "align": "left",
+  "labelPosition": "vertical",
+}
 
 export const propsIds =
-  {
-    "id": "00001",
-    "index": 0,
-    "key": "OKRs_Ids",
-    "size": "long",
-    "type": "title",
-    "permission": 2,
-    "align": "left",
-    "labelPosition": "vertical"
+{
+  "id": "00001",
+  "index": 0,
+  "key": "OKRs_Ids",
+  "size": "long",
+  "type": "title",
+  "permission": 2,
+  "align": "left",
+  "labelPosition": "vertical"
+}
+
+export const propsStatus =
+{
+  "id": "00000",
+  "index": 4000,
+  "key": "OKRs_Status",
+  "size": "long",
+  "type": "select",
+  "align": "left",
+  "permission": 2,
+  "label": "สถานะ",
+  "required": true,
+  "options": [
+    {
+      "index": 0,
+      "label": "ขออนุมัติโครงการ",
+      "value": 0
+    },
+    {
+      "index": 1,
+      "label": "สิ้นสุดโครงการ",
+      "value": 1
+    },
+    {
+      "index": 2,
+      "label": "รับคืนแก้ไข",
+      "value": 2
+    },
+    // {
+    //   "index": 2,
+    //   "label": "ส่งคืนแผนปฏิบัติการแก้ไข",
+    //   "value": 6
+    // },
+    // {
+    //   "index": 3,
+    //   "label": "ส่งคืนแผนงบประมาณแก้ไข",
+    //   "value": 7
+    // },
+    {
+      "index": 4,
+      "label": "ส่งคืนแก้ไข",
+      "value": 8
+    },
+    {
+      "index": 5,
+      "label": "ส่งคืนเจ้าของเรื่อง",
+      "value": 3
+    },
+    {
+      "index": 6,
+      "label": "ส่งเงินยืม",
+      "value": 4
+    },
+    {
+      "index": 7,
+      "label": "เบิกจ่ายโครงการ",
+      "value": 5
+    },
+    {
+      "index": 8,
+      "label": "วันที่ส่งเบิกกองคลัง",
+      "value": 10
+    },
+    {
+      "index": 9,
+      "label": "ผู้รับผิดชอบการเงิน",
+      "value": 11
+    },
+    {
+      "index": 10,
+      "label": "อื่นๆ",
+      "value": 12
+    }
+  ],
+  "labelPosition": "vertical"
+}
+
+export const onFormSubmit = async (profile, form, listComponent) => {
+  console.log("start onFormSubmit", profile, form.getFieldsValue(), listComponent);
+  let res = {};
+  let data = listComponent;
+  data.templateId = listComponent?.templateId ?? listComponent?.template_id;
+  data.templateName = listComponent?.templateName;
+  data.typeId = listComponent?.typeId ?? listComponent?.type_id;
+  data.id = listComponent?.id;
+  data.stepId = listComponent?.stepId ?? listComponent?.step_id;
+  data.status = listComponent?.status && !isNaN(+listComponent?.status) ? listComponent?.status : (listComponent?.form_status ?? (listComponent?.formStatus ?? 0));
+  let components = listComponent?.component
+  let countTargetGroup = 0;
+  Object.keys(form.getFieldsValue()).forEach(function (key) {
+    let c = components.find((k) => k.key === key);
+    if (c) {
+      c.value = form.getFieldValue(key);
+    } else {
+      let s = key.split('#')
+      // console.log('key.split', s)
+      c = components.find((k) => k.key === s[1] || k.key === s[0]);
+      if (c) {
+        let v = form.getFieldValue(key);
+        // console.log('c', c, v)
+        if (key.startsWith('OKRs_Status')) {
+          if (s[1] === 'date') {
+            c.date = v
+          } else {
+            c.detail = v
+          }
+        } else if (key.startsWith('OKRs_PDCA')) {
+          let vo = {}
+          if (s[1] === 'title') {
+            vo = {
+              index: parseInt(s[2]),
+              title: v ?? null
+            }
+          } else {
+            vo = {
+              index: parseInt(s[2]),
+              month: v ?? null
+            }
+          }
+
+          if (!c.value) {
+            c.value = []
+            c.value.push(vo)
+          } else {
+            let old = c.value.find(v => v.index === vo.index)
+            if (!old) {
+              c.value.push(vo)
+            } else {
+              Object.assign(old, vo)
+            }
+          }
+        } else if (key.startsWith('OKRs_TargetGroup')) {
+          let vo = {}
+          if (s[1] === 'label') {
+            vo = {
+              index: 6,
+              label: v
+            }
+          } else {
+            // console.log('s[1]',s[1], parseInt(s[1]))
+            vo = {
+              index: parseInt(s[1]),
+              value: v ?? null
+            }
+
+            if (v && v != "") {
+              countTargetGroup++;
+            }
+          }
+          if (!c.value) {
+            c.value = []
+            c.value.push(vo)
+          } else {
+            let old = c.value.find(v => v.index === vo.index)
+            if (!old) {
+              c.value.push(vo)
+            } else {
+              Object.assign(old, vo)
+            }
+          }
+
+        } else {
+          let vo = {
+            index: parseInt(s[2]),
+            key: s[0],
+            value: v ?? ''
+          }
+          if (!c.value) {
+            c.value = []
+            c.value.push(vo)
+          } else {
+            let old = c.value.find(v => v.index === vo.index && v.key === vo.key)
+            if (!old) {
+              c.value.push(vo)
+            } else {
+              Object.assign(old, vo)
+            }
+          }
+        }
+      }
+    }
+
+    if (key === 'OKRs_Status') {
+      console.log('OKRs_Status', c)
+      if (c === null || c === undefined) {
+        c = propsStatus
+        components.push(c)
+      }
+      let value = form.getFieldValue(key)
+      if (value === 1) {
+        data.status = 1
+        data.stepId = 5
+      } else if (value === 8) {
+        data.status = 0
+        data.stepId = 8
+      } else {
+        data.status = 0
+        data.stepId = 4
+      }
+    }
+  });
+
+  // if (!components?.find(f => f.key === 'OKRs_PIC')) {
+  components = components?.filter(f => f.key !== 'OKRs_PIC');
+  let sp = propsPic
+  sp.value = data.groupTypeId
+  components.push(sp)
+  // }
+
+  if (countTargetGroup > 0) {
+    components = components?.filter(f => f.key !== 'OKRs_TargetGroupNum');
+    let s = propsTargetGroupNum
+    s.value = countTargetGroup
+    components.push(s)
   }
 
-  export const propsStatus =
-  {
-    "id": "00000",
-    "index": 4000,
-    "key": "OKRs_Status",
-    "size": "long",
-    "type": "select",
-    "align": "left",
-    "permission": 2,
-    "label": "สถานะ",
-    "required": true,
-    "options": [
-      {
-        "index": 1,
-        "label": "สิ้นสุดโครงการ",
-        "value": 1
-      },
-      // {
-      //   "index": 2,
-      //   "label": "ส่งคืนแผนปฏิบัติการแก้ไข",
-      //   "value": 6
-      // },
-      // {
-      //   "index": 3,
-      //   "label": "ส่งคืนแผนงบประมาณแก้ไข",
-      //   "value": 7
-      // },
-      {
-        "index": 4,
-        "label": "ส่งคืนผู้ใช้งานแก้ไข",
-        "value": 8
-      },
-      {
-        "index": 5,
-        "label": "ส่งคืนเจ้าของเรื่อง",
-        "value": 10
-      },
-      {
-        "index": 6,
-        "label": "ส่งเงินยืม",
-        "value": 11
-      },
-      {
-        "index": 7,
-        "label": "เบิกจ่ายโครงการ",
-        "value": 12
-      },
-      {
-        "index": 7,
-        "label": "อื่นๆ",
-        "value": 13
-      }
-    ],
-    "labelPosition": "vertical"
+  if (form.getFieldValue('OKRs_Value') || form.getFieldValue('OKRs_ResultValue')) {
+    components = components?.filter(f => f.key !== 'OKRs_Success');
+    let s = propsSuccess
+    let b1 = form.getFieldValue('OKRs_Value') && !isNaN(+form.getFieldValue('OKRs_Value')) ? form.getFieldValue('OKRs_Value') : 0
+    let b2 = form.getFieldValue('OKRs_ResultValue') && !isNaN(+form.getFieldValue('OKRs_ResultValue')) ? form.getFieldValue('OKRs_ResultValue') : 0
+    console.log('check OKRs_Success', b1 , b2)
+    let val = b1 >= b2 ? 'success' : 'failed'
+    s.value = val
+    components.push(s)
   }
+  if (data.typeId === '2' && (!data.stepId || data.stepId < 3)) {
+    data.stepId = 9
+  } else if (data.typeId === '1' && profile?.role_id === '3' && (data.stepId === '1' || data.stepId === 1)) {
+    data.stepId = 10
+  } else if (data.typeId === '1' && profile?.role_id === '4' && (data.stepId === '1' || data.stepId === 1)) {
+    data.stepId = 11
+  }
+
+  if (!data.stepId) {
+    data.stepId = 1
+  }
+  data.name = form.getFieldValue('name')
+  data.groupid = form.getFieldValue('group')
+  data.component = components
+  try {
+    if (listComponent.id) {
+      res = await UpdateFormAction(data);
+    } else {
+      res = await SaveFormAction(data);
+    }
+
+  } catch (err) {
+    throw (err);
+  } finally {
+    return res;
+  }
+};

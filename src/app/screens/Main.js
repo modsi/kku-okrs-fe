@@ -45,26 +45,37 @@ const Main = () => {
     }
 
     useEffect(() => {
-        // if (profile?.role?.priority === '1') {
-        //     let c = listForm?.result?.filter(l => l.step_id !== "3" && l.step_id !== "5" && l.step_id !== "8" && l.step_id !== "1")
-        //     setCount2(c?.length)
-        // } else if (profile?.role?.priority === '2') {
-        //     let c = listForm?.result?.filter(l => l.step_id === "4")
-        //     setCount2(c?.length)
-        // } else if (profile?.role?.priority === '3') {
-        //     let c
-        //     if (profile?.role_id === '3') {
-        //         c = listForm?.result?.filter(l => l.step_id === "2" || l.step_id === "7")
-        //     } else if (profile?.role_id === '4') {
-        //         c = listForm?.result?.filter(l => l.step_id === "2" || l.step_id === "6")
-        //     }
-        //     setCount2(c?.length)
-        // }
-
-        // let c = listForm?.result?.filter(l => (l.step_id === "8" || l.step_id === "3") && l.type_id === '1')
-        // setCount31(c?.length)
-        // c = listForm?.result?.filter(l => (l.step_id === "8" || l.step_id === "3") && l.type_id === '2')
-        // setCount32(c?.length)
+        if (profile?.role?.priority === '1') {
+            // let c = listForm?.result?.filter(l => l.step_id !== "3" && l.step_id !== "5" && l.step_id !== "8" && l.step_id !== "1")
+            // setCount2(c?.length)
+            setCount2(0)
+            let c = listForm?.result?.filter(l => (l.step_id === "4" || l.step_id === "8" || l.step_id === "3") && l.type_id === '1')
+            setCount31(c?.length)
+            c = listForm?.result?.filter(l => (l.step_id === "4" || l.step_id === "8" || l.step_id === "3") && l.type_id === '2')
+            setCount32(c?.length)
+        } else if (profile?.role?.priority === '2') {
+            setCount2(0)
+            let c = listForm?.result?.filter(l => (l.step_id === "4") && l.type_id === '1')
+            setCount31(c?.length)
+            c = listForm?.result?.filter(l => (l.step_id === "4") && l.type_id === '2')
+            setCount32(c?.length)
+        } else if (profile?.role?.priority === '3') {
+            let c
+            if (profile?.role_id === '3') {
+                c = listForm?.result?.filter(l => l.step_id === "2" || l.step_id === "11")
+            } else if (profile?.role_id === '4') {
+                c = listForm?.result?.filter(l => l.step_id === "2" || l.step_id === "10")
+            }
+            setCount2(c?.length)
+            setCount31(0)
+            setCount32(0)
+        } else if (profile?.role?.priority === '4') {
+            setCount2(0)
+            let c = listForm?.result?.filter(l => (l.step_id === "3") && l.type_id === '1')
+            setCount31(c?.length)
+            c = listForm?.result?.filter(l => (l.step_id === "3") && l.type_id === '2')
+            setCount32(c?.length)
+        }
 
     }, [listForm, profile])
 
