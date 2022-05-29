@@ -1,10 +1,16 @@
-import { ListInstitutions, ListRoles, ListTypeTemplate, ListFieldMasterTemplate } from '../../services/MainService'
+import { ListInstitutions, ListRoles, ListTypeTemplate, ListFieldMasterTemplate, ListYear } from '../../services/MainService'
 import { Payload } from '../../utils/Payload'
 
 export const LIST_INSTITUTIONS = 'listInstitutions'
 export const ListInstitutionsAction = async () => {
     const result = await ListInstitutions()
     return Payload({ params: { [LIST_INSTITUTIONS]: result?.data?.data ?? null }, type: LIST_INSTITUTIONS })
+}
+
+export const LIST_YEARS = 'listYears'
+export const ListYearsAction = async () => {
+    const result = await ListYear()
+    return Payload({ params: { [LIST_YEARS]: result?.data?.data ?? null }, type: LIST_YEARS })
 }
 
 export const LIST_ROLES = 'listRoles'
