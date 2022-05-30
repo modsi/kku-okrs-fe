@@ -109,7 +109,7 @@ export const SaveCompalteFormAction = async (id, data) => {
       })
       ov += ']'
       o.value = ov
-      console.log('o', ov)
+      // console.log('o', ov)
       component.push(o)
     } else if (c.value && (c.type === 'table' || c.key === 'OKRs_TargetGroup')) {
       let ov = '['
@@ -119,7 +119,7 @@ export const SaveCompalteFormAction = async (id, data) => {
       })
       ov += ']'
       o.value = ov
-      console.log('o', ov)
+      // console.log('o', ov)
       component.push(o)
     } else if (c.value && c.type === 'table') {
       let ov = '['
@@ -129,7 +129,7 @@ export const SaveCompalteFormAction = async (id, data) => {
       })
       ov += ']'
       o.value = ov
-      console.log('o', ov)
+      // console.log('o', ov)
       component.push(o)
     } else if (c.value && Array.isArray(c.value)) {
       c.value.map((v) => {
@@ -155,7 +155,7 @@ export const SaveCompalteFormAction = async (id, data) => {
     }
   })
   obj.formId = id
-  obj.component = component
+  obj.component = component?.filter(c=> c.key)
   // console.log(obj)
   const result = await SaveComplateFormService(obj)
   return result?.data
@@ -354,7 +354,7 @@ export const onFormSubmit = async (profile, form, listComponent) => {
   Object.keys(form.getFieldsValue()).forEach(function (key) {
     let c = components.find((k) => k.key === key);
     if (c) {
-      c.value = form.getFieldValue(key);
+      c.value = form.getFieldValue(key) ?? null;
     } else {
       let s = key.split('#')
       // console.log('key.split', s)

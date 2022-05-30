@@ -361,7 +361,7 @@ const ReportForm1 = () => {
         let c = record?.OKRs_Success === 'success' ? true : false
         return (
           <>
-            {!c ? null : (c ?
+            {record?.OKRs_Success === null || record?.OKRs_Success === '' ? null : (c ?
               <Text strong style={{ color: 'green' }}><CheckOutlined /></Text>
               :
               <Text strong style={{ color: 'red' }}><CloseOutlined /></Text>
@@ -626,7 +626,7 @@ const ReportForm1 = () => {
       ) : (
         <Card title={"Report Form 1"} className="rounded">
           <Row gutter={24}>
-            {profile?.role?.priority === '1' || profile?.role?.priority === '4' ?
+            {/* {profile?.role?.priority === '1' || profile?.role?.priority === '4' ?
               <Col span={24} style={{ textAlign: "right" }} >
                 <Button type="primary" shape="round" icon={<PlusOutlined />}
                   onClick={newSpecTemplate} className="ggar2-button"
@@ -634,7 +634,7 @@ const ReportForm1 = () => {
                   รายงานพิเศษ
                 </Button>
               </Col >
-              : null}
+              : null} */}
             <Col span={24} style={{ textAlign: "center", marginTop: 15 }}>
               {/* {listTableForm} */}
 

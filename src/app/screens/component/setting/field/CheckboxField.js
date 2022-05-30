@@ -64,9 +64,28 @@ const CheckboxField = ({ form, content }) => {
     }
   }, [content])
 
+  const checkOptions = () => {
+    let chk = true
+    options?.map(o => {
+      // console.log('options', o)
+      if (!o.value || !o.label) {
+        chk = false
+      } else {
+        let chkValue = options.find((op) => op.value === o.value && op.index !== o.index) ? true : false
+        if (chkValue) {
+          chk = false
+          console.log('options value duplicated', o)
+          o.value = null
+          form.setFieldsValue({ ["value" + o.index]: null });
+        }
+      }
+    })
+    return chk;
+  }
+
   const onSubmit = async () => {
     // console.log(form.getFieldValue())    
-    if (form.getFieldValue('label') && form.getFieldValue('key') && options.length > 0) {
+    if (form.getFieldValue('label') && form.getFieldValue('key') && checkOptions()) {
       let store = storeTemplate?.component ?? []
       let components = store
       if (content?.id) {
@@ -81,6 +100,7 @@ const CheckboxField = ({ form, content }) => {
       let max = store.length > 0 ? Math.max(...store.map(({ index }) => index)) : 0;
       let obj = {
         id: content?.id ?? uuidv4(),
+        required: content?.required ?? null,
         index: content?.index ?? (max + 1),
         labelPosition: "vertical",
         type: 'checkbox',
@@ -129,20 +149,20 @@ const CheckboxField = ({ form, content }) => {
   }, [options])
 
   const updateOption = (inx, type, e) => {
-    console.log('updateOption >>', inx, type, e)
+    // console.log('updateOption >>', inx, type, e)
     let op = options.find(({ index }) => index === inx)
     if (type === "label") {
       op.label = e.target.value
       form.setFieldsValue({ ["label" + op.index]: e.target.value });
     } else {
-      let op2 = options.find(({ value }) => value === e.target.value)
-      if (!op2 || op2.index === op.index) {
-        op.value = e.target.value
-        form.setFieldsValue({ ["value" + op.index]: e.target.value });
-      } else {
-        op.value = null
-        form.setFieldsValue({ ["value" + op.index]: null });
-      }
+      // let op2 = options.find(({ value }) => value === e.target.value)
+      // if (!op2 || op2.index === op.index) {
+      op.value = e.target.value
+      form.setFieldsValue({ ["value" + op.index]: e.target.value });
+      // } else {
+      //   op.value = null
+      //   form.setFieldsValue({ ["value" + op.index]: null });
+      // }
     }
     let store = [...options?.filter((item) => {
       if (item.index !== inx) {
@@ -167,14 +187,14 @@ const CheckboxField = ({ form, content }) => {
             name={"label" + item.index}
             rules={[{ required: true }]}
           >
-            <Input placeholder="label" onChange={(e) => updateOption(item.index, 'label', e)} defaultValue={item.label} style={{ width: '40%' }} />
+            <Input placeholder={"label " + item.index} onChange={(e) => updateOption(item.index, 'label', e)} defaultValue={item.label} style={{ width: '40%' }} />
           </Form.Item>
           <Form.Item
             noStyle
             name={"value" + item.index}
             rules={[{ required: true }]}
           >
-            <Input placeholder="value" onChange={(e) => updateOption(item.index, 'value', e)} defaultValue={item.value} style={{ width: '40%' }} />
+            <Input placeholder={"value" + item.index} onChange={(e) => updateOption(item.index, 'value', e)} defaultValue={item.value} style={{ width: '40%' }} />
           </Form.Item>
 
           <MinusCircleOutlined
@@ -228,6 +248,7 @@ const CheckboxField = ({ form, content }) => {
                       ]}
                     >
                       <Input
+                        disabled={content?.required ? true : false}
                         onChange={(e) => {
                           form.setFieldsValue({ ["key"]: e.target.value });
                         }}
@@ -253,7 +274,7 @@ const CheckboxField = ({ form, content }) => {
                                         </Form.Item>
                                     </Col> */}
                   <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-                    <Form.Item label={"Options "} name={"options"}>
+                    <Form.Item label={"Options (value ห้ามซ้ำกัน)"} name={"options"}>
                       {listField}
                       <Form.Item>
                         <Button

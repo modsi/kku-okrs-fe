@@ -84,7 +84,7 @@ export const SaveFormService = async (data = {}) => {
 }
 
 export const GetFormeService = async(data = {})=>{
-    return await get(`${FORM__URL}/list_form?name=${data?.str ?? ''}&userId=${data?.userId}&&roleId=${data?.roleId}&username=${data?.username}&year=${data.year}&group_id=${data.group_id}`)
+    return await get(`${FORM__URL}/list_form?name=${data?.str ?? ''}&userId=${data?.userId ?? null}&roleId=${data?.roleId}&username=${data?.username}&year=${data.year}&group_id=${data.group_id}`)
 }
 
 export const UpdateFormService = async (data = {}) => {
@@ -106,5 +106,5 @@ export const ExportFormWord = async (formId) => {
 }
 
 export const GetFormTemplateService = async(data = {})=>{
-    return await get(`${FORM__URL}/list_form_template?typeId=${data?.typeId}&roleId=${data?.roleId}&isParent=${data?.isParent}`)
+    return await get(`${FORM__URL}/list_form_template?typeId=${data?.typeId}&userId=${data?.userId ?? null}&roleId=${data?.roleId}&isParent=${data?.isParent}`)
 }

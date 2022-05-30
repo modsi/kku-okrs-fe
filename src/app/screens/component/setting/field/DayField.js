@@ -83,6 +83,7 @@ const DayField = ({ form, content }) => {
       let max = store.length > 0 ? Math.max(...store.map(({ index }) => index)) : 0;
       let obj = {
         id: content?.id ?? uuidv4(),
+        required: content?.required ?? null,
         index: content?.index ?? (max + 1),
         labelPosition: "vertical",
         type: 'day',
@@ -141,6 +142,7 @@ const DayField = ({ form, content }) => {
                       ]}
                     >
                       <Input
+                      disabled={content?.required ? true : false}
                         onChange={(e) => {
                           form.setFieldsValue({ ["key"]: e.target.value });
                         }}

@@ -45,6 +45,7 @@ const Main = () => {
     }
 
     useEffect(() => {
+        console.log('listForm', listForm)
         if (profile?.role?.priority === '1') {
             // let c = listForm?.result?.filter(l => l.step_id !== "3" && l.step_id !== "5" && l.step_id !== "8" && l.step_id !== "1")
             // setCount2(c?.length)
@@ -60,11 +61,11 @@ const Main = () => {
             c = listForm?.result?.filter(l => (l.step_id === "4") && l.type_id === '2')
             setCount32(c?.length)
         } else if (profile?.role?.priority === '3') {
-            let c
+            let c            
             if (profile?.role_id === '3') {
-                c = listForm?.result?.filter(l => l.step_id === "2" || l.step_id === "11")
+                c = listForm?.result?.filter(l => l.step_id === "10" && l.form_status === "3")
             } else if (profile?.role_id === '4') {
-                c = listForm?.result?.filter(l => l.step_id === "2" || l.step_id === "10")
+                c = listForm?.result?.filter(l => l.step_id === "11" && l.form_status === "3")
             }
             setCount2(c?.length)
             setCount31(0)
@@ -100,7 +101,7 @@ const Main = () => {
     async function checkToken() {
         try {
             if (getStorage('profile')) {
-                let res = await UpdateAccAction(getStorage('profile'))
+                // let res = await UpdateAccAction(getStorage('profile'))
             } else {
                 routeChange()
             }
@@ -111,7 +112,7 @@ const Main = () => {
 
     async function handleListMaster() {
         let p = getStorage('profile')
-        dispatch(await ListFormAction({ roleId: p.role_id, str: '', username: p.username }))
+        dispatch(await ListFormAction({  userId: p.id , roleId: p.role_id, str: '', username: p.username }))
     }
 
     const onClickMenu = value => {

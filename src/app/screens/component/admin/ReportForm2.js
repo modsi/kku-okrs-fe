@@ -22,14 +22,7 @@ import {
   Upload,
   message,
 } from "antd";
-import {
-  EditOutlined,
-  EyeOutlined,
-  SettingOutlined,
-  PlusOutlined,
-  FileSearchOutlined,
-  PlusCircleFilled,
-} from "@ant-design/icons";
+import { PlusOutlined, CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import { tem1, tem2 } from "../../../../template-mock";
 import {
   LIST_TEMPLATES,
@@ -49,6 +42,7 @@ import {
   propsStatus,
   propsSuccess,
   SaveFormAction,
+  onFormSubmit,
   ListForm2Action,
   LIST_FROM_2,
   UpdateFormAction,
@@ -277,6 +271,7 @@ const ReportForm2 = () => {
     data.stepId = 1;
     data.templateId = obj?.templateId ?? obj?.template_id;
     data.typeId = obj?.typeId ?? obj?.type_id;
+    data.groupid = obj?.groupid ?? obj?.group_id;
     data.status = 0;
     data.id = null;
     let res = {};
@@ -325,6 +320,7 @@ const ReportForm2 = () => {
     data.templateId = record?.templateId ?? record?.template_id;
     data.typeId = record?.typeId ?? record?.type_id;
     data.stepId = 4;
+    let stepId = record?.stepId ?? record?.step_id;
     let components = record?.component;
     let c = components.find((k) => k.key === "OKRs_Ids");
     if (!c) {
@@ -334,6 +330,22 @@ const ReportForm2 = () => {
     let ids = padLeadingZeros(record?.id, 5);
     c.label = "เลขการรับเงิน : " + ids;
     c.value = ids;
+
+    if (stepId === "8") {
+      components = components?.filter(f => f.key !== 'OKRs_Status');
+      let s = propsStatus
+      s.value = 2
+      let label = s.options.find(k => k.value === 2)?.label
+      s.labelValue = label
+      components.push(s)
+    } else {
+      components = components?.filter(f => f.key !== 'OKRs_Status');
+      let s = propsStatus
+      s.value = 0
+      let label = s.options.find(k => k.value === 0)?.label
+      s.labelValue = label
+      components.push(s)
+    }
 
     let res = await UpdateFormAction(data);
     if (res.error === null) {
@@ -355,85 +367,8 @@ const ReportForm2 = () => {
     console.log("start onSubmit", form2.getFieldsValue(), listComponent);
     setIsLoading(true);
     let res = {};
-    let data = listComponent;
-    data.templateId = listComponent?.templateId ?? listComponent?.template_id;
-    data.templateName = listComponent?.templateName;
-    data.typeId = listComponent?.typeId ?? listComponent?.type_id;
-    data.id = listComponent?.id;
-    data.stepId = listComponent?.stepId ?? listComponent?.step_id;
-    data.name = listComponent?.name;
-    let components = listComponent?.component
-    Object.keys(form2.getFieldsValue()).forEach(function (key) {
-      let c = components.find((k) => k.key === key);
-      if (c) {
-        c.value = form2.getFieldValue(key);
-      } else {
-        let s = key.split('#')
-        // console.log('s', s)
-        c = components.find((k) => k.key === s[1]);
-        if (c) {
-          // console.log('c', c)
-          let v = form2.getFieldValue(key);
-          let vo = {
-            index: parseInt(s[2]),
-            key: s[0],
-            value: v ?? ''
-          }
-          if (!c.value) {
-            c.value = []
-            c.value.push(vo)
-          } else {
-            let old = c.value.find(v => v.index === vo.index && v.key === vo.key)
-            if (!old) {
-              c.value.push(vo)
-            } else {
-              Object.assign(old, vo)
-            }
-          }
-        }
-      }
-
-      if (key === 'OKRs_Status') {
-        console.log('OKRs_Status', c)
-        if (c === null || c === undefined) {
-          console.log('add c')
-          c = propsStatus
-          components.push(c)
-        }
-        let value = form2.getFieldValue(key)
-        // c.value = propsStatus.options.find(k => k.value === value)?.label
-        if (value === 1) {
-          data.status = 1
-          data.stepId = 5
-        } else if (value < 10) {
-          data.status = 0
-          data.stepId = value
-        } else {
-          data.status = 0
-          data.stepId = 4
-        }
-      }
-    });
-
-    if (form2.getFieldValue('OKRs_Value') || form2.getFieldValue('OKRs_ResultValue')) {
-      components = components?.filter(f => f.key !== 'OKRs_Success');
-      let s = propsSuccess
-      let b1 = form2.getFieldValue('OKRs_Value') && !isNaN(+form2.getFieldValue('OKRs_Value')) ? form2.getFieldValue('OKRs_Value') : 0
-      let b2 = form2.getFieldValue('OKRs_ResultValue') && !isNaN(+form2.getFieldValue('OKRs_ResultValue')) ? form2.getFieldValue('OKRs_ResultValue') : 0
-      let val = b1 >= b2 ? 'success' : 'failed'
-      s.value = val
-      components.push(s)
-    }
-    if (data.stepId === "1" || data.stepId === 1) {
-      data.stepId = 3;
-    }
-    data.component = components;
     try {
-      if (listComponent.id) {
-        res = await UpdateFormAction(data);
-      } else {
-        res = await SaveFormAction(data);
-      }
+      res = await onFormSubmit(profile, form2, listComponent);
       if (res.error === null) {
         SuccessModal("Success");
         handleListMaster();
@@ -521,24 +456,15 @@ const ReportForm2 = () => {
       dataIndex: "no",
       key: "no",
       align: "center",
-      width: 40,
+      width: 50,
       fixed: "center",
-      render: (val, record, index) => {
-        return {
-          children: (
-            <Text strong style={{ color: !record?.id ? "red" : "black" }}>
-              {val}
-            </Text>
-          ),
-        };
-      },
     },
     {
       title: "เลขการรับเงิน",
       dataIndex: "OKRs_Ids",
       key: "OKRs_Ids",
       align: "center",
-      width: 80,
+      width: 100,
       render: (_, record) => record?.OKRs_Ids,
     },
     {
@@ -546,11 +472,8 @@ const ReportForm2 = () => {
       dataIndex: "OKRs_Date",
       key: "OKRs_Date",
       align: "center",
-      width: 80,
-      render: (_, record) =>
-        record?.OKRs_Date
-          ? moment(record?.OKRs_Date).format("DD/MM/YYYY")
-          : null,
+      width: 100,
+      render: (_, record) => record?.OKRs_Date ? moment(record?.OKRs_Date).format('DD/MM/YYYY') : null,
     },
     {
       title: "เลขที่หนังสือรับ อว",
@@ -582,18 +505,27 @@ const ReportForm2 = () => {
       key: "OKRs_Value",
       align: "left",
       width: 80,
-      render: (_, record) =>
-        record?.OKRs_Value
-          ? record?.OKRs_Value + " " + record?.OKRs_Unit_Value
-          : "",
+      render: (_, record) => record?.OKRs_Value ? record?.OKRs_Value + ' ' + record?.OKRs_Unit_Value : '',
     },
     {
       title: "ความสำเร็จ",
       dataIndex: "OKRs_Success",
       key: "OKRs_Success",
-      align: "left",
+      align: "center",
       width: 80,
-      render: (_, record) => record?.OKRs_Success,
+      render: (_, record) => {
+        // console.log('OKRs_Success', record?.OKRs_Success)
+        let c = record?.OKRs_Success === 'success' ? true : false
+        return (
+          <>
+            {!c ? null : (c ?
+              <Text strong style={{ color: 'green' }}><CheckOutlined /></Text>
+              :
+              <Text strong style={{ color: 'red' }}><CloseOutlined /></Text>
+            )}
+          </>
+        )
+      }
     },
     {
       title: "จำนวนเงินขออนุมัติ",
@@ -625,7 +557,24 @@ const ReportForm2 = () => {
       key: "OKRs_Status",
       align: "center",
       width: 80,
-      render: (_, record) => record?.record_data?.status,
+      render: (_, record) => {
+        // console.log('status', record?.record_data)
+        let r = record?.record_data
+        let v = record?.record_data?.component?.find(i=> i.key === 'OKRs_Status')
+        return (
+          <>
+            {!r.status || !v ? null 
+            : (r.step_id === '8' || r.step_id === 8 || v.value === 0 || v.value === 8 || v.value === 2 ?
+              <Text strong style={{ color: 'red' }}>{r.status}</Text>
+              :(v.value === 1 ?
+                <Text strong style={{ color: 'green' }}>{r.status}</Text>
+                :
+                <Text strong style={{ color: '#edbf17' }}>{r.status}</Text>
+              )
+            )}
+          </>
+        )
+      }
     },
     {
       title: "Step",

@@ -117,7 +117,7 @@ const LayoutReport = ({ form, store }) => {
                       {currentItem.type === 'textArea' ?
                         (<Input.TextArea showCount maxLength={currentItem.maxLength} disabled={isDisabled} />)
                         : currentItem.type === 'inputNumber' ?
-                          (<InputNumber formatter={value => !isNaN(+value) ? formatCurrency(value) : value} min={currentItem.min} max={currentItem.max} disabled={currentItem.key === 'OKRs_Budget3' || isDisabled} onChange={(e) => setAutoValue(e.target.value, currentItem.key)} />)
+                          (<InputNumber min={currentItem.min} max={currentItem.max} disabled={currentItem.key === 'OKRs_Budget3' || isDisabled} onChange={(e) => setAutoValue(e, currentItem.key)} />)
                           : currentItem.type === 'checkbox' ?
                             (<Checkbox.Group options={currentItem.options} disabled={isDisabled} />)
                             : currentItem.type === 'select' ?

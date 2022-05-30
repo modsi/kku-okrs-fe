@@ -169,6 +169,23 @@ const ManageTemplate = () => {
       dataIndex: "status",
       align: "left",
       width: 100,
+      render: (_, record) => {
+        // console.log('status', record)
+        let v = record?.component?.find(i=> i.key === 'OKRs_Status')
+        return (
+          <>
+            {!v ? null 
+            : (v.value === 0 || v.value === 8 || v.value === 2 ?
+              <Text strong style={{ color: 'red' }}>{_}</Text>
+              :(v.value === 1 ?
+                <Text strong style={{ color: 'green' }}>{_}</Text>
+                :
+                <Text strong style={{ color: '#edbf17' }}>{_}</Text>
+              )
+            )}
+          </>
+        )
+      }
     },
     {
       title: "รายละเอียด",
