@@ -18,6 +18,9 @@ export const ListYear = async () => {
     return await get(`${MANAGE_URL}/year_list`)     
 }
 
+export const ListStatus = async () => {
+    return await get(`${MANAGE_URL}/status_list`)     
+}
 
 export const ListRoles = async () => {
     return await get(`${MANAGE_URL}/role`)
@@ -106,4 +109,8 @@ export const ExportFormWord = async (formId) => {
 
 export const GetFormTemplateService = async(data = {})=>{
     return await get(`${FORM__URL}/list_form_template?typeId=${data?.typeId}&roleId=${data?.roleId}&isParent=${data?.isParent}`)
+}
+
+export const GetHistoryService = async(data = {})=>{
+    return await get(`${FORM__URL}/list_hisyory?name=${data?.str ?? ''}&year=${data.year}&group_id=${data.group_id}&status=${data.status}`)
 }

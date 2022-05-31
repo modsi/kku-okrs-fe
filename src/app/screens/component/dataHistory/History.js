@@ -14,13 +14,7 @@ import {
   Typography,
   Switch,
 } from "antd";
-import {
-  EditOutlined,
-  EyeOutlined,
-  SettingOutlined,
-  PlusOutlined,
-  SearchOutlined,
-} from "@ant-design/icons";
+import { CheckOutlined, CloseOutlined, RedoOutlined } from "@ant-design/icons";
 import {
   ListInstitutionsAction,
   ListRolesAction,
@@ -28,6 +22,8 @@ import {
   LIST_ROLES,
   ListYearsAction,
   LIST_YEARS,
+  LIST_STATUS,
+  ListStatusAction,
 } from "../../../redux/actions/ListMasterAction";
 import SetOptionsForSelect, {
   SetOptionsForSelectSetLable,
@@ -56,8 +52,10 @@ import {
   ListFormAction,
   LIST_FORM,
   UpdateFormAction,
+  LIST_HISTORY,
+  ListHistoryAction,
 } from "../../../redux/actions/FormAction";
-import { clearStorege, getStorage } from "../../state/localStorage";
+import { clearStorege, getStorage, setStorage } from "../../state/localStorage";
 
 const { Option } = Select;
 const { Text, Link } = Typography;
@@ -70,6 +68,7 @@ const History = () => {
   const dataSource = historyList;
   const listRoles = useSelector((state) => state?.main?.[LIST_ROLES]);
   const listYears = useSelector((state) => state?.main?.[LIST_YEARS]);
+  const listStatus = useSelector((state) => state?.main?.[LIST_STATUS]);
   const [isLoading, setIsLoading] = useState(false);
   const [isModalAddEditVisible, setIsModalAddEditVisible] = useState(false);
   const [addEditTitle, setAddEditTitle] = useState("");
@@ -77,11 +76,12 @@ const History = () => {
   const [id, setId] = useState(null);
   const [showGroup, setShowGroup] = useState(false);
 
-  const listForm = useSelector((state) => state?.main?.[LIST_FORM]);
+  const listForm = useSelector((state) => state?.main?.[LIST_HISTORY]);
   const [listFormComponent, setListFormComponent] = useState([]);
   const [listTableForm, setListTableForm] = useState([]);
   const [years, setYears] = useState(null);
   const [group, setGroup] = useState(null);
+  const [okrStatus, setOkrStatus] = useState(null);
 
   const layout = {
     labelCol: { span: 24 },
@@ -89,17 +89,13 @@ const History = () => {
     layout: "vertical",
   };
 
-  useEffect(() => {
-    console.log(dataSource);
-  }, [dataSource]);
+  // useEffect(() => {
+  //   console.log(dataSource);
+  // }, [dataSource]);
 
   useEffect(() => {
     if (listForm) {
-      setListFormComponent(
-        listForm.result?.filter(
-          (l) => l.step_id > 2 && l.step_id !== "9" && l.type_id === "1"
-        )
-      );
+      setListFormComponent(listForm.result);
     }
   }, [listForm]);
 
@@ -114,15 +110,12 @@ const History = () => {
     listAccount({ str: "" });
   }, []);
 
-  async function handleSearch(value, type = '') {
-    let p = getStorage("profile");
+  async function handleSearch() {
     dispatch(
-      await ListFormAction({
-        roleId: p.role_id,
-        str: "",
-        username: p.username,
-        year: type == 'year' ? value : years,
-        group_id: type == 'group' ? value : group,
+      await ListHistoryAction({
+        year: form.getFieldValue("year"),
+        group_id: form.getFieldValue("group"),
+        status: form.getFieldValue("status_okr"),
       })
     );
   }
@@ -131,6 +124,8 @@ const History = () => {
     dispatch(await ListInstitutionsAction());
     dispatch(await ListRolesAction());
     dispatch(await ListYearsAction());
+    dispatch(await ListStatusAction());
+    dispatch(await ListHistoryAction());
   }
 
   async function listAccount(data) {
@@ -143,34 +138,31 @@ const History = () => {
     console.log("setPage", listFormComponent);
     if (listFormComponent) {
       listFormComponent?.map((obj, i) => {
-        let components = obj?.component;
-        components?.sort((a, b) => (a.index > b.index ? 1 : -1));
-        let col = [];
-        let colData = {
-          no: i + 1,
-          id: obj?.id,
-          OKRs_Ids: "",
-          OKRs_Date: "",
-          OKRs_BookNumber: "",
-          OKRs_Project: "",
-          OKRs_Title: "",
-          OKRs_Value: "",
-          OKRs_Unit_Value: "",
-          OKRs_Success: "",
-          OKRs_Budget2: "",
-          OKRs_FinanceNumber: "",
-          OKRs_Officer: "",
-          OKRs_Status: "",
-          record_data: obj,
-        };
+        if (obj.type_id == 2 && obj.parent_id == 0) {
+        } else {
+          let components = obj?.component;
+          components?.sort((a, b) => (a.index > b.index ? 1 : -1));
+          let col = [];
+          let colData = {
+            no: i + 1,
+            type_name: obj?.type_name,
+            group_name: obj?.group_name,
+            id: obj?.id,
+            OKRs_Ids: "",
+            OKRs_Date: "",
+            OKRs_BookNumber: "",
+            OKRs_Project: "",
+            OKRs_Title: "",
+            OKRs_Value: "",
+            OKRs_Unit_Value: "",
+            OKRs_Success: "",
+            OKRs_Budget2: "",
+            OKRs_FinanceNumber: "",
+            OKRs_Officer: "",
+            OKRs_Status: "",
+            record_data: obj,
+          };
 
-        let status = components.find((item) => {
-          return item.key === "OKRs_Status" && item.value == 1;
-        });
-
-        if (status) {
-          index++;
-          colData.no = index;
           components.map((component) => {
             if (component.key === "OKRs_Title") {
               colData.OKRs_Title = component.value;
@@ -197,7 +189,6 @@ const History = () => {
             } else if (component.key === "OKRs_Officer") {
               colData.OKRs_Officer = component.value;
             } else if (component.key === "OKRs_Status") {
-              console.log("s", component.value);
               colData.OKRs_Status = component.value;
             }
           });
@@ -217,6 +208,20 @@ const History = () => {
       align: "center",
       width: 50,
       render: (text, record, index) => (currentPage - 1) * 10 + index + 1,
+    },
+    {
+      title: "ประเภทรายงาน",
+      dataIndex: "type_name",
+      align: "left",
+      width: 100,
+      render: (_, record) => record?.type_name,
+    },
+    {
+      title: "กลุ่มงาน",
+      dataIndex: "group_name",
+      align: "left",
+      width: 100,
+      render: (_, record) => record?.group_name,
     },
     {
       title: "เลขการรับเงิน",
@@ -271,7 +276,16 @@ const History = () => {
       dataIndex: "OKRs_Success",
       align: "center",
       width: 80,
-      render: (_, record) => record?.OKRs_Success,
+      // render: (_, record) => record?.OKRs_Success,
+      render: (record) => (
+        <div className="text-center">
+          {record == "failed" ? (
+            <CloseOutlined style={{ color: "red" }} />
+          ) : (
+            <CheckOutlined style={{ color: "green" }} />
+          )}
+        </div>
+      ),
     },
     {
       title: "จำนวนเงินขออนุมัติ",
@@ -294,13 +308,13 @@ const History = () => {
       width: 80,
       render: (_, record) => record?.OKRs_Officer,
     },
-    // {
-    //     title: 'สถานะ',
-    //     dataIndex: 'OKRs_Status',
-    //     align: 'left',
-    //     width: 80,
-    //     render: (_, record) => record?.OKRs_Status
-    // },
+    {
+      title: "สถานะ",
+      dataIndex: "OKRs_Status",
+      align: "left",
+      width: 80,
+      render: (_, record) => record?.record_data?.status,
+    },
     {
       title: "Action",
       fixed: "right",
@@ -352,6 +366,19 @@ const History = () => {
     };
   };
 
+  const resetSearch = async () => {
+    console.log("testestre");
+    form.setFieldsValue({
+      group: null,
+      year: null,
+      status_okr: null,
+    });
+
+    // setTimeout( async () => {
+    await handleSearch();
+    // }, 100);
+  };
+
   const onSubmit = async () => {
     console.log(form.getFieldValue());
     if (
@@ -376,8 +403,8 @@ const History = () => {
     data.role_id = form.getFieldValue("role");
     data.status =
       form.getFieldValue("status") ||
-        form.getFieldValue("status") === undefined ||
-        form.getFieldValue("status") === null
+      form.getFieldValue("status") === undefined ||
+      form.getFieldValue("status") === null
         ? 1
         : 0;
     data.group = form.getFieldValue("group");
@@ -419,19 +446,6 @@ const History = () => {
     setCurrentPage(pagination.current);
   };
 
-  const handleGroup = async (value) => {
-    setGroup(value);
-
-    await handleSearch(value, 'group')
-  }
-
-  const handleYear = async (value) => {
-    setYears(value);
-
-    await handleSearch(value, 'year')
-
-  }
-
   return (
     <div className="container-user">
       <Card title={"Data History"} className="rounded container-card">
@@ -451,7 +465,7 @@ const History = () => {
                     <Row>
                       <Col className="from-search">
                         <Form.Item
-                          // label={"Role"} name={"role"}
+                          name={"group"}
                           rules={[
                             { required: true, message: "Role is required!" },
                           ]}
@@ -462,7 +476,7 @@ const History = () => {
                               value: "groupid",
                               data: listInstitutions,
                             })}
-                            onChange={handleGroup}
+                            onChange={handleSearch}
                             placeholder="กลุ่มงาน"
                             size="middle"
                             style={{ width: "350px" }}
@@ -472,7 +486,7 @@ const History = () => {
 
                       <Col className="from-search">
                         <Form.Item
-                          // label={"Role"} name={"role"}
+                          name={"year"}
                           rules={[
                             { required: true, message: "Role is required!" },
                           ]}
@@ -483,7 +497,7 @@ const History = () => {
                               value: "value",
                               data: listYears,
                             })}
-                            onChange={handleYear}
+                            onChange={handleSearch}
                             placeholder="ปีงบประมาณ"
                             size="middle"
                             style={{ width: "200px" }}
@@ -491,6 +505,31 @@ const History = () => {
                         </Form.Item>
                       </Col>
 
+                      <Col className="from-search">
+                        <Form.Item
+                          name={"status_okr"}
+                          rules={[
+                            { required: true, message: "Role is required!" },
+                          ]}
+                        >
+                          <Select
+                            options={SetOptionsForSelect({
+                              label: "label_value",
+                              value: "value",
+                              data: listStatus,
+                            })}
+                            onChange={handleSearch}
+                            placeholder="สถานะ"
+                            size="middle"
+                            style={{ width: "200px" }}
+                          />
+                        </Form.Item>
+                      </Col>
+                      <Col className="from-search">
+                        <Button onClick={resetSearch}>
+                          <RedoOutlined />
+                        </Button>
+                      </Col>
                     </Row>
                   </div>
                 </Col>

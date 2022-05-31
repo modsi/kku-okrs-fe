@@ -1,8 +1,8 @@
-import { LIST_INSTITUTIONS, LIST_ROLES, LIST_TYPE_TEPM, LIST_FIELD_TEPM, LIST_YEARS } from '../actions/ListMasterAction'
+import { LIST_INSTITUTIONS, LIST_ROLES, LIST_TYPE_TEPM, LIST_FIELD_TEPM, LIST_YEARS, LIST_STATUS } from '../actions/ListMasterAction'
 import { LLIST_ACCOUNT } from '../actions/UserAction'
 import {LIST_TEMPLATES} from '../actions/TemplateAction'
 import { LIST_DASHBOARD } from '../actions/DashboardAction';
-import { LIST_FORM, LIST_FROM_TEMPLATES, LIST_FROM_2 } from '../actions/FormAction'
+import { LIST_FORM, LIST_FROM_TEMPLATES, LIST_FROM_2, LIST_HISTORY } from '../actions/FormAction'
 
 const initialsState = {
     [LIST_FROM_2]: null,
@@ -15,7 +15,9 @@ const initialsState = {
     [LIST_ROLES]: null,  
     [LLIST_ACCOUNT]  : null,
     [LIST_DASHBOARD] : null,
-    [LIST_YEARS] : null
+    [LIST_YEARS] : null,
+    [LIST_STATUS] : null,
+    [LIST_HISTORY] : null
     
 };
 
@@ -32,6 +34,8 @@ export default (state = initialsState, { type, payload }) => {
         case LIST_INSTITUTIONS:
         case LIST_ROLES:
         case LIST_YEARS:
+        case LIST_STATUS:
+        case LIST_HISTORY:
         case LIST_DASHBOARD:
             return {
                 ...state,
