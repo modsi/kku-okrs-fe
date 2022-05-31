@@ -48,9 +48,28 @@ const TableField = ({ form, content }) => {
     }
   }, [content])
 
+  const checkOptions = () => {
+    let chk = true
+    options?.map(o => {
+      // console.log('options', o)
+      if (!o.colKey || !o.colLabel) {
+        chk = false
+      } else {
+        let chkValue = options.find((op) => op.colKey === o.colKey && op.index !== o.index) ? true : false
+        if (chkValue) {
+          chk = false
+          // console.log('options colKey duplicated', o)
+          o.colKey = null
+          form.setFieldsValue({ ["colKey" + o.index]: null });
+        }
+      }
+    })
+    return chk;
+  }
+
   const onSubmit = async () => {
     // console.log(form.getFieldValue())    
-    if (form.getFieldValue('label') && form.getFieldValue('key') && options.length > 0) {
+    if (form.getFieldValue('label') && form.getFieldValue('key') && checkOptions()) {
       let store = storeTemplate?.component ?? []
       let components = store
       if (content?.id) {
@@ -65,6 +84,7 @@ const TableField = ({ form, content }) => {
       let max = store.length > 0 ? Math.max(...store.map(({ index }) => index)) : 0;
       let obj = {
         id: content?.id ?? uuidv4(),
+        required: content?.required ?? null,
         index: content?.index ?? (max + 1),
         type: 'table',
         key: form.getFieldValue('key'),
@@ -108,14 +128,14 @@ const TableField = ({ form, content }) => {
       op.colLabel = e.target.value
       form.setFieldsValue({ ["colLabel" + op.index]: e.target.value });
     } else {
-      let op2 = options.find(({ colKey }) => colKey === e.target.value)
-      if (!op2 || op2.index === op.index) {
-        op.colKey = e.target.value
-        form.setFieldsValue({ ["colKey" + op.index]: e.target.value });
-      } else {
-        op.colKey = null
-        form.setFieldsValue({ ["colKey" + op.index]: null });
-      }
+      // let op2 = options.find(({ colKey }) => colKey === e.target.value)
+      // if (!op2 || op2.index === op.index) {
+      op.colKey = e.target.value
+      form.setFieldsValue({ ["colKey" + op.index]: e.target.value });
+      // } else {
+      //   op.colKey = null
+      //   form.setFieldsValue({ ["colKey" + op.index]: null });
+      // }
     }
     let store = [...options?.filter((item) => {
       if (item.index !== inx) {
@@ -141,14 +161,14 @@ const TableField = ({ form, content }) => {
             name={"colLabel" + item.index}
             rules={[{ required: true }]}
           >
-            <Input placeholder="label" onChange={(e) => updateOption(item.index, 'colLabel', e)} defaultValue={item.colLabel} style={{ width: '40%' }} />
+            <Input placeholder={"column name " + item.index} onChange={(e) => updateOption(item.index, 'colLabel', e)} defaultValue={item.colLabel} style={{ width: '40%' }} />
           </Form.Item>
           <Form.Item
             noStyle
             name={"colKey" + item.index}
             rules={[{ required: true }]}
           >
-            <Input placeholder="column key" onChange={(e) => updateOption(item.index, 'colKey', e)} defaultValue={item.colKey} style={{ width: '40%' }} />
+            <Input placeholder={"column key " + item.index} onChange={(e) => updateOption(item.index, 'colKey', e)} defaultValue={item.colKey} style={{ width: '40%' }} />
           </Form.Item>
 
           <MinusCircleOutlined
@@ -247,6 +267,7 @@ const TableField = ({ form, content }) => {
                   rules={[{ required: true, message: "Please input Key!" }]}
                 >
                   <Input
+                    disabled={content?.required ? true : false}
                     onChange={(e) => {
                       form.setFieldsValue({ ["key"]: e.target.value });
                     }}
@@ -254,7 +275,7 @@ const TableField = ({ form, content }) => {
                 </Form.Item>
               </Col>
               <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                <Form.Item label={"Columns "} name={"columns"}>
+                <Form.Item label={"Columns (key ห้ามซ้ำกัน)"} name={"columns"}>
                   {listField}
                   <Form.Item>
                     <Button

@@ -2,7 +2,8 @@ import { httpUtils } from '../utils/HttpUtils'
 
 const { get, post, patch, postTokenKku, postLoginKku, downloadFile } = httpUtils
 const API_KKU = `https://api.kku.ac.th/v2`
-const API_ENDPOINT = `http://localhost:8080/api`
+// const API_ENDPOINT = `http://localhost:8080/api`
+const API_ENDPOINT = `https://e-project.kku.ac.th/api`
 const USER_URL = `${API_ENDPOINT}/users`
 const MANAGE_URL = `${API_ENDPOINT}/manage`
 const TEMPLATE__URL = `${API_ENDPOINT}/templates`
@@ -11,15 +12,15 @@ const FORM__URL = `${API_ENDPOINT}/form`
 const REPORT_URL = `https://e-project.kku.ac.th/api/report/`
 
 export const ListInstitutions = async () => {
-    return await get(`${MANAGE_URL}/institution`)     
+    return await get(`${MANAGE_URL}/institution`)
 }
 
 export const ListYear = async () => {
-    return await get(`${MANAGE_URL}/year_list`)     
+    return await get(`${MANAGE_URL}/year_list`)
 }
 
 export const ListStatus = async () => {
-    return await get(`${MANAGE_URL}/status_list`)     
+    return await get(`${MANAGE_URL}/status_list`)
 }
 
 export const ListRoles = async () => {
@@ -85,8 +86,12 @@ export const SaveFormService = async (data = {}) => {
     return await post(`${FORM__URL}/create_form`, data)
 }
 
-export const GetFormeService = async(data = {})=>{
-    return await get(`${FORM__URL}/list_form?name=${data?.str ?? ''}&roleId=${data?.roleId}&username=${data?.username}&year=${data.year}&group_id=${data.group_id}`)
+export const GetFormeService = async (data = {}) => {
+    return await get(`${FORM__URL}/list_form?name=${data?.str ?? ''}&userId=${data?.userId ?? null}&roleId=${data?.roleId}&username=${data?.username}&year=${data.year}&group_id=${data.group_id}`)
+}
+
+export const GetStepService = async (data = {}) => {
+    return await get(`${FORM__URL}/list_flow_step?roleId=${data?.roleId}`)
 }
 
 export const UpdateFormService = async (data = {}) => {
@@ -107,10 +112,10 @@ export const ExportFormWord = async (formId) => {
 
 }
 
-export const GetFormTemplateService = async(data = {})=>{
-    return await get(`${FORM__URL}/list_form_template?typeId=${data?.typeId}&roleId=${data?.roleId}&isParent=${data?.isParent}`)
+export const GetFormTemplateService = async (data = {}) => {
+    return await get(`${FORM__URL}/list_form_template?typeId=${data?.typeId}&userId=${data?.userId ?? null}&roleId=${data?.roleId}&isParent=${data?.isParent}`)
 }
 
-export const GetHistoryService = async(data = {})=>{
+export const GetHistoryService = async (data = {}) => {
     return await get(`${FORM__URL}/list_hisyory?name=${data?.str ?? ''}&year=${data.year}&group_id=${data.group_id}&status=${data.status}`)
 }

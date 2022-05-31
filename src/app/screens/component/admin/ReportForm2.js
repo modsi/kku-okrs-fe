@@ -22,14 +22,7 @@ import {
   Upload,
   message,
 } from "antd";
-import {
-  EditOutlined,
-  EyeOutlined,
-  SettingOutlined,
-  PlusOutlined,
-  FileSearchOutlined,
-  PlusCircleFilled,
-} from "@ant-design/icons";
+import { PlusOutlined, CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import { tem1, tem2 } from "../../../../template-mock";
 import {
   LIST_TEMPLATES,
@@ -49,6 +42,7 @@ import {
   propsStatus,
   propsSuccess,
   SaveFormAction,
+  onFormSubmit,
   ListForm2Action,
   LIST_FROM_2,
   UpdateFormAction,
@@ -60,6 +54,9 @@ import FormUpload from "./FormUpload";
 import { StoreTemplateAction } from "../../../redux/actions/StoreSearchAction";
 import { UpdateTempateAction } from "../../../redux/actions/TemplateAction";
 import moment from "moment";
+import { ListInstitutionsAction, LIST_INSTITUTIONS } from '../../../redux/actions/ListMasterAction'
+import { SetIsusedAction } from "../../../redux/actions/TemplateAction"
+import LayoutReport from './LayoutReport'
 
 const { Text, Link } = Typography;
 const { RangePicker } = DatePicker;
@@ -101,6 +98,7 @@ const ReportForm2 = () => {
   const [listTableForm, setListTableForm] = useState([]);
   const [showConfigPage, setShowConfigPage] = useState(false);
   const [showViewPage, setShowViewPage] = useState(false);
+  const listInstitutions = useSelector(state => state?.main?.[LIST_INSTITUTIONS]);
 
   const layout = {
     labelCol: { span: 24 },
@@ -157,6 +155,7 @@ const ReportForm2 = () => {
       await ListForm2Action({ roleId: p.role_id, typeId: 2, isParent: 0 })
     );
     dispatch(await ListTemplateAction({}));
+    dispatch(await ListInstitutionsAction())
   }
 
   const handleClickCancel = () => {
@@ -173,6 +172,7 @@ const ReportForm2 = () => {
   const newTemplate = () => {
     setIsModalAddEditVisible(true);
     setAddEditTitle("เลือกใช้รายงาน");
+
   };
 
   const handleClickEdit = (record) => {
@@ -184,77 +184,13 @@ const ReportForm2 = () => {
     setIsLoading(false);
   };
 
-  const setLayoutTemplate = (listComponent) => {
-    console.log("start setLayoutTemplate", listComponent);
-    let listField = [];
-    listComponent?.sort((a, b) => (a.index > b.index ? 1 : -1));
-    listComponent?.map((currentItem) => {
-      console.log("value", currentItem.value);
-      let field = (
-        <>
-          <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-            {currentItem.type === "title" ? (
-              <Text
-                style={currentItem.isSubTitle ? { paddingLeft: "50px" } : {}}
-              >
-                {currentItem?.label}
-              </Text>
-            ) : (
-              <Form.Item
-                className="template-text"
-                labelAlign="left"
-                labelWrap="true"
-                layout={currentItem.labelPosition ?? "vertical"}
-                label={currentItem.label}
-                name={currentItem.key}
-                rules={[
-                  {
-                    required: currentItem.required ? true : false,
-                    message: "Please input " + currentItem?.label,
-                  },
-                ]}
-              >
-                {currentItem.type === "textArea" ? (
-                  <Input.TextArea showCount maxLength={currentItem.maxLength} />
-                ) : currentItem.type === "inputNumber" ? (
-                  <InputNumber min={currentItem.min} max={currentItem.max} />
-                ) : currentItem.type === "checkbox" ? (
-                  <Checkbox.Group options={currentItem.options} />
-                ) : currentItem.type === "select" ? (
-                  <Select
-                    mode={currentItem.mode}
-                    placeholder="Please select"
-                    style={{ width: "100%" }}
-                    options={currentItem.options}
-                  />
-                ) : currentItem.type === "radio" ? (
-                  <Radio.Group options={currentItem.options} />
-                ) : currentItem.type === "day" ? (
-                  <DatePicker />
-                ) : currentItem.type === "date_time" ? (
-                  <DatePicker showTime format="DD/MM/YYYY HH:mm:ss" />
-                ) : currentItem.type === "range_date" ? (
-                  <RangePicker />
-                ) : (
-                  <Input />
-                )}
-              </Form.Item>
-            )}
-          </Col>
-        </>
-      );
-      if (currentItem.type === "day" || currentItem.type === "date_time") {
-        form2.setFieldsValue({ [currentItem.key]: moment(currentItem.value) });
-      } else {
-        form2.setFieldsValue({ [currentItem.key]: currentItem.value });
-      }
-      listField.push(field);
-    });
-    setListField(listField);
-  };
+  const setLayoutReport = (listComponent) => {
+    console.log('setLayoutReport', listComponent)
+    setListField(<LayoutReport form={form2} store={listComponent} />)
+  }
 
   const onSubmitNewReport = async () => {
-    if (form.getFieldValue("template") && form.getFieldValue("name")) {
+    if (form.getFieldValue("template") && form.getFieldValue("name") && form.getFieldValue("group")) {
       ConfirmModalEditText(onSubmitNew, conditionSave());
     } else {
       form.validateFields();
@@ -262,23 +198,18 @@ const ReportForm2 = () => {
   };
 
   const onSubmitNew = async () => {
-    console.log(
-      "start onSubmitNew",
-      form.getFieldValue("template"),
-      form.getFieldValue("name")
-    );
     setIsLoading(true);
-    let obj = listTemplate.find(
-      (template) => template.id === form.getFieldValue("template")
-    );
+    let obj = listTemplate.find((template) => template.id === form.getFieldValue("template"));
     let data = obj;
     data.parentId = obj.id;
     data.name = form.getFieldValue("name");
     data.stepId = 1;
     data.templateId = obj?.templateId ?? obj?.template_id;
     data.typeId = obj?.typeId ?? obj?.type_id;
+    data.groupid = obj?.groupid ?? obj?.group_id;
     data.status = 0;
     data.id = null;
+    data.groupid = form.getFieldValue('group')
     let res = {};
     try {
       res = await SaveFormAction(data);
@@ -323,18 +254,37 @@ const ReportForm2 = () => {
     console.log("upStep", record);
     let data = { ...record };
     data.templateId = record?.templateId ?? record?.template_id;
+    data.status = record?.status && !isNaN(+record?.status) ? record?.status : (record?.form_status ?? (record?.formStatus ?? 0));
     data.typeId = record?.typeId ?? record?.type_id;
     data.stepId = 4;
+    let stepId = record?.stepId ?? record?.step_id;
     let components = record?.component;
-    let c = components.find((k) => k.key === "OKRs_Ids");
+    let c = components.find(k => k.key === 'OKRs_Ids')
     if (!c) {
-      c = propsIds;
-      components.push(c);
+      c = propsIds
+      components.push(c)
     }
     let ids = padLeadingZeros(record?.id, 5);
-    c.label = "เลขการรับเงิน : " + ids;
-    c.value = ids;
+    c.label = 'เลขการรับเงิน : ' + ids
+    c.value = ids
 
+    if (stepId === "8") {
+      components = components?.filter(f => f.key !== 'OKRs_Status');
+      let s = propsStatus
+      s.value = 2
+      let label = s.options.find(k => k.value === 2)?.label
+      s.labelValue = label
+      components.push(s)
+    } else {
+      components = components?.filter(f => f.key !== 'OKRs_Status');
+      let s = propsStatus
+      s.value = 0
+      let label = s.options.find(k => k.value === 0)?.label
+      s.labelValue = label
+      components.push(s)
+    }
+    
+    data.component = components
     let res = await UpdateFormAction(data);
     if (res.error === null) {
       SuccessModal("Success");
@@ -355,85 +305,8 @@ const ReportForm2 = () => {
     console.log("start onSubmit", form2.getFieldsValue(), listComponent);
     setIsLoading(true);
     let res = {};
-    let data = listComponent;
-    data.templateId = listComponent?.templateId ?? listComponent?.template_id;
-    data.templateName = listComponent?.templateName;
-    data.typeId = listComponent?.typeId ?? listComponent?.type_id;
-    data.id = listComponent?.id;
-    data.stepId = listComponent?.stepId ?? listComponent?.step_id;
-    data.name = listComponent?.name;
-    let components = listComponent?.component
-    Object.keys(form2.getFieldsValue()).forEach(function (key) {
-      let c = components.find((k) => k.key === key);
-      if (c) {
-        c.value = form2.getFieldValue(key);
-      } else {
-        let s = key.split('#')
-        // console.log('s', s)
-        c = components.find((k) => k.key === s[1]);
-        if (c) {
-          // console.log('c', c)
-          let v = form2.getFieldValue(key);
-          let vo = {
-            index: parseInt(s[2]),
-            key: s[0],
-            value: v ?? ''
-          }
-          if (!c.value) {
-            c.value = []
-            c.value.push(vo)
-          } else {
-            let old = c.value.find(v => v.index === vo.index && v.key === vo.key)
-            if (!old) {
-              c.value.push(vo)
-            } else {
-              Object.assign(old, vo)
-            }
-          }
-        }
-      }
-
-      if (key === 'OKRs_Status') {
-        console.log('OKRs_Status', c)
-        if (c === null || c === undefined) {
-          console.log('add c')
-          c = propsStatus
-          components.push(c)
-        }
-        let value = form2.getFieldValue(key)
-        // c.value = propsStatus.options.find(k => k.value === value)?.label
-        if (value === 1) {
-          data.status = 1
-          data.stepId = 5
-        } else if (value < 10) {
-          data.status = 0
-          data.stepId = value
-        } else {
-          data.status = 0
-          data.stepId = 4
-        }
-      }
-    });
-
-    if (form2.getFieldValue('OKRs_Value') || form2.getFieldValue('OKRs_ResultValue')) {
-      components = components?.filter(f => f.key !== 'OKRs_Success');
-      let s = propsSuccess
-      let b1 = form2.getFieldValue('OKRs_Value') && !isNaN(+form2.getFieldValue('OKRs_Value')) ? form2.getFieldValue('OKRs_Value') : 0
-      let b2 = form2.getFieldValue('OKRs_ResultValue') && !isNaN(+form2.getFieldValue('OKRs_ResultValue')) ? form2.getFieldValue('OKRs_ResultValue') : 0
-      let val = b1 >= b2 ? 'success' : 'failed'
-      s.value = val
-      components.push(s)
-    }
-    if (data.stepId === "1" || data.stepId === 1) {
-      data.stepId = 3;
-    }
-    data.component = components;
     try {
-      if (listComponent.id) {
-        res = await UpdateFormAction(data);
-      } else {
-        res = await SaveFormAction(data);
-      }
+      res = await onFormSubmit(profile, form2, listComponent);
       if (res.error === null) {
         SuccessModal("Success");
         handleListMaster();
@@ -521,24 +394,15 @@ const ReportForm2 = () => {
       dataIndex: "no",
       key: "no",
       align: "center",
-      width: 40,
+      width: 50,
       fixed: "center",
-      render: (val, record, index) => {
-        return {
-          children: (
-            <Text strong style={{ color: !record?.id ? "red" : "black" }}>
-              {val}
-            </Text>
-          ),
-        };
-      },
     },
     {
       title: "เลขการรับเงิน",
       dataIndex: "OKRs_Ids",
       key: "OKRs_Ids",
       align: "center",
-      width: 80,
+      width: 100,
       render: (_, record) => record?.OKRs_Ids,
     },
     {
@@ -546,11 +410,8 @@ const ReportForm2 = () => {
       dataIndex: "OKRs_Date",
       key: "OKRs_Date",
       align: "center",
-      width: 80,
-      render: (_, record) =>
-        record?.OKRs_Date
-          ? moment(record?.OKRs_Date).format("DD/MM/YYYY")
-          : null,
+      width: 100,
+      render: (_, record) => record?.OKRs_Date ? moment(record?.OKRs_Date).format('DD/MM/YYYY') : null,
     },
     {
       title: "เลขที่หนังสือรับ อว",
@@ -582,18 +443,27 @@ const ReportForm2 = () => {
       key: "OKRs_Value",
       align: "left",
       width: 80,
-      render: (_, record) =>
-        record?.OKRs_Value
-          ? record?.OKRs_Value + " " + record?.OKRs_Unit_Value
-          : "",
+      render: (_, record) => record?.OKRs_Value ? record?.OKRs_Value + ' ' + record?.OKRs_Unit_Value : '',
     },
     {
       title: "ความสำเร็จ",
       dataIndex: "OKRs_Success",
       key: "OKRs_Success",
-      align: "left",
+      align: "center",
       width: 80,
-      render: (_, record) => record?.OKRs_Success,
+      render: (_, record) => {
+        // console.log('OKRs_Success', record?.OKRs_Success)
+        let c = record?.OKRs_Success === 'success' ? true : false
+        return (
+          <>
+            {record?.OKRs_Success === null || record?.OKRs_Success === '' ? null : (c ?
+              <Text strong style={{ color: 'green' }}><CheckOutlined /></Text>
+              :
+              <Text strong style={{ color: 'red' }}><CloseOutlined /></Text>
+            )}
+          </>
+        )
+      }
     },
     {
       title: "จำนวนเงินขออนุมัติ",
@@ -625,7 +495,24 @@ const ReportForm2 = () => {
       key: "OKRs_Status",
       align: "center",
       width: 80,
-      render: (_, record) => record?.record_data?.status,
+      render: (_, record) => {
+        // console.log('status', record?.record_data)
+        let r = record?.record_data
+        let v = record?.record_data?.component?.find(i => i.key === 'OKRs_Status')
+        return (
+          <>
+            {!r.status || !v ? null
+              : (r.step_id === '8' || r.step_id === 8 || v.value === 0 || v.value === 8 || v.value === 2 ?
+                <Text strong style={{ color: 'red' }}>{r.status}</Text>
+                : (v.value === 1 ?
+                  <Text strong style={{ color: 'green' }}>{r.status}</Text>
+                  :
+                  <Text strong style={{ color: '#edbf17' }}>{r.status}</Text>
+                )
+              )}
+          </>
+        )
+      }
     },
     {
       title: "Step",
@@ -643,8 +530,8 @@ const ReportForm2 = () => {
           <>
             {(profile?.role?.priority === "1" ||
               profile?.role?.priority === "2") &&
-            (record?.record_data?.step_id === "4" ||
-              record?.record_data?.step_id === "5") ? (
+              (record?.record_data?.step_id === "4" ||
+                record?.record_data?.step_id === "5") ? (
               <>
                 <Button
                   type="primary"
@@ -672,8 +559,8 @@ const ReportForm2 = () => {
                 <Button
                   disabled={
                     record?.record_data?.step_id === "1" ||
-                    record?.record_data?.step_id === "3" ||
-                    record?.record_data?.step_id === "8"
+                      record?.record_data?.step_id === "3" ||
+                      record?.record_data?.step_id === "8"
                       ? false
                       : true
                   }
@@ -688,8 +575,8 @@ const ReportForm2 = () => {
                 <Button
                   disabled={
                     record?.record_data?.step_id === "1" ||
-                    record?.record_data?.step_id === "3" ||
-                    record?.record_data?.step_id === "8"
+                      record?.record_data?.step_id === "3" ||
+                      record?.record_data?.step_id === "8"
                       ? false
                       : true
                   }
@@ -723,7 +610,7 @@ const ReportForm2 = () => {
     let status = { ...propsStatus };
     status.options = propsStatus.options.filter(
       (l) => l.value !== 6 && l.value !== 7
-    );  
+    );
     if (!c) {
       let status = { ...propsStatus }
       if (record.status) {
@@ -733,11 +620,12 @@ const ReportForm2 = () => {
           Object.assign(status, { value: parseInt(record.stepId) })
         }
       }
-      setLayoutTemplate([...l, status])
+      setLayoutReport([...l, status])
     } else {
-      setLayoutTemplate(l)
+      setLayoutReport(l)
     }
     form2.setFieldsValue({ ["name"]: record.name });
+    form2.setFieldsValue({ ['groupName']: record.group_name ? record.group_type_name + "/" + record.group_name : '' })
     setStep(record.stepId - 1);
     setListComponent(record);
     setIsModal2(true);
@@ -758,11 +646,6 @@ const ReportForm2 = () => {
   };
 
   const onSubmitNewSpec = async () => {
-    // console.log(
-    //   "start onSubmitNewSpec",
-    //   form3.getFieldValue("template"),
-    //   form3.getFieldValue("name")
-    // );
     setIsLoading(true);
     let obj = listTempMaster.find(
       (template) => template.id === form3.getFieldValue("template")
@@ -854,7 +737,7 @@ const ReportForm2 = () => {
         <Card title={"Report Form 2"} className="rounded">
           <Row gutter={24} className="row-inquiry-customer">
             {profile?.role?.priority === "1" ||
-            profile?.role?.priority === "4" ? (
+              profile?.role?.priority === "4" ? (
               <Col span={24} style={{ textAlign: "right" }}>
                 <Button
                   type="primary"
@@ -865,7 +748,7 @@ const ReportForm2 = () => {
                 >
                   รายงาน
                 </Button>
-                &nbsp;&nbsp;
+                {/* &nbsp;&nbsp;
                 <Button
                   type="primary"
                   shape="round"
@@ -874,7 +757,7 @@ const ReportForm2 = () => {
                   className="ggar2-button"
                 >
                   รายงานพิเศษ
-                </Button>
+                </Button> */}
               </Col>
             ) : null}
             <Col span={24} style={{ textAlign: "left", marginTop: 15 }}>
@@ -928,10 +811,15 @@ const ReportForm2 = () => {
                 <Form.Item
                   label="ชื่อรายงาน"
                   name={"name"}
-                  // rules={[
-                  //   { required: true, message: "Report Name is required" },
-                  // ]}
+                // rules={[
+                //   { required: true, message: "Report Name is required" },
+                // ]}
                 >
+                  <Input disabled={true} />
+                </Form.Item>
+              </Col>
+              <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                <Form.Item label={"ผู้รับผิดชอบโครงการ"} name={"groupName"}>
                   <Input disabled={true} />
                 </Form.Item>
               </Col>
@@ -1002,6 +890,20 @@ const ReportForm2 = () => {
                   />
                 </Form.Item>
               </Col>
+              <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                <Form.Item label={"ผู้รับผิดชอบโครงการ"} name={"group"} rules={[{ required: true, message: 'ผู้รับผิดชอบโครงการ is required' }]}>
+                  <Select
+                    options={SetOptionsForSelect({
+                      label: "groupname",
+                      value: "groupid",
+                      data: listInstitutions,
+                    })}
+                    placeholder="-Please select from dropdown-"
+                    size="middle"
+                    style={{ width: "100%" }}
+                  />
+                </Form.Item>
+              </Col>
               <Col
                 className="form-login form-user"
                 xs={24}
@@ -1014,7 +916,7 @@ const ReportForm2 = () => {
                   name={"name"}
                   rules={[{ required: true, message: "Please Input!" }]}
                 >
-                  <Input placeholder="ชื่อรายงาน" />
+                  <Input placeholder="ชื่อรายงาน" size="middle" />
                 </Form.Item>
               </Col>
             </Row>

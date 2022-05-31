@@ -49,6 +49,7 @@ const TitleField = ({ form, content }) => {
       let max = store.length > 0 ? Math.max(...store.map(({ index }) => index)) : 0;
       let obj = {
         id: content?.id ?? uuidv4(),
+        required: content?.required ?? null,
         index: content?.index ?? (max + 1),
         type: 'title',
         label: form.getFieldValue('label'),

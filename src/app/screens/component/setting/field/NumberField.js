@@ -81,6 +81,7 @@ const NumberField = ({ form, content }) => {
       let maxi = store.length > 0 ? Math.max(...store.map(({ index }) => index)) : 0;
       let obj = {
         id: content?.id ?? uuidv4(),
+        required: content?.required ?? null,
         index: content?.index ?? (maxi + 1),
         labelPosition: "vertical",
         type: 'inputNumber',
@@ -143,6 +144,7 @@ const NumberField = ({ form, content }) => {
                       ]}
                     >
                       <Input
+                      disabled={content?.required ? true : false}
                         onChange={(e) => {
                           form.setFieldsValue({ ["key"]: e.target.value });
                         }}

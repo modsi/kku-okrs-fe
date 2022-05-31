@@ -65,10 +65,28 @@ const SelectField = ({ form, content }) => {
     }
   }, [content])
 
+  const checkOptions = () => {
+    let chk = true
+    options?.map(o => {
+      // console.log('options', o)
+      if (!o.value || !o.label) {
+        chk = false
+      } else {
+        let chkValue = options.find((op) => op.value === o.value && op.index !== o.index) ? true : false
+        if (chkValue) {
+          chk = false
+          console.log('options value duplicated', o)
+          o.value = null
+          form.setFieldsValue({ ["value" + o.index]: null });
+        }
+      }
+    })
+    return chk;
+  }
 
   const onSubmit = async () => {
     // console.log(form.getFieldValue())    
-    if (form.getFieldValue('label') && form.getFieldValue('key') && options.length > 0) {
+    if (form.getFieldValue('label') && form.getFieldValue('key') && checkOptions()) {
       let store = storeTemplate?.component ?? []
       let components = store
       if (content?.id) {
@@ -83,6 +101,7 @@ const SelectField = ({ form, content }) => {
       let max = store.length > 0 ? Math.max(...store.map(({ index }) => index)) : 0;
       let obj = {
         id: content?.id ?? uuidv4(),
+        required: content?.required ?? null,
         index: content?.index ?? (max + 1),
         labelPosition: "vertical",
         type: 'select',
@@ -139,14 +158,14 @@ const SelectField = ({ form, content }) => {
       op.label = e.target.value
       form.setFieldsValue({ ["label" + op.index]: e.target.value });
     } else {
-      let op2 = options.find(({ value }) => value === e.target.value)
-      if (!op2 || op2.index === op.index) {
-        op.value = e.target.value
-        form.setFieldsValue({ ["value" + op.index]: e.target.value });
-      } else {
-        op.value = null
-        form.setFieldsValue({ ["value" + op.index]: null });
-      }
+      // let op2 = options.find(({ index }) => index === e.target.value)
+      // if (!op2 || op2.index === op.index) {
+      op.value = e.target.value
+      form.setFieldsValue({ ["value" + op.index]: e.target.value });
+      // } else {
+      //   op.value = null
+      //   form.setFieldsValue({ ["value" + op.index]: null });
+      // }
     }
     let store = [...options?.filter((item) => {
       if (item.index !== inx) {
@@ -156,6 +175,7 @@ const SelectField = ({ form, content }) => {
       }
     })]
     setOptions([...store, op])
+    form.validateFields()
   };
 
   const DynamicFieldSet = () => {
@@ -173,7 +193,7 @@ const SelectField = ({ form, content }) => {
                 rules={[{ required: true }]}
               >
                 <Input
-                  placeholder="label"
+                  placeholder={"label " + item.index}
                   onChange={(e) => updateOption(item.index, "label", e)}
                   defaultValue={item.label}
                 />
@@ -186,7 +206,7 @@ const SelectField = ({ form, content }) => {
                 rules={[{ required: true }]}
               >
                 <Input
-                  placeholder="value"
+                  placeholder={"value " + item.index}
                   onChange={(e) => updateOption(item.index, "value", e)}
                   defaultValue={item.value}
                 />
@@ -201,6 +221,8 @@ const SelectField = ({ form, content }) => {
           </Row>
         </>
       );
+      form.setFieldsValue({ ["label" + item.index]: item.label });
+      form.setFieldsValue({ ["value" + item.index]: item.value && item.value !== "" ? item.value : null });
       listField.push(field);
     });
     setListField(listField);
@@ -246,6 +268,7 @@ const SelectField = ({ form, content }) => {
                       ]}
                     >
                       <Input
+                        disabled={content?.required ? true : false}
                         onChange={(e) => {
                           form.setFieldsValue({ ["key"]: e.target.value });
                         }}
@@ -283,11 +306,11 @@ const SelectField = ({ form, content }) => {
                     </Form.Item>
                   </Col>
                   <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-                    <Form.Item label={"Options "} name={"options"}>
+                    <Form.Item label={"Options (value ห้ามซ้ำกัน)"} name={"options"}>
                       {listField}
                       <Form.Item>
                         <Button
-                          disabled={options.length > 19 ? true : false}
+                          // disabled={options.length > 19 ? true : false}
                           type="dashed"
                           onClick={() => add()}
                           style={{ width: "40%", margin: ".5rem 0" }}
