@@ -520,7 +520,9 @@ export const onFormSubmit = async (profile, form, listComponent) => {
     data.stepId = 11
   }
   data.name = form.getFieldValue('name')
-  data.groupid = form.getFieldValue('group') ?? null
+  if (form.getFieldValue('group')) {
+    data.groupid = form.getFieldValue('group') ?? null
+  }
   data.component = components
   try {
     if (listComponent.id) {
