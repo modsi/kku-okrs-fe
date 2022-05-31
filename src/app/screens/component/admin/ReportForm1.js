@@ -98,10 +98,10 @@ const ReportForm1 = () => {
 
   async function handleListMaster() {
     let p = getStorage("profile");
-    console.log('profile' , p);
+    console.log('profile', p);
     dispatch(await ListTemplateAction({}));
     dispatch(
-      await ListFormAction({ userId: p.id , roleId: p.role_id, str: "", username: p.username })
+      await ListFormAction({ userId: p.id, roleId: p.role_id, str: "", username: p.username })
     );
   }
 
@@ -403,18 +403,18 @@ const ReportForm1 = () => {
       render: (_, record) => {
         // console.log('status', record?.record_data)
         let r = record?.record_data
-        let v = record?.record_data?.component?.find(i=> i.key === 'OKRs_Status')
+        let v = record?.record_data?.component?.find(i => i.key === 'OKRs_Status')
         return (
           <>
-            {!r.status || !v ? null 
-            : (r.step_id === '8' || r.step_id === 8 || v.value === 0 || v.value === 8 || v.value === 2 ?
-              <Text strong style={{ color: 'red' }}>{r.status}</Text>
-              :(v.value === 1 ?
-                <Text strong style={{ color: 'green' }}>{r.status}</Text>
-                :
-                <Text strong style={{ color: '#edbf17' }}>{r.status}</Text>
-              )
-            )}
+            {!r.status || !v ? null
+              : (r.step_id === '8' || r.step_id === 8 || v.value === 0 || v.value === 8 || v.value === 2 ?
+                <Text strong style={{ color: 'red' }}>{r.status}</Text>
+                : (v.value === 1 ?
+                  <Text strong style={{ color: 'green' }}>{r.status}</Text>
+                  :
+                  <Text strong style={{ color: '#edbf17' }}>{r.status}</Text>
+                )
+              )}
           </>
         )
       }
@@ -503,6 +503,7 @@ const ReportForm1 = () => {
       setLayoutReport(l)
     }
     form2.setFieldsValue({ ['name']: record.name })
+    form2.setFieldsValue({ ['groupName']: record.group_name ? record.group_type_name + "/" + record.group_name : '' })
     setStep(record.stepId - 1)
     setListComponent(record)
 
@@ -682,8 +683,12 @@ const ReportForm1 = () => {
                 <Form.Item
                   label='ชื่อรายงาน'
                   name={"name"}
-                // rules={[{ required: true, message: 'Report Name is required' }]}
                 >
+                  <Input disabled={true} />
+                </Form.Item>
+              </Col>
+              <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                <Form.Item label={"ผู้รับผิดชอบโครงการ"} name={"groupName"}>
                   <Input disabled={true} />
                 </Form.Item>
               </Col>

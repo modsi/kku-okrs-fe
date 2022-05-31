@@ -1,8 +1,9 @@
-import { GetFormTemplateService, SaveFormService, GetFormeService, UpdateFormService, SaveComplateFormService, ExportFormCsv, ExportFormWord } from '../../services/MainService'
+import { GetStepService, GetFormTemplateService, SaveFormService, GetFormeService, UpdateFormService, SaveComplateFormService, ExportFormCsv, ExportFormWord } from '../../services/MainService'
 import { Payload } from '../../utils/Payload'
-import { clearStorege, getStorage } from "../../screens/state/localStorage";
+import { getStorage } from "../../screens/state/localStorage";
 import { DATE_MM, DATE_NORMAL } from "../../utils/Elements"
 import moment from "moment";
+import { SetIsusedAction } from "./TemplateAction"
 
 export const SaveFormAction = async (data) => {
   const result = await SaveFormService(data)
@@ -99,7 +100,7 @@ export const SaveCompalteFormAction = async (id, data) => {
       let v = c.value
       let label = c.options.find(k => k.value === v)?.label
       o.value = v
-      o.labelValue = label + (v > 9 ? (v === 10 ? (c.date ? (': ' + moment(c.date).format(DATE_NORMAL)) : '') : (c.detail ? (' : ' + c.detail) : '') ) : '')
+      o.labelValue = label + (v > 9 ? (v === 10 ? (c.date ? (': ' + moment(c.date).format(DATE_NORMAL)) : '') : (c.detail ? (' : ' + c.detail) : '')) : '')
       component.push(o)
     } else if (c.value && c.key === 'OKRs_PDCA') {
       let ov = '['
@@ -155,7 +156,7 @@ export const SaveCompalteFormAction = async (id, data) => {
     }
   })
   obj.formId = id
-  obj.component = component?.filter(c=> c.key)
+  obj.component = component?.filter(c => c.key)
   // console.log(obj)
   const result = await SaveComplateFormService(obj)
   return result?.data
@@ -178,6 +179,26 @@ export const ListFormAction = async (data = {}) => {
   } catch (e) {
     console.error(e)
     return Payload({ params: [], type: LIST_FORM })
+  }
+}
+
+export const LIST_STEP = 'list_step'
+export const ListStepAction = async (data = {}) => {
+  try {
+    const onSearch = {
+      ...data,
+    }
+    const result = await GetStepService(onSearch)
+    const params = {
+      [LIST_STEP]: {
+        result: result?.data?.data,
+        totalData: result?.data?.data?.totalItems
+      }
+    }
+    return Payload({ params: params, type: LIST_STEP })
+  } catch (e) {
+    console.error(e)
+    return Payload({ params: [], type: LIST_STEP })
   }
 }
 
@@ -483,30 +504,32 @@ export const onFormSubmit = async (profile, form, listComponent) => {
     let s = propsSuccess
     let b1 = form.getFieldValue('OKRs_Value') && !isNaN(+form.getFieldValue('OKRs_Value')) ? form.getFieldValue('OKRs_Value') : 0
     let b2 = form.getFieldValue('OKRs_ResultValue') && !isNaN(+form.getFieldValue('OKRs_ResultValue')) ? form.getFieldValue('OKRs_ResultValue') : 0
-    console.log('check OKRs_Success', b1 , b2)
-    let val = b1 >= b2 ? 'success' : 'failed'
+    console.log('check OKRs_Success', b1, b2)
+    let val = b1 <= b2 ? 'success' : 'failed'
     s.value = val
     components.push(s)
-  }
-  if (data.typeId === '2' && (!data.stepId || data.stepId < 3)) {
-    data.stepId = 9
-  } else if (data.typeId === '1' && profile?.role_id === '3' && (data.stepId === '1' || data.stepId === 1)) {
-    data.stepId = 10
-  } else if (data.typeId === '1' && profile?.role_id === '4' && (data.stepId === '1' || data.stepId === 1)) {
-    data.stepId = 11
   }
 
   if (!data.stepId) {
     data.stepId = 1
   }
+
+  if (profile?.role_id === '3' && (data.stepId === '1' || data.stepId === 1)) {
+    data.stepId = 10
+  } else if (profile?.role_id === '4' && (data.stepId === '1' || data.stepId === 1)) {
+    data.stepId = 11
+  }
   data.name = form.getFieldValue('name')
-  data.groupid = form.getFieldValue('group')
+  data.groupid = form.getFieldValue('group') ?? null
   data.component = components
   try {
     if (listComponent.id) {
       res = await UpdateFormAction(data);
     } else {
       res = await SaveFormAction(data);
+      if (res.error === null) {
+        await SetIsusedAction({ id: data.templateId, isUsed: true })
+      }
     }
 
   } catch (err) {

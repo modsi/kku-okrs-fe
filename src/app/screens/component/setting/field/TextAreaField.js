@@ -1,8 +1,6 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate } from "react-router-dom";
-import { Card, Row, Col, Button, Typography, Table, Form, Input, Radio, Space, Image, Switch, InputNumber } from 'antd';
-import logo from "../../../../../assets/images/favicon-96x96.png"
+import { Card, Row, Col, Button, Typography, Form, Input, Radio, Space, InputNumber } from 'antd';
 import { STORE_TEMPLATE, StoreTemplateAction } from "../../../../redux/actions/StoreSearchAction"
 import { v4 as uuidv4 } from "uuid";
 import { QuestionCircleOutlined } from "@ant-design/icons";
@@ -13,7 +11,6 @@ const TextAreaField = ({ form, content }) => {
   const [form2] = Form.useForm();
   const storeTemplate = useSelector(state => state?.storeSearchReducer?.[STORE_TEMPLATE])
   const [title, setTitle] = useState('Label Text Field');
-  const [required, setRequired] = useState(false);
   const [size, setSize] = useState(2);
   const [maxLength, setMaxLength] = useState(100);
   const [formLayout, setFormLayout] = useState('vertical');

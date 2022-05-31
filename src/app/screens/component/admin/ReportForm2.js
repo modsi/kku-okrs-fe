@@ -54,6 +54,9 @@ import FormUpload from "./FormUpload";
 import { StoreTemplateAction } from "../../../redux/actions/StoreSearchAction";
 import { UpdateTempateAction } from "../../../redux/actions/TemplateAction";
 import moment from "moment";
+import { ListInstitutionsAction, LIST_INSTITUTIONS } from '../../../redux/actions/ListMasterAction'
+import { SetIsusedAction } from "../../../redux/actions/TemplateAction"
+import LayoutReport from './LayoutReport'
 
 const { Text, Link } = Typography;
 const { RangePicker } = DatePicker;
@@ -95,6 +98,7 @@ const ReportForm2 = () => {
   const [listTableForm, setListTableForm] = useState([]);
   const [showConfigPage, setShowConfigPage] = useState(false);
   const [showViewPage, setShowViewPage] = useState(false);
+  const listInstitutions = useSelector(state => state?.main?.[LIST_INSTITUTIONS]);
 
   const layout = {
     labelCol: { span: 24 },
@@ -151,6 +155,7 @@ const ReportForm2 = () => {
       await ListForm2Action({ roleId: p.role_id, typeId: 2, isParent: 0 })
     );
     dispatch(await ListTemplateAction({}));
+    dispatch(await ListInstitutionsAction())
   }
 
   const handleClickCancel = () => {
@@ -167,6 +172,7 @@ const ReportForm2 = () => {
   const newTemplate = () => {
     setIsModalAddEditVisible(true);
     setAddEditTitle("เลือกใช้รายงาน");
+
   };
 
   const handleClickEdit = (record) => {
@@ -178,77 +184,13 @@ const ReportForm2 = () => {
     setIsLoading(false);
   };
 
-  const setLayoutTemplate = (listComponent) => {
-    console.log("start setLayoutTemplate", listComponent);
-    let listField = [];
-    listComponent?.sort((a, b) => (a.index > b.index ? 1 : -1));
-    listComponent?.map((currentItem) => {
-      console.log("value", currentItem.value);
-      let field = (
-        <>
-          <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-            {currentItem.type === "title" ? (
-              <Text
-                style={currentItem.isSubTitle ? { paddingLeft: "50px" } : {}}
-              >
-                {currentItem?.label}
-              </Text>
-            ) : (
-              <Form.Item
-                className="template-text"
-                labelAlign="left"
-                labelWrap="true"
-                layout={currentItem.labelPosition ?? "vertical"}
-                label={currentItem.label}
-                name={currentItem.key}
-                rules={[
-                  {
-                    required: currentItem.required ? true : false,
-                    message: "Please input " + currentItem?.label,
-                  },
-                ]}
-              >
-                {currentItem.type === "textArea" ? (
-                  <Input.TextArea showCount maxLength={currentItem.maxLength} />
-                ) : currentItem.type === "inputNumber" ? (
-                  <InputNumber min={currentItem.min} max={currentItem.max} />
-                ) : currentItem.type === "checkbox" ? (
-                  <Checkbox.Group options={currentItem.options} />
-                ) : currentItem.type === "select" ? (
-                  <Select
-                    mode={currentItem.mode}
-                    placeholder="Please select"
-                    style={{ width: "100%" }}
-                    options={currentItem.options}
-                  />
-                ) : currentItem.type === "radio" ? (
-                  <Radio.Group options={currentItem.options} />
-                ) : currentItem.type === "day" ? (
-                  <DatePicker />
-                ) : currentItem.type === "date_time" ? (
-                  <DatePicker showTime format="DD/MM/YYYY HH:mm:ss" />
-                ) : currentItem.type === "range_date" ? (
-                  <RangePicker />
-                ) : (
-                  <Input />
-                )}
-              </Form.Item>
-            )}
-          </Col>
-        </>
-      );
-      if (currentItem.type === "day" || currentItem.type === "date_time") {
-        form2.setFieldsValue({ [currentItem.key]: moment(currentItem.value) });
-      } else {
-        form2.setFieldsValue({ [currentItem.key]: currentItem.value });
-      }
-      listField.push(field);
-    });
-    setListField(listField);
-  };
+  const setLayoutReport = (listComponent) => {
+    console.log('setLayoutReport', listComponent)
+    setListField(<LayoutReport form={form2} store={listComponent} />)
+  }
 
   const onSubmitNewReport = async () => {
-    if (form.getFieldValue("template") && form.getFieldValue("name")) {
+    if (form.getFieldValue("template") && form.getFieldValue("name") && form.getFieldValue("group")) {
       ConfirmModalEditText(onSubmitNew, conditionSave());
     } else {
       form.validateFields();
@@ -256,15 +198,8 @@ const ReportForm2 = () => {
   };
 
   const onSubmitNew = async () => {
-    console.log(
-      "start onSubmitNew",
-      form.getFieldValue("template"),
-      form.getFieldValue("name")
-    );
     setIsLoading(true);
-    let obj = listTemplate.find(
-      (template) => template.id === form.getFieldValue("template")
-    );
+    let obj = listTemplate.find((template) => template.id === form.getFieldValue("template"));
     let data = obj;
     data.parentId = obj.id;
     data.name = form.getFieldValue("name");
@@ -274,6 +209,7 @@ const ReportForm2 = () => {
     data.groupid = obj?.groupid ?? obj?.group_id;
     data.status = 0;
     data.id = null;
+    data.groupid = form.getFieldValue('group')
     let res = {};
     try {
       res = await SaveFormAction(data);
@@ -318,18 +254,19 @@ const ReportForm2 = () => {
     console.log("upStep", record);
     let data = { ...record };
     data.templateId = record?.templateId ?? record?.template_id;
+    data.status = record?.status && !isNaN(+record?.status) ? record?.status : (record?.form_status ?? (record?.formStatus ?? 0));
     data.typeId = record?.typeId ?? record?.type_id;
     data.stepId = 4;
     let stepId = record?.stepId ?? record?.step_id;
     let components = record?.component;
-    let c = components.find((k) => k.key === "OKRs_Ids");
+    let c = components.find(k => k.key === 'OKRs_Ids')
     if (!c) {
-      c = propsIds;
-      components.push(c);
+      c = propsIds
+      components.push(c)
     }
     let ids = padLeadingZeros(record?.id, 5);
-    c.label = "เลขการรับเงิน : " + ids;
-    c.value = ids;
+    c.label = 'เลขการรับเงิน : ' + ids
+    c.value = ids
 
     if (stepId === "8") {
       components = components?.filter(f => f.key !== 'OKRs_Status');
@@ -346,7 +283,8 @@ const ReportForm2 = () => {
       s.labelValue = label
       components.push(s)
     }
-
+    
+    data.component = components
     let res = await UpdateFormAction(data);
     if (res.error === null) {
       SuccessModal("Success");
@@ -518,7 +456,7 @@ const ReportForm2 = () => {
         let c = record?.OKRs_Success === 'success' ? true : false
         return (
           <>
-            {!c ? null : (c ?
+            {record?.OKRs_Success === null || record?.OKRs_Success === '' ? null : (c ?
               <Text strong style={{ color: 'green' }}><CheckOutlined /></Text>
               :
               <Text strong style={{ color: 'red' }}><CloseOutlined /></Text>
@@ -560,18 +498,18 @@ const ReportForm2 = () => {
       render: (_, record) => {
         // console.log('status', record?.record_data)
         let r = record?.record_data
-        let v = record?.record_data?.component?.find(i=> i.key === 'OKRs_Status')
+        let v = record?.record_data?.component?.find(i => i.key === 'OKRs_Status')
         return (
           <>
-            {!r.status || !v ? null 
-            : (r.step_id === '8' || r.step_id === 8 || v.value === 0 || v.value === 8 || v.value === 2 ?
-              <Text strong style={{ color: 'red' }}>{r.status}</Text>
-              :(v.value === 1 ?
-                <Text strong style={{ color: 'green' }}>{r.status}</Text>
-                :
-                <Text strong style={{ color: '#edbf17' }}>{r.status}</Text>
-              )
-            )}
+            {!r.status || !v ? null
+              : (r.step_id === '8' || r.step_id === 8 || v.value === 0 || v.value === 8 || v.value === 2 ?
+                <Text strong style={{ color: 'red' }}>{r.status}</Text>
+                : (v.value === 1 ?
+                  <Text strong style={{ color: 'green' }}>{r.status}</Text>
+                  :
+                  <Text strong style={{ color: '#edbf17' }}>{r.status}</Text>
+                )
+              )}
           </>
         )
       }
@@ -592,8 +530,8 @@ const ReportForm2 = () => {
           <>
             {(profile?.role?.priority === "1" ||
               profile?.role?.priority === "2") &&
-            (record?.record_data?.step_id === "4" ||
-              record?.record_data?.step_id === "5") ? (
+              (record?.record_data?.step_id === "4" ||
+                record?.record_data?.step_id === "5") ? (
               <>
                 <Button
                   type="primary"
@@ -621,8 +559,8 @@ const ReportForm2 = () => {
                 <Button
                   disabled={
                     record?.record_data?.step_id === "1" ||
-                    record?.record_data?.step_id === "3" ||
-                    record?.record_data?.step_id === "8"
+                      record?.record_data?.step_id === "3" ||
+                      record?.record_data?.step_id === "8"
                       ? false
                       : true
                   }
@@ -637,8 +575,8 @@ const ReportForm2 = () => {
                 <Button
                   disabled={
                     record?.record_data?.step_id === "1" ||
-                    record?.record_data?.step_id === "3" ||
-                    record?.record_data?.step_id === "8"
+                      record?.record_data?.step_id === "3" ||
+                      record?.record_data?.step_id === "8"
                       ? false
                       : true
                   }
@@ -672,7 +610,7 @@ const ReportForm2 = () => {
     let status = { ...propsStatus };
     status.options = propsStatus.options.filter(
       (l) => l.value !== 6 && l.value !== 7
-    );  
+    );
     if (!c) {
       let status = { ...propsStatus }
       if (record.status) {
@@ -682,11 +620,12 @@ const ReportForm2 = () => {
           Object.assign(status, { value: parseInt(record.stepId) })
         }
       }
-      setLayoutTemplate([...l, status])
+      setLayoutReport([...l, status])
     } else {
-      setLayoutTemplate(l)
+      setLayoutReport(l)
     }
     form2.setFieldsValue({ ["name"]: record.name });
+    form2.setFieldsValue({ ['groupName']: record.group_name ? record.group_type_name + "/" + record.group_name : '' })
     setStep(record.stepId - 1);
     setListComponent(record);
     setIsModal2(true);
@@ -707,11 +646,6 @@ const ReportForm2 = () => {
   };
 
   const onSubmitNewSpec = async () => {
-    // console.log(
-    //   "start onSubmitNewSpec",
-    //   form3.getFieldValue("template"),
-    //   form3.getFieldValue("name")
-    // );
     setIsLoading(true);
     let obj = listTempMaster.find(
       (template) => template.id === form3.getFieldValue("template")
@@ -803,7 +737,7 @@ const ReportForm2 = () => {
         <Card title={"Report Form 2"} className="rounded">
           <Row gutter={24} className="row-inquiry-customer">
             {profile?.role?.priority === "1" ||
-            profile?.role?.priority === "4" ? (
+              profile?.role?.priority === "4" ? (
               <Col span={24} style={{ textAlign: "right" }}>
                 <Button
                   type="primary"
@@ -814,7 +748,7 @@ const ReportForm2 = () => {
                 >
                   รายงาน
                 </Button>
-                &nbsp;&nbsp;
+                {/* &nbsp;&nbsp;
                 <Button
                   type="primary"
                   shape="round"
@@ -823,7 +757,7 @@ const ReportForm2 = () => {
                   className="ggar2-button"
                 >
                   รายงานพิเศษ
-                </Button>
+                </Button> */}
               </Col>
             ) : null}
             <Col span={24} style={{ textAlign: "left", marginTop: 15 }}>
@@ -877,10 +811,15 @@ const ReportForm2 = () => {
                 <Form.Item
                   label="ชื่อรายงาน"
                   name={"name"}
-                  // rules={[
-                  //   { required: true, message: "Report Name is required" },
-                  // ]}
+                // rules={[
+                //   { required: true, message: "Report Name is required" },
+                // ]}
                 >
+                  <Input disabled={true} />
+                </Form.Item>
+              </Col>
+              <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                <Form.Item label={"ผู้รับผิดชอบโครงการ"} name={"groupName"}>
                   <Input disabled={true} />
                 </Form.Item>
               </Col>
@@ -951,6 +890,20 @@ const ReportForm2 = () => {
                   />
                 </Form.Item>
               </Col>
+              <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                <Form.Item label={"ผู้รับผิดชอบโครงการ"} name={"group"} rules={[{ required: true, message: 'ผู้รับผิดชอบโครงการ is required' }]}>
+                  <Select
+                    options={SetOptionsForSelect({
+                      label: "groupname",
+                      value: "groupid",
+                      data: listInstitutions,
+                    })}
+                    placeholder="-Please select from dropdown-"
+                    size="middle"
+                    style={{ width: "100%" }}
+                  />
+                </Form.Item>
+              </Col>
               <Col
                 className="form-login form-user"
                 xs={24}
@@ -963,7 +916,7 @@ const ReportForm2 = () => {
                   name={"name"}
                   rules={[{ required: true, message: "Please Input!" }]}
                 >
-                  <Input placeholder="ชื่อรายงาน" />
+                  <Input placeholder="ชื่อรายงาน" size="middle" />
                 </Form.Item>
               </Col>
             </Row>

@@ -1,20 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
-import { PageHeader, Modal, Steps, Card, Row, Col, Button, Typography, Table, Form, Input, Radio, Space, Image, InputNumber, Checkbox, Select, DatePicker, Upload, message } from 'antd';
-import { EditOutlined, EyeOutlined, TableOutlined, PlusOutlined, FileSearchOutlined, PlusCircleFilled } from "@ant-design/icons";
-import { tem1, tem2 } from '../../../../template-mock'
+import { Modal, Steps, Card, Row, Col, Button, Typography, Table, Form, Input, Select, DatePicker, } from 'antd';
+import { TableOutlined, PlusOutlined, } from "@ant-design/icons";
 import { LIST_TEMPLATES, ListTemplateAction } from '../../../redux/actions/TemplateAction'
-import SetOptionsForSelect, { SetOptionsForSelectSetLable } from '../../items/SetOptionsForSelect'
-import { clearStorege, getStorage } from "../../state/localStorage";
+import SetOptionsForSelect from '../../items/SetOptionsForSelect'
+import { getStorage } from "../../state/localStorage";
 import { ConfirmModalEditText, SuccessModal, ErrorModalMassageHtml, } from "../../items/Modal";
 import { onFormSubmit, ListFormAction, LIST_FORM, UpdateFormAction, ListForm2Action, LIST_FROM_2 } from "../../../redux/actions/FormAction";
-import { StoreTemplateAction, STORE_TEMPLATE, } from "../../../redux/actions/StoreSearchAction";
-import { SetIsusedAction } from '../../../redux/actions/TemplateAction'
 import { ListInstitutionsAction, LIST_INSTITUTIONS } from '../../../redux/actions/ListMasterAction'
 import LayoutReport from './LayoutReport'
 
-const { Text, Link } = Typography;
-const { RangePicker } = DatePicker;
+const { Text } = Typography;
 const { Step } = Steps;
 
 const ManageTemplate = () => {
@@ -22,6 +18,7 @@ const ManageTemplate = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isModalAddEditVisible, setIsModalAddEditVisible] = useState(false);
   const [isModal2, setIsModal2] = useState(false);
+  const [isForm2, setIsFrom2] = useState(false);
   const [addEditTitle, setAddEditTitle] = useState('');
   const [form] = Form.useForm();
   const [form2] = Form.useForm();
@@ -63,20 +60,7 @@ const ManageTemplate = () => {
       let d1 = []
       let list = listForm.result?.filter(l => l.type_id === "1");
       list.map(f => {
-        let obj = {}
-        obj.component = f.component
-        obj.templateId = f?.templateId ?? f?.template_id
-        obj.templateName = f?.templateName ?? f?.template_name
-        obj.stepName = f?.stepName ?? f?.step_name
-        obj.typeId = f?.typeId ?? f?.type_id
-        obj.id = f?.id
-        obj.stepId = f?.stepId ?? f?.step_id
-        obj.status = f?.status
-        obj.name = f?.name
-        obj.updatedBy = f?.updatedBy ?? f?.updated_by
-        obj.formStatus = f?.form_status ?? f?.formStatus
-        obj.groupId = f?.groupId ?? f?.group_id
-        obj.groupTypeId = f?.groupTypeId ?? f?.group_type_id
+        let obj = setRecord(f)
         d1.push(obj)
       })
       setDataSource1(d1)
@@ -88,24 +72,30 @@ const ManageTemplate = () => {
       let d2 = []
       let list = listForm2.result
       list.map(f => {
-        let obj = {}
-        obj.component = f.component
-        obj.templateId = f?.templateId ?? f?.template_id
-        obj.templateName = f?.templateName ?? f?.template_name
-        obj.stepName = f?.stepName ?? f?.step_name
-        obj.typeId = f?.typeId ?? f?.type_id
-        obj.id = f?.id
-        obj.stepId = f?.stepId ?? f?.step_id
-        obj.status = f?.status
-        obj.name = f?.name
-        obj.updatedBy = f?.updatedBy ?? f?.updated_by
-        obj.groupId = f?.groupId ?? f?.group_id
-        obj.groupTypeId = f?.groupTypeId ?? f?.group_type_id
+        let obj = setRecord(f)
         d2.push(obj)
       })
       setDataSource2(d2)
     }
   }, [listForm2])
+
+  const setRecord = (f) => {
+    let obj = {}
+    obj.component = f.component
+    obj.templateId = f?.templateId ?? f?.template_id
+    obj.templateName = f?.templateName ?? f?.template_name
+    obj.stepName = f?.stepName ?? f?.step_name
+    obj.typeId = f?.typeId ?? f?.type_id
+    obj.id = f?.id
+    obj.stepId = f?.stepId ?? f?.step_id
+    obj.status = f?.status
+    obj.name = f?.name
+    obj.updatedBy = f?.updatedBy ?? f?.updated_by
+    obj.formStatus = f?.form_status ?? f?.formStatus
+    obj.groupId = f?.groupId ?? f?.group_id
+    obj.groupTypeId = f?.groupTypeId ?? f?.group_type_id
+    return obj
+  }
 
   async function handleListMaster() {
     let p = getStorage('profile')
@@ -136,9 +126,6 @@ const ManageTemplate = () => {
       width: 60,
       render: (val, record, index) => {
         return {
-          // props: {
-          //   style: { color: 'red' }
-          // },
           children: <Text strong style={{ color: (!val ? 'red' : 'black') }}>{((record.typeId === '1' ? currentPage1 : currentPage2) - 1) * 10 + index + 1}</Text>
         };
       }
@@ -170,19 +157,18 @@ const ManageTemplate = () => {
       align: "left",
       width: 100,
       render: (_, record) => {
-        // console.log('status', record)
-        let v = record?.component?.find(i=> i.key === 'OKRs_Status')
+        let v = record?.component?.find(i => i.key === 'OKRs_Status')
         return (
           <>
-            {!v ? null 
-            : (v.value === 0 || v.value === 8 || v.value === 2 ?
-              <Text strong style={{ color: 'red' }}>{_}</Text>
-              :(v.value === 1 ?
-                <Text strong style={{ color: 'green' }}>{_}</Text>
-                :
-                <Text strong style={{ color: '#edbf17' }}>{_}</Text>
-              )
-            )}
+            {!v ? null
+              : (v.value === 0 || v.value === 8 || v.value === 2 ?
+                <Text strong style={{ color: 'red' }}>{_}</Text>
+                : (v.value === 1 ?
+                  <Text strong style={{ color: 'green' }}>{_}</Text>
+                  :
+                  <Text strong style={{ color: '#edbf17' }}>{_}</Text>
+                )
+              )}
           </>
         )
       }
@@ -195,12 +181,10 @@ const ManageTemplate = () => {
       ellipsis: {
         showTitle: false,
       },
-      // render: (obj) => setTableContent(obj)
       render: (obj) => {
         let comp = obj?.filter(i => profile.role_id === '1' ? i.permission === 3 || i.permission === 4 : i.permission === parseInt(profile.role_id))
         let content = []
         comp.map(item => {
-          // console.log('item', item.label, item.value)
           content.push(
             <>
               <Text>{item.label + " : "}</Text>
@@ -223,9 +207,7 @@ const ManageTemplate = () => {
       align: "center",
       width: 100,
       render: (record) => {
-        // console.log('profile', profile, record)
         let canEdit = (record?.stepId === '11' && profile?.role_id === '3') || (record?.stepId === '10' && profile?.role_id === '4') || (record?.stepId === '6' && profile?.role_id === '3') || (record?.stepId === '7' && profile?.role_id === '4') ? false : true
-        // console.log('canEdit', canEdit)
         return (
           <>
             <Button
@@ -238,18 +220,18 @@ const ManageTemplate = () => {
             >
               <Text className="big6-title">manage</Text>
             </Button>
-            {record.typeId === '1' ?
-              <Button
-                disabled={!canEdit || (record?.stepId !== '1' && record?.stepId !== '2' && record?.stepId !== '10' && record?.stepId !== '11' && record?.stepId !== '6' && record?.stepId !== '7') || !record?.id ? true : false}
-                type="primary"
-                className={record?.id ? "pre-button" : "nol-button"}
-                onClick={() =>
-                  handleUpStep(record)
-                }
-              >
-                <Text className="big6-title">ส่งไปแบบรายงาน</Text>
-              </Button>
-              : null}
+            {/* {record.typeId === '1' ? */}
+            <Button
+              disabled={!canEdit || (record?.stepId !== '1' && record?.stepId !== '2' && record?.stepId !== '10' && record?.stepId !== '11' && record?.stepId !== '6' && record?.stepId !== '7') || !record?.id ? true : false}
+              type="primary"
+              className={record?.id ? "pre-button" : "nol-button"}
+              onClick={() =>
+                handleUpStep(record)
+              }
+            >
+              <Text className="big6-title">ส่งไปแบบรายงาน</Text>
+            </Button>
+            {/* : null} */}
           </>
         )
       },
@@ -258,7 +240,6 @@ const ManageTemplate = () => {
 
   const handleUpStep = (record) => {
     upStep(record)
-    // ConfirmModalEditText(upStep(record), conditionUpStep());
   }
 
   async function upStep(record) {
@@ -270,7 +251,7 @@ const ManageTemplate = () => {
         data.stepId = record.stepId === '10' ? 11 : 10
         data.status = 3
       } else {
-        data.stepId = 3
+        data.stepId = record.typeId === "2" ? 9 : 3
       }
     } else {
       data.stepId = (record.stepId === '6' || record.stepId === '7' || record.stepId === '8' ? 4 : parseInt(record.stepId) + 1)
@@ -283,23 +264,26 @@ const ManageTemplate = () => {
       ErrorModalMassageHtml(res.error.message);
     }
     setIsLoading(false);
-  } 
+  }
 
   const handleClickCancel = () => {
     setIsModalAddEditVisible(false);
     setIsModal2(false)
+    setIsFrom2(false)
     form2.resetFields()
     form.resetFields()
   }
 
   const handleClickEdit = (record) => {
     console.log("handleClickEdit", profile.role_id, record)
+    if (record.typeId === "2") {
+      setIsFrom2(true)
+    }
     form2.setFieldsValue({ ['name']: record.name })
     form2.setFieldsValue({ ['group']: record.groupId })
     setStep(record.stepId === '6' || record.stepId === '7' || record.stepId === '8' ? 3 : record.stepId - 1)
     setListComponent(record)
     let l = record?.component?.filter(i => profile.role_id === '1' ? i.permission === 3 || i.permission === 4 : i.permission === parseInt(profile.role_id))
-    console.log("handleClickEdit", l)
     setLayoutReport(l)
     setIsModal2(true);
     setAddEditTitle(profile?.role?.role_name)
@@ -337,7 +321,8 @@ const ManageTemplate = () => {
   }
 
   const saveForm = () => {
-    if (form2.getFieldValue("name") && form2.getFieldValue("group")) {
+    // console.log('isForm2', isForm2, form2.getFieldValue("group"))
+    if (form2.getFieldValue("name") && (isForm2 || (!isForm2 && form2.getFieldValue("group")))) {
       ConfirmModalEditText(onSubmit, conditionSave());
     } else {
       form2.validateFields();
@@ -515,20 +500,22 @@ const ManageTemplate = () => {
                   <Input />
                 </Form.Item>
               </Col>
-              <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-                <Form.Item label={"ผู้รับผิดชอบโครงการ"} name={"group"} rules={[{ required: true, message: 'ผู้รับผิดชอบโครงการ is required' }]}>
-                  <Select
-                    options={SetOptionsForSelect({
-                      label: "groupname",
-                      value: "groupid",
-                      data: listInstitutions,
-                    })}
-                    placeholder="-Please select from dropdown-"
-                    size="large"
-                    style={{ width: "100%" }}
-                  />
-                </Form.Item>
-              </Col>
+              {!isForm2 ?
+                <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                  <Form.Item label={"ผู้รับผิดชอบโครงการ"} name={"group"} rules={[{ required: true, message: 'ผู้รับผิดชอบโครงการ is required' }]}>
+                    <Select
+                      options={SetOptionsForSelect({
+                        label: "groupname",
+                        value: "groupid",
+                        data: listInstitutions,
+                      })}
+                      placeholder="-Please select from dropdown-"
+                      size="large"
+                      style={{ width: "100%" }}
+                    />
+                  </Form.Item>
+                </Col>
+                : null}
               {listField}
             </Row>
             <Row gutter={24} className="row-inquiry-customer">

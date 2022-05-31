@@ -87,6 +87,10 @@ export const GetFormeService = async(data = {})=>{
     return await get(`${FORM__URL}/list_form?name=${data?.str ?? ''}&userId=${data?.userId ?? null}&roleId=${data?.roleId}&username=${data?.username}&year=${data.year}&group_id=${data.group_id}`)
 }
 
+export const GetStepService = async(data = {})=>{
+    return await get(`${FORM__URL}/list_flow_step?roleId=${data?.roleId}`)
+}
+
 export const UpdateFormService = async (data = {}) => {
     return await post(`${FORM__URL}/update_from`, data)
 }
