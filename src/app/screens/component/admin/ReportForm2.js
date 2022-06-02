@@ -57,6 +57,7 @@ import moment from "moment";
 import { ListInstitutionsAction, LIST_INSTITUTIONS } from '../../../redux/actions/ListMasterAction'
 import { SetIsusedAction } from "../../../redux/actions/TemplateAction"
 import LayoutReport from './LayoutReport'
+import StepProcess from '../../items/StepProcess'
 
 const { Text, Link } = Typography;
 const { RangePicker } = DatePicker;
@@ -626,11 +627,24 @@ const ReportForm2 = () => {
     }
     form2.setFieldsValue({ ["name"]: record.name });
     form2.setFieldsValue({ ['groupName']: record.group_name ? record.group_type_name + "/" + record.group_name : '' })
-    setStep(record.stepId - 1);
+    let s = 0
+    if (record.step_id === "4") {
+      s = 4;
+    } else if (record.step_id === "5") {
+      s = 5;
+    } else if (record.id != null) {
+      s = 1;
+    }
+    setLayoutStep(record, s)
     setListComponent(record);
     setIsModal2(true);
     setAddEditTitle(profile?.role?.role_name);
   };
+
+  const setLayoutStep = (listComponent, index) => {
+    console.log('setLayoutStep', listComponent, index)
+    setStep(<StepProcess current={listComponent} index={index} />)
+  }
 
   const newSpecTemplate = () => {
     setIsModal3(true);
@@ -798,12 +812,7 @@ const ReportForm2 = () => {
                 xl={24}
                 style={{ paddingBottom: "15px" }}
               >
-                <Steps current={step} percent={60}>
-                  <Step title="Admin1 กรอกข้อมูล" />
-                  <Step title="Admin2 กรอกข้อมูล" />
-                  <Step title="ผู้ใช้งาน กรอกข้อมูล" />
-                  <Step title="Validate" />
-                </Steps>
+               {step}
               </Col>
             </Row>
             <Row>

@@ -91,7 +91,7 @@ const ManageTemplate = () => {
     obj.status = f?.status
     obj.name = f?.name
     obj.updatedBy = f?.updatedBy ?? f?.updated_by
-    obj.formStatus = f?.form_status ?? f?.formStatus
+    obj.formStatus = f?.form_status ?? (f?.formStatus ?? 0)
     obj.groupId = f?.groupId ?? f?.group_id
     obj.groupTypeId = f?.groupTypeId ?? f?.group_type_id
     return obj
@@ -103,7 +103,7 @@ const ManageTemplate = () => {
     dispatch(await ListTemplateAction({}))
     dispatch(await ListFormAction({ roleId: p.role_id, str: '', username: p.username }))
     dispatch(await ListForm2Action({ roleId: p.role_id, typeId: 2, isParent: 1 }))
-    dispatch(await ListStepAction({roleId: profile?.role_id}))
+    dispatch(await ListStepAction({ roleId: profile?.role_id }))
   }
 
   const newTemplate = () => {
@@ -252,7 +252,14 @@ const ManageTemplate = () => {
         data.stepId = record.stepId === '10' ? 11 : 10
         data.status = 3
       } else {
-        data.stepId = record.typeId === "2" ? 9 : 3
+        data.stepId = (record.typeId === 2 || record.typeId === '2') ? 9 : 3
+      }
+    } else if ((record.typeId === 2 || record.typeId === '2') && record.stepId === '2' ) {
+      if (!record.formStatus || record.formStatus === '0') {
+        data.stepId = 9
+        data.status = 0
+      } else {
+        data.stepId = (record.typeId === 2 || record.typeId === '2') ? 9 : 3
       }
     } else {
       data.stepId = (record.stepId === '6' || record.stepId === '7' || record.stepId === '8' ? 4 : parseInt(record.stepId) + 1)
@@ -278,8 +285,28 @@ const ManageTemplate = () => {
 
   const handleClickEdit = (record) => {
     console.log("handleClickEdit", profile.role_id, record)
-    if (record.typeId === "2") {
+    let step = 0
+    if (record.typeId === '2') {
       setIsFrom2(true)
+      if (record.stepId === "2" || record.formStatus === "3") {
+        step = 2;
+      } else if (record.id != null && record.stepId !== "9") {
+        step = 1;
+      } else if (record.id != null) {
+        step = 3;
+      }
+    } else {
+      if (record.stepId === "2" || record.formStatus === "3") {
+        step = 2;
+      } else if (record.stepId === "3") {
+        step = 3;
+      } else if (record.stepId === "4") {
+        step = 4;
+      } else if (record.stepId === "5") {
+        step = 5;
+      } else if (record.id != null) {
+        step = 1;
+      }
     }
     form2.setFieldsValue({ ['name']: record.name })
     form2.setFieldsValue({ ['group']: record.groupId })
@@ -288,12 +315,13 @@ const ManageTemplate = () => {
     setLayoutReport(l)
     setIsModal2(true);
     setAddEditTitle(profile?.role?.role_name)
-    setLayoutStep(record)
+
+    setLayoutStep(record, step)
   }
 
-  const setLayoutStep = (listComponent) => {
+  const setLayoutStep = (listComponent, index) => {
     // console.log('setLayoutStep', listComponent)
-    setStep(<StepProcess current={listComponent} profile={profile} />)
+    setStep(<StepProcess current={listComponent} index={index} />)
   }
 
   const setLayoutReport = (listComponent) => {

@@ -30,6 +30,7 @@ import { StoreTemplateAction } from "../../../redux/actions/StoreSearchAction";
 import { UpdateTempateAction } from '../../../redux/actions/TemplateAction'
 import moment from "moment";
 import LayoutReport from './LayoutReport'
+import StepProcess from '../../items/StepProcess'
 
 const { Text, Link } = Typography;
 const { RangePicker } = DatePicker;
@@ -112,7 +113,13 @@ const ReportForm1 = () => {
     form3.resetFields();
     setShowConfigPage(false);
     setTemplate({});
+    setStep(null)
   };
+
+  const setLayoutStep = (listComponent, index) => {
+    console.log('setLayoutStep', listComponent, index)
+    setStep(<StepProcess current={listComponent} index={index} />)
+  }
 
   const handleClickEdit = (record) => {
     console.log("handleClickEdit", record);
@@ -504,9 +511,16 @@ const ReportForm1 = () => {
     }
     form2.setFieldsValue({ ['name']: record.name })
     form2.setFieldsValue({ ['groupName']: record.group_name ? record.group_type_name + "/" + record.group_name : '' })
-    setStep(record.stepId - 1)
-    setListComponent(record)
-
+   setListComponent(record)
+    let s = 0
+    if (record.step_id === "4") {
+      s = 4;
+    } else if (record.step_id === "5") {
+      s = 5;
+    } else if (record.id != null) {
+      s = 1;
+    }
+    setLayoutStep(record, s)
     setIsModal2(true);
     setAddEditTitle(profile?.role?.role_name)
   }
@@ -670,12 +684,7 @@ const ReportForm1 = () => {
           <Form form={form2} {...layout} >
             <Row>
               <Col xs={24} sm={24} md={24} lg={24} xl={24} style={{ paddingBottom: '15px' }}>
-                <Steps current={step} percent={60}>
-                  <Step title="Admin1 กรอกข้อมูล" />
-                  <Step title="Admin2 กรอกข้อมูล" />
-                  <Step title="ผู้ใช้งาน กรอกข้อมูล" />
-                  <Step title="Validate" />
-                </Steps>
+                {step}
               </Col>
             </Row>
             <Row>
