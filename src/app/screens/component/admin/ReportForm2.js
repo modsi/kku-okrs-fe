@@ -691,7 +691,7 @@ const ReportForm2 = () => {
             title="Back"
           />
           <Row gutter={24} className="row-inquiry-customer">
-            <FormReport form={form2} />
+            <FormReport form={form2} isView={true}/>
           </Row>
         </>
       ) : showConfigPage ? (

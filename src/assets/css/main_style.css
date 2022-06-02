@@ -501,6 +501,15 @@ display: inline;
   border-radius: 20px;
 }
 
+.ant-steps-item-description {
+  font-size: 10px !important;
+  
+}
+
+.ant-steps-horizontal:not(.ant-steps-label-vertical) .ant-steps-item-description {
+  max-width: 90px;
+}
+
 .card-m-tem .btn-event {
   padding: 5px 30px;
   height: auto;

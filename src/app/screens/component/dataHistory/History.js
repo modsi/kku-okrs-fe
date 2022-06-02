@@ -4,7 +4,7 @@ import {
   Card,
   Table,
   Button,
-  Modal,
+  PageHeader,
   Form,
   Row,
   Col,
@@ -43,6 +43,9 @@ import {
 import { historyList } from "../../../mock/data_history";
 import { DATE_FULL, DATE_NORMAL } from "../../../utils/Elements";
 import moment from "moment";
+import { StoreTemplateAction } from "../../../redux/actions/StoreSearchAction";
+import FormReport from "../admin/FormReport";
+import FormUpload from "../admin/FormUpload";
 
 import {
   propsIds,
@@ -82,6 +85,8 @@ const History = () => {
   const [years, setYears] = useState(null);
   const [group, setGroup] = useState(null);
   const [okrStatus, setOkrStatus] = useState(null);
+  const [showViewPage, setShowViewPage] = useState(false);
+  const [form2] = Form.useForm();
 
   const layout = {
     labelCol: { span: 24 },
@@ -313,7 +318,24 @@ const History = () => {
       dataIndex: "OKRs_Status",
       align: "left",
       width: 80,
-      render: (_, record) => record?.record_data?.status,
+      render: (_, record) => {
+        // console.log('status', record?.record_data)
+        let r = record?.record_data
+        let v = record?.record_data?.component?.find(i => i.key === 'OKRs_Status')
+        return (
+          <>
+            {!r.status || !v ? null
+              : (r.step_id === '8' || r.step_id === 8 || v.value === 0 || v.value === 8 || v.value === 2 ?
+                <Text strong style={{ color: 'red' }}>{r.status}</Text>
+                : (v.value === 1 ?
+                  <Text strong style={{ color: 'green' }}>{r.status}</Text>
+                  :
+                  <Text strong style={{ color: '#edbf17' }}>{r.status}</Text>
+                )
+              )}
+          </>
+        )
+      }
     },
     {
       title: "Action",
@@ -325,7 +347,7 @@ const History = () => {
           <Button
             type="link"
             className="text-danger btn-view"
-            onClick={() => handleClickEdit(record)}
+            onClick={() => handleClickView(record?.record_data)}
           >
             <Text>view</Text>
             {/* <EditOutlined /> */}
@@ -335,35 +357,12 @@ const History = () => {
     },
   ];
 
-  const handleClickEdit = (record) => {
-    console.log("record >> ", record);
-    setId(record.id);
-    setIsModalAddEditVisible(true);
-    setAddEditTitle("User Management");
-    let ag = [];
-    record?.account_groups?.map((item) => {
-      ag.push(item.group_id);
-    });
-    form.setFieldsValue({
-      fullName: record?.full_name,
-      username: record?.username,
-      email: record?.email,
-      role: record?.role?.id,
-      status: record?.status === "1" ? true : false,
-      group: ag,
-    });
-  };
-
-  const newUser = async () => {
-    setIsModalAddEditVisible(true);
-    setAddEditTitle("Registration");
-  };
-
-  const conditionSave = () => {
-    return {
-      title: "Confirm",
-      content: "Are you sure you want to save ?",
-    };
+  const handleClickView = (record) => {
+    console.log("handleClickView record >> ", record);
+    setIsLoading(true);
+    setShowViewPage(true);
+    setTemplate(record);
+    setIsLoading(false);
   };
 
   const resetSearch = async () => {
@@ -377,167 +376,121 @@ const History = () => {
     // setTimeout( async () => {
     await handleSearch();
     // }, 100);
-  };
+  };  
 
-  const onSubmit = async () => {
-    console.log(form.getFieldValue());
-    if (
-      form.getFieldValue("fullName") &&
-      form.getFieldValue("email") &&
-      form.getFieldValue("role") &&
-      form.getFieldValue("username")
-    ) {
-      ConfirmModalEditText(onFinish, conditionSave());
-    } else {
-      form.validateFields();
-    }
-  };
-
-  async function onFinish() {
-    setIsLoading(true);
-    let data = {};
-    data.username = form.getFieldValue("username");
-    data.password = "1234";
-    data.email = form.getFieldValue("email");
-    data.full_name = form.getFieldValue("fullName");
-    data.role_id = form.getFieldValue("role");
-    data.status =
-      form.getFieldValue("status") ||
-      form.getFieldValue("status") === undefined ||
-      form.getFieldValue("status") === null
-        ? 1
-        : 0;
-    data.group = form.getFieldValue("group");
-    console.log("onFinish >> data is ", data);
-    let res = {};
-    if (id) {
-      data.id = id;
-      data.updated_datetime = moment().format(DATE_FULL);
-      res = await UpdateAccAction(data);
-    } else {
-      res = await SaveAccAction(data);
-    }
-    if (res.error === null) {
-      handleClickCancel();
-      listAccount({ str: "" });
-      SuccessModal("Success");
-    } else {
-      ErrorModalMassageHtml(res.error.message);
-    }
-    setIsLoading(false);
+  async function setTemplate(data) {
+    dispatch(await StoreTemplateAction(data));
   }
 
-  const handleClickCancel = () => {
-    form.resetFields();
-    setId(null);
-    setIsModalAddEditVisible(false);
-  };
-
-  const setUsername = (e) => {
-    console.log("setUsername", e.target.value);
-    let value = e.target.value.split("@");
-    form.setFieldsValue({
-      username: value ? value[0] : null,
-    });
-  };
-
-  const handleTableChange = (pagination, filters, sorter) => {
-    console.log("pagination >> ", pagination);
-    setCurrentPage(pagination.current);
-  };
-
   return (
-    <div className="container-user">
-      <Card title={"Data History"} className="rounded container-card">
-        <Form
-          form={form}
-          name="login"
-          layout="vertical"
-          labelCol={{ span: 24 }}
-          wrapperCol={{ span: 24 }}
-          autoComplete="off"
-        >
+    <>
+      {showViewPage ? (
+        <>
+          <PageHeader
+            style={{ padding: "0px" }}
+            onBack={() => {
+              setShowViewPage(false);
+              setTemplate({});
+            }}
+            title="Back"
+          />
           <Row gutter={24} className="row-inquiry-customer">
-            <Col span={24} style={{ textAlign: "left" }}>
-              <Row>
-                <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-                  <div style={{ float: "right" }}>
-                    <Row>
-                      <Col className="from-search">
-                        <Form.Item
-                          name={"group"}
-                          rules={[
-                            { required: true, message: "Role is required!" },
-                          ]}
-                        >
-                          <Select
-                            options={SetOptionsForSelect({
-                              label: "groupname",
-                              value: "groupid",
-                              data: listInstitutions,
-                            })}
-                            onChange={handleSearch}
-                            placeholder="กลุ่มงาน"
-                            size="middle"
-                            style={{ width: "350px" }}
-                          />
-                        </Form.Item>
-                      </Col>
+            <FormReport form={form2} isView={true} />
+            <FormUpload form={form2} />
+          </Row>
+        </>
+      ) :
+        <div className="container-user">
+          <Card title={"Data History"} className="rounded container-card">
+            <Form
+              form={form}
+              name="login"
+              layout="vertical"
+              labelCol={{ span: 24 }}
+              wrapperCol={{ span: 24 }}
+              autoComplete="off"
+            >
+              <Row gutter={24} className="row-inquiry-customer">
+                <Col span={24} style={{ textAlign: "left" }}>
+                  <Row>
+                    <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                      <div style={{ float: "right" }}>
+                        <Row>
+                          <Col className="from-search">
+                            <Form.Item
+                              name={"group"}
+                              rules={[
+                                { required: true, message: "Role is required!" },
+                              ]}
+                            >
+                              <Select
+                                options={SetOptionsForSelect({
+                                  label: "groupname",
+                                  value: "groupid",
+                                  data: listInstitutions,
+                                })}
+                                onChange={handleSearch}
+                                placeholder="กลุ่มงาน"
+                                size="middle"
+                                style={{ width: "350px" }}
+                              />
+                            </Form.Item>
+                          </Col>
 
-                      <Col className="from-search">
-                        <Form.Item
-                          name={"year"}
-                          rules={[
-                            { required: true, message: "Role is required!" },
-                          ]}
-                        >
-                          <Select
-                            options={SetOptionsForSelect({
-                              label: "value",
-                              value: "value",
-                              data: listYears,
-                            })}
-                            onChange={handleSearch}
-                            placeholder="ปีงบประมาณ"
-                            size="middle"
-                            style={{ width: "200px" }}
-                          />
-                        </Form.Item>
-                      </Col>
+                          <Col className="from-search">
+                            <Form.Item
+                              name={"year"}
+                              rules={[
+                                { required: true, message: "Role is required!" },
+                              ]}
+                            >
+                              <Select
+                                options={SetOptionsForSelect({
+                                  label: "value",
+                                  value: "value",
+                                  data: listYears,
+                                })}
+                                onChange={handleSearch}
+                                placeholder="ปีงบประมาณ"
+                                size="middle"
+                                style={{ width: "200px" }}
+                              />
+                            </Form.Item>
+                          </Col>
 
-                      <Col className="from-search">
-                        <Form.Item
-                          name={"status_okr"}
-                          rules={[
-                            { required: true, message: "Role is required!" },
-                          ]}
-                        >
-                          <Select
-                            options={SetOptionsForSelect({
-                              label: "label_value",
-                              value: "value",
-                              data: listStatus,
-                            })}
-                            onChange={handleSearch}
-                            placeholder="สถานะ"
-                            size="middle"
-                            style={{ width: "200px" }}
-                          />
-                        </Form.Item>
-                      </Col>
-                      <Col className="from-search">
-                        <Button onClick={resetSearch}>
-                          <RedoOutlined />
-                        </Button>
-                      </Col>
-                    </Row>
-                  </div>
+                          <Col className="from-search">
+                            <Form.Item
+                              name={"status_okr"}
+                              rules={[
+                                { required: true, message: "Role is required!" },
+                              ]}
+                            >
+                              <Select
+                                options={SetOptionsForSelect({
+                                  label: "label_value",
+                                  value: "value",
+                                  data: listStatus,
+                                })}
+                                onChange={handleSearch}
+                                placeholder="สถานะ"
+                                size="middle"
+                                style={{ width: "200px" }}
+                              />
+                            </Form.Item>
+                          </Col>
+                          <Col className="from-search">
+                            <Button onClick={resetSearch}>
+                              <RedoOutlined />
+                            </Button>
+                          </Col>
+                        </Row>
+                      </div>
+                    </Col>
+                  </Row>
                 </Col>
-              </Row>
-            </Col>
-            <Col span={24}>
-              <div style={{ textAlign: "center" }}>
-                {/* <Table
+                <Col span={24}>
+                  <div style={{ textAlign: "center" }}>
+                    {/* <Table
                                 className='table-user custom-table-dashboard'
                                 rowKey={(record, index) => record.key}
                                 style={{ whiteSpace: 'pre' }}
@@ -551,27 +504,29 @@ const History = () => {
                                 pageSize={10}
                                 columns={columns} /> */}
 
-                <Table
-                  className="table-user custom-table-dashboard"
-                  rowKey={(record, index) => record.id}
-                  style={{ whiteSpace: "pre" }}
-                  loading={isLoading}
-                  scroll={{ x: "max-content" }}
-                  size="small"
-                  dataSource={listTableForm}
-                  pagination={false}
-                  columns={columns}
-                />
-              </div>
+                    <Table
+                      className="table-user custom-table-dashboard"
+                      rowKey={(record, index) => record.id}
+                      style={{ whiteSpace: "pre" }}
+                      loading={isLoading}
+                      scroll={{ x: "max-content" }}
+                      size="small"
+                      dataSource={listTableForm}
+                      pagination={false}
+                      columns={columns}
+                    />
+                  </div>
 
-              {/* <div style={{}}>
+                  {/* <div style={{}}>
                             Show 1 to 6 of 30 entries
                         </div> */}
-            </Col>
-          </Row>
-        </Form>
-      </Card>
-    </div>
+                </Col>
+              </Row>
+            </Form>
+          </Card>
+        </div>
+      }
+    </>
   );
 };
 export default History;

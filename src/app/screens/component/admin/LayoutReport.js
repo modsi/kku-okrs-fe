@@ -16,7 +16,7 @@ import { formatCurrency } from '../../../utils/CommonUtils'
 
 const { Text, Link } = Typography;
 const { RangePicker } = DatePicker;
-const LayoutReport = ({ form, store }) => {
+const LayoutReport = ({ form, store, isView }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [listField, setListField] = useState([]);
@@ -90,12 +90,12 @@ const LayoutReport = ({ form, store }) => {
 
             {currentItem.key === 'OKRs_TargetGroup' ?
               <>
-                <TargetGroupField form={form} content={currentItem} />
+                <TargetGroupField form={form} content={currentItem} isView={isView} />
               </>
               :
               currentItem.key === 'OKRs_PDCA' ?
                 <>
-                  <PDCAField form={form} content={currentItem} />
+                  <PDCAField form={form} content={currentItem} isView={isView} />
                 </>
                 : currentItem.type === 'table' ?
                   <>
@@ -115,14 +115,14 @@ const LayoutReport = ({ form, store }) => {
                     // rules={[{ required: currentItem.required ? true : false, message: 'Please input ' + currentItem?.label }]}
                     >
                       {currentItem.type === 'textArea' ?
-                        (<Input.TextArea showCount maxLength={currentItem.maxLength} disabled={isDisabled} />)
+                        (<Input.TextArea  showCount maxLength={currentItem.maxLength} disabled={isView || isDisabled ? true : false} />)
                         : currentItem.type === 'inputNumber' ?
-                          (<InputNumber min={currentItem.min} max={currentItem.max} disabled={currentItem.key === 'OKRs_Budget3' || isDisabled} onChange={(e) => setAutoValue(e, currentItem.key)} />)
+                          (<InputNumber min={currentItem.min} max={currentItem.max} disabled={isView || currentItem.key === 'OKRs_Budget3' || isDisabled} onChange={(e) => setAutoValue(e, currentItem.key)} />)
                           : currentItem.type === 'checkbox' ?
-                            (<Checkbox.Group options={currentItem.options} disabled={isDisabled} />)
+                            (<Checkbox.Group options={currentItem.options} disabled={isView || isDisabled ? true : false} />)
                             : currentItem.type === 'select' ?
                               (<Select
-                                disabled={isDisabled}
+                                disabled={isView || isDisabled ? true : false}
                                 mode={currentItem.mode}
                                 placeholder="Please select"
                                 style={{ width: '100%' }}
@@ -131,22 +131,22 @@ const LayoutReport = ({ form, store }) => {
                               />)
                               : currentItem.type === 'radio' ?
                                 (<Radio.Group
-                                  disabled={isDisabled}
+                                  disabled={isView || isDisabled ? true : false}
                                   options={currentItem.options}
                                 />)
                                 : currentItem.type === 'day' ?
-                                  (<DatePicker disabled={isDisabled} />)
+                                  (<DatePicker disabled={isView || isDisabled ? true : false} />)
                                   : currentItem.type === 'date_time' ?
-                                    (<DatePicker showTime format="DD/MM/YYYY HH:mm:ss" disabled={isDisabled} />)
+                                    (<DatePicker showTime format="DD/MM/YYYY HH:mm:ss" disabled={isView || isDisabled ? true : false} />)
                                     : currentItem.type === 'range_date' ?
-                                      (<RangePicker disabled={isDisabled} />)
+                                      (<RangePicker disabled={isView || isDisabled ? true : false} />)
                                       : currentItem.type === 'upload' ?
                                         (<Upload {...propsUpload}>
-                                          <Button icon={<UploadOutlined />} disabled={isDisabled}>Click to Upload</Button>
+                                          <Button icon={<UploadOutlined />} disabled={isView || isDisabled ? true : false}>Click to Upload</Button>
                                         </Upload>)
                                         // : currentItem.type === 'email' ?
                                         // (<Input placeholder="Please enter email." onChange={(e) => form.validateFields()} />)                                                                                        
-                                        : (<Input disabled={currentItem.key === 'OKRs_Budget3' || isDisabled} onChange={(e) => setAutoValue(e.target.value, currentItem.key)} />)
+                                        : (<Input disabled={isView ||currentItem.key === 'OKRs_Budget3' || isDisabled} onChange={(e) => setAutoValue(e.target.value, currentItem.key)} />)
                       }
                     </Form.Item>
                     )}
@@ -234,6 +234,7 @@ const LayoutReport = ({ form, store }) => {
             style={{ margin: 0, padding: 0 }}
           >
             <Input
+              disabled={isView ? true : false}
               style={{ width: '100%', textAlign: "left" }}
               size="small"
               onChange={(e) => form.setFieldsValue({ [dataIndex + '#' + record?.index]: e.target.value })}

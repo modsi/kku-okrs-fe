@@ -269,7 +269,8 @@ export const ListHistoryAction = async (data = {}) => {
     return Payload({ params: params, type: LIST_HISTORY });
   } catch (e) {
     console.error(e);
-    return Payload({ params: [], type: LIST_HISTORY });
+    throw e;
+    // return Payload({ params: [], type: LIST_HISTORY });
   }
 };
 

@@ -9,7 +9,7 @@ import { QuestionCircleOutlined, CaretRightFilled } from "@ant-design/icons";
 import { formatCurrency } from '../../../../utils/CommonUtils'
 
 const { Text, Link } = Typography;
-const TargetGroupField = ({ form, content }) => {
+const TargetGroupField = ({ form, content, isView }) => {
   const [title, setTitle] = useState('Label Text Field');
   const [formLayout, setFormLayout] = useState('vertical');
 
@@ -77,7 +77,7 @@ const TargetGroupField = ({ form, content }) => {
                     <Form.Item
                       name={"OKRs_TargetGroup#1"}
                       style={{ margin: 0, padding: 0 }}>
-                      <InputNumber style={{ width: '90%', marginLeft: '10px', marginRight: '10px' }} formatter={value => !isNaN(+value) ? formatCurrency(value) : value} onChange={(v) => form.setFieldsValue({ ["OKRs_TargetGroup#1"]: v })} />
+                      <InputNumber disabled={isView ? true : false} style={{ width: '90%', marginLeft: '10px', marginRight: '10px' }} formatter={value => !isNaN(+value) ? formatCurrency(value) : value} onChange={(v) => form.setFieldsValue({ ["OKRs_TargetGroup#1"]: v })} />
                     </Form.Item>
                     <Text>คน</Text>
                   </Space>
@@ -91,7 +91,7 @@ const TargetGroupField = ({ form, content }) => {
                     <Form.Item
                       name={"OKRs_TargetGroup#2"}
                       style={{ margin: 0, padding: 0 }}>
-                      <InputNumber style={{ width: '90%', marginLeft: '10px', marginRight: '10px' }} formatter={value => !isNaN(+value) ? formatCurrency(value) : value} onChange={(v) => form.setFieldsValue({ ["OKRs_TargetGroup#2"]: v })} />
+                      <InputNumber disabled={isView ? true : false} style={{ width: '90%', marginLeft: '10px', marginRight: '10px' }} formatter={value => !isNaN(+value) ? formatCurrency(value) : value} onChange={(v) => form.setFieldsValue({ ["OKRs_TargetGroup#2"]: v })} />
                     </Form.Item>
                     <Text>คน</Text>
                   </Space>
@@ -105,7 +105,7 @@ const TargetGroupField = ({ form, content }) => {
                     <Form.Item
                       name={"OKRs_TargetGroup#3"}
                       style={{ margin: 0, padding: 0 }}>
-                      <InputNumber style={{ width: '90%', marginLeft: '10px', marginRight: '10px' }} formatter={value => !isNaN(+value) ? formatCurrency(value) : value} onChange={(v) => form.setFieldsValue({ ["OKRs_TargetGroup#3"]: v })} />
+                      <InputNumber disabled={isView ? true : false} style={{ width: '90%', marginLeft: '10px', marginRight: '10px' }} formatter={value => !isNaN(+value) ? formatCurrency(value) : value} onChange={(v) => form.setFieldsValue({ ["OKRs_TargetGroup#3"]: v })} />
                     </Form.Item>
                     <Text>คน</Text>
                   </Space>
@@ -119,7 +119,7 @@ const TargetGroupField = ({ form, content }) => {
                     <Form.Item
                       name={"OKRs_TargetGroup#4"}
                       style={{ margin: 0, padding: 0 }}>
-                      <InputNumber style={{ width: '90%', marginLeft: '10px', marginRight: '10px' }} formatter={value => !isNaN(+value) ? formatCurrency(value) : value} onChange={(v) => form.setFieldsValue({ ["OKRs_TargetGroup#4"]: v })} />
+                      <InputNumber disabled={isView ? true : false} style={{ width: '90%', marginLeft: '10px', marginRight: '10px' }} formatter={value => !isNaN(+value) ? formatCurrency(value) : value} onChange={(v) => form.setFieldsValue({ ["OKRs_TargetGroup#4"]: v })} />
                     </Form.Item>
                     <Text>คน</Text>
                   </Space>
@@ -133,7 +133,7 @@ const TargetGroupField = ({ form, content }) => {
                     <Form.Item
                       name={"OKRs_TargetGroup#5"}
                       style={{ margin: 0, padding: 0 }}>
-                      <InputNumber style={{ width: '90%', marginLeft: '10px', marginRight: '10px' }} formatter={value => !isNaN(+value) ? formatCurrency(value) : value} onChange={(v) => form.setFieldsValue({ ["OKRs_TargetGroup#5"]: v })} />
+                      <InputNumber disabled={isView ? true : false} style={{ width: '90%', marginLeft: '10px', marginRight: '10px' }} formatter={value => !isNaN(+value) ? formatCurrency(value) : value} onChange={(v) => form.setFieldsValue({ ["OKRs_TargetGroup#5"]: v })} />
                     </Form.Item>
                     <Text>คน</Text>
                   </Space>
@@ -145,7 +145,7 @@ const TargetGroupField = ({ form, content }) => {
                   <Form.Item
                     name={"OKRs_TargetGroup#label#6"}
                     style={{ margin: 0, padding: 0 }}>
-                    <Input placeholder="โปรดระบุ" />
+                    <Input disabled={isView ? true : false} placeholder="โปรดระบุ" />
                   </Form.Item>
                 </Col>
                 <Col span={14}>
@@ -154,7 +154,7 @@ const TargetGroupField = ({ form, content }) => {
                     <Form.Item
                       name={"OKRs_TargetGroup#6"}
                       style={{ margin: 0, padding: 0 }}>
-                      <InputNumber style={{ width: '90%', marginLeft: '10px', marginRight: '10px' }} formatter={value => !isNaN(+value) ? formatCurrency(value) : value} onChange={(v) => form.setFieldsValue({ ["OKRs_TargetGroup#6"]: v })} />
+                      <InputNumber disabled={isView ? true : false} style={{ width: '90%', marginLeft: '10px', marginRight: '10px' }} formatter={value => !isNaN(+value) ? formatCurrency(value) : value} onChange={(v) => form.setFieldsValue({ ["OKRs_TargetGroup#6"]: v })} />
                     </Form.Item>
                     <Text>คน</Text>
                   </Space>

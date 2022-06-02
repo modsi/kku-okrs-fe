@@ -6,12 +6,12 @@ import { LIST_TEMPLATES, ListTemplateAction } from '../../../redux/actions/Templ
 import SetOptionsForSelect from '../../items/SetOptionsForSelect'
 import { getStorage } from "../../state/localStorage";
 import { ConfirmModalEditText, SuccessModal, ErrorModalMassageHtml, } from "../../items/Modal";
-import { onFormSubmit, ListFormAction, LIST_FORM, UpdateFormAction, ListForm2Action, LIST_FROM_2 } from "../../../redux/actions/FormAction";
+import { ListStepAction, onFormSubmit, ListFormAction, LIST_FORM, UpdateFormAction, ListForm2Action, LIST_FROM_2 } from "../../../redux/actions/FormAction";
 import { ListInstitutionsAction, LIST_INSTITUTIONS } from '../../../redux/actions/ListMasterAction'
 import LayoutReport from './LayoutReport'
+import StepProcess from '../../items/StepProcess'
 
 const { Text } = Typography;
-const { Step } = Steps;
 
 const ManageTemplate = () => {
   const dispatch = useDispatch()
@@ -33,8 +33,8 @@ const ManageTemplate = () => {
   const [listField, setListField] = useState([]);
   const [profile, setProfile] = useState({})
   const [listComponent, setListComponent] = useState([]);
-  const [step, setStep] = useState(0);
   const listInstitutions = useSelector(state => state?.main?.[LIST_INSTITUTIONS]);
+  const [step, setStep] = useState(null)
 
   const layout = {
     labelCol: { span: 24 },
@@ -103,6 +103,7 @@ const ManageTemplate = () => {
     dispatch(await ListTemplateAction({}))
     dispatch(await ListFormAction({ roleId: p.role_id, str: '', username: p.username }))
     dispatch(await ListForm2Action({ roleId: p.role_id, typeId: 2, isParent: 1 }))
+    dispatch(await ListStepAction({roleId: profile?.role_id}))
   }
 
   const newTemplate = () => {
@@ -272,6 +273,7 @@ const ManageTemplate = () => {
     setIsFrom2(false)
     form2.resetFields()
     form.resetFields()
+    setStep(null)
   }
 
   const handleClickEdit = (record) => {
@@ -281,16 +283,21 @@ const ManageTemplate = () => {
     }
     form2.setFieldsValue({ ['name']: record.name })
     form2.setFieldsValue({ ['group']: record.groupId })
-    setStep(record.stepId === '6' || record.stepId === '7' || record.stepId === '8' ? 3 : record.stepId - 1)
     setListComponent(record)
     let l = record?.component?.filter(i => profile.role_id === '1' ? i.permission === 3 || i.permission === 4 : i.permission === parseInt(profile.role_id))
     setLayoutReport(l)
     setIsModal2(true);
     setAddEditTitle(profile?.role?.role_name)
+    setLayoutStep(record)
+  }
+
+  const setLayoutStep = (listComponent) => {
+    // console.log('setLayoutStep', listComponent)
+    setStep(<StepProcess current={listComponent} profile={profile} />)
   }
 
   const setLayoutReport = (listComponent) => {
-    console.log('setLayoutReport', listComponent)
+    // console.log('setLayoutReport', listComponent)
     setListField(<LayoutReport form={form2} store={listComponent} />)
   }
 
@@ -482,12 +489,7 @@ const ManageTemplate = () => {
           <Form form={form2} {...layout} >
             <Row>
               <Col xs={24} sm={24} md={24} lg={24} xl={24} style={{ paddingBottom: '15px' }}>
-                <Steps current={step} percent={60}>
-                  <Step title="Admin1 กรอกข้อมูล" />
-                  <Step title="Admin2 กรอกข้อมูล" />
-                  <Step title="ผู้ใช้งาน กรอกข้อมูล" />
-                  <Step title="Validate" />
-                </Steps>
+                {step}
               </Col>
             </Row>
             <Row>

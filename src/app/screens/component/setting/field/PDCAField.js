@@ -11,7 +11,7 @@ import moment from "moment";
 
 const { Text, Link } = Typography;
 const { RangePicker } = DatePicker;
-const PDCAField = ({ form, content }) => {
+const PDCAField = ({ form, content, isView }) => {
   const dispatch = useDispatch()
   const [form2] = Form.useForm();
   const storeTemplate = useSelector(state => state?.storeSearchReducer?.[STORE_TEMPLATE])
@@ -73,12 +73,12 @@ const PDCAField = ({ form, content }) => {
       if (Array.isArray(content?.value)) {
         content?.value?.map(v => {
           form.setFieldsValue({
-            [content.key + "#month#" + v.index]: v.month ? [moment(v.month[0]), moment(v.month[1])] : [null ,null],
+            [content.key + "#month#" + v.index]: v.month ? [moment(v.month[0]), moment(v.month[1])] : [null, null],
             [content.key + "#title#" + v.index]: v.title,
           })
         })
         setRow(content?.value?.length ?? 1)
-      }      
+      }
       setTitle(content.label)
     }
   }, [content])
@@ -177,14 +177,14 @@ const PDCAField = ({ form, content }) => {
             name={"colLabel" + item.index}
             rules={[{ required: true }]}
           >
-            <Input placeholder="label" onChange={(e) => updateOption(item.index, 'colLabel', e)} defaultValue={item.colLabel} style={{ width: '40%' }} />
+            <Input placeholder="label" disabled={isView ? true : false} onChange={(e) => updateOption(item.index, 'colLabel', e)} defaultValue={item.colLabel} style={{ width: '40%' }} />
           </Form.Item>
           <Form.Item
             noStyle
             name={"colKey" + item.index}
             rules={[{ required: true }]}
           >
-            <Input placeholder="column key" onChange={(e) => updateOption(item.index, 'colKey', e)} defaultValue={item.colKey} style={{ width: '40%' }} />
+            <Input placeholder="column key" disabled={isView ? true : false} onChange={(e) => updateOption(item.index, 'colKey', e)} defaultValue={item.colKey} style={{ width: '40%' }} />
           </Form.Item>
 
           <MinusCircleOutlined
@@ -234,12 +234,14 @@ const PDCAField = ({ form, content }) => {
             >
               {dataIndex === 'OKRs_PDCA#month' ?
                 <RangePicker
+                  disabled={isView ? true : false}
                   picker="month"
                   style={{ width: '100%', textAlign: "left" }}
                   size="small"
                 />
                 :
                 <Input
+                  disabled={isView ? true : false}
                   style={{ width: '100%', textAlign: "left" }}
                   size="small"
                 />
@@ -287,14 +289,16 @@ const PDCAField = ({ form, content }) => {
                     }}
                     bordered
                   />
-                  <Button
-                    type="dashed"
-                    onClick={() => add()}
-                    style={{ width: "60%" }}
-                    icon={<PlusOutlined />}
-                  >
-                    Add Rows
-                  </Button>
+                  {isView ? null :
+                    <Button
+                      type="dashed"
+                      onClick={() => add()}
+                      style={{ width: "60%" }}
+                      icon={<PlusOutlined />}
+                    >
+                      Add Rows
+                    </Button>
+                  }
                 </Space>
               </Col>
             </Row>

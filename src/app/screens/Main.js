@@ -22,7 +22,7 @@ import { ConfirmModalEditText } from "./items/Modal";
 import logoProfile from "../../assets/images/icon/pixlr-bg-result.png";
 import logoLogOut from "../../assets/images/icon/log-out.png";
 
-import { SaveFormAction, ListFormAction, LIST_FORM, UpdateFormAction } from "../redux/actions/FormAction";
+import { ListHistoryAction, SaveFormAction, ListFormAction, LIST_FORM, UpdateFormAction } from "../redux/actions/FormAction";
 import { UpdateAccAction } from '../redux/actions/UserAction'
 
 const { Text, Link } = Typography;
@@ -102,6 +102,7 @@ const Main = () => {
         try {
             if (getStorage('profile')) {
                 // let res = await UpdateAccAction(getStorage('profile'))
+                dispatch(await ListHistoryAction());
             } else {
                 routeChange()
             }

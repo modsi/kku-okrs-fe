@@ -2,9 +2,10 @@ import { LIST_INSTITUTIONS, LIST_ROLES, LIST_TYPE_TEPM, LIST_FIELD_TEPM, LIST_YE
 import { LLIST_ACCOUNT } from '../actions/UserAction'
 import {LIST_TEMPLATES} from '../actions/TemplateAction'
 import { LIST_DASHBOARD } from '../actions/DashboardAction';
-import { LIST_FORM, LIST_FROM_TEMPLATES, LIST_FROM_2, LIST_HISTORY } from '../actions/FormAction'
+import { LIST_FORM, LIST_FROM_TEMPLATES, LIST_FROM_2, LIST_HISTORY, LIST_STEP } from '../actions/FormAction'
 
 const initialsState = {
+    [LIST_STEP]: null,
     [LIST_FROM_2]: null,
     [LIST_FROM_TEMPLATES]: null,
     [LIST_FORM]: null,
@@ -24,6 +25,7 @@ const initialsState = {
 // eslint-disable-next-line import/no-anonymous-default-export
 export default (state = initialsState, { type, payload }) => {
     switch (type) {
+        case LIST_STEP:
         case LIST_FROM_2:
         case LIST_FROM_TEMPLATES:
         case LIST_FORM:
