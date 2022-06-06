@@ -126,7 +126,7 @@ export const SaveCompalteFormAction = async (id, data) => {
       o.value = ov
       // console.log('o', ov)
       component.push(o)
-    } else if (c.value && (c.type === 'table' || c.key === 'OKRs_TargetGroup')) {
+    } else if (c.value && (c.key === 'OKRs_TargetGroup')) {
       let ov = '['
       c.value.map((v) => {
         ov += (ov === '[' ? '' : ',')
@@ -137,14 +137,27 @@ export const SaveCompalteFormAction = async (id, data) => {
       // console.log('o', ov)
       component.push(o)
     } else if (c.value && c.type === 'table') {
-      let ov = '['
-      c.value.map((v) => {
-        ov += (ov === '[' ? '' : ',')
-        ov += '{"key" : "' + v.key + '", "value" : "' + v.value + '", "index": ' + v.index + '}'
+      // console.log('o > table >', c)
+      let columnsItems = ''
+      c.columns.map((v) => {
+        columnsItems += (columnsItems === '' ? '' : ',')
+        columnsItems += '"' + v.colLabel + '"'
       })
-      ov += ']'
+      let rowsItems = ''
+      for (let i = 1; i <= c.rows; i++) {
+        let r = [...(c.value?.filter(v => v.index === i))]
+        // console.log('o > table > r', r)
+        let rows = ''
+        c.columns.map((v) => {
+          rows += (rows === '' ? '' : ',')
+          rows += '"' + (r.find(vl => vl.key === v.colKey).value) + '"'
+        })
+        rowsItems += (rowsItems === '' ? '' : ',')
+        rowsItems += '[' + rows + ']'
+      }
+      let ov = '{ "columnsItems": [' + columnsItems + '], "rowsItems": [' + rowsItems + '] }'
       o.value = ov
-      // console.log('o', ov)
+      o.isTable = true;
       component.push(o)
     } else if (c.value && Array.isArray(c.value)) {
       c.value.map((v) => {
@@ -158,13 +171,13 @@ export const SaveCompalteFormAction = async (id, data) => {
       o.value = v.value
       o.labelValue = v.label
       component.push(o)
-    } else if (c.type === 'select') {
+    } else if (c.value && c.type === 'select') {
       let v = c.value
       let label = c.options.find(k => k.value === v)?.label
       o.value = v
       o.labelValue = label
       component.push(o)
-    } else {
+    } else if (c.value) {
       o.value = c.value;
       component.push(o);
     }
@@ -516,9 +529,9 @@ export const onFormSubmit = async (profile, form, listComponent) => {
       } else if (value === 8) {
         data.status = 0
         data.stepId = 8
-      } else {
-        data.status = 0
-        data.stepId = 4
+      // } else {
+      //   data.status = 0
+      //   data.stepId = 4
       }
     }
   });
