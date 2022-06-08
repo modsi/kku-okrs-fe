@@ -12,26 +12,16 @@ import {
   Table,
   Form,
   Input,
-  Radio,
-  Space,
-  Image,
-  InputNumber,
-  Checkbox,
   Select,
   DatePicker,
-  Upload,
-  message,
 } from "antd";
 import { PlusOutlined, CheckOutlined, CloseOutlined } from "@ant-design/icons";
-import { tem1, tem2 } from "../../../../template-mock";
 import {
   LIST_TEMPLATES,
   ListTemplateAction,
 } from "../../../redux/actions/TemplateAction";
-import SetOptionsForSelect, {
-  SetOptionsForSelectSetLable,
-} from "../../items/SetOptionsForSelect";
-import { clearStorege, getStorage } from "../../state/localStorage";
+import SetOptionsForSelect from "../../items/SetOptionsForSelect";
+import { getStorage } from "../../state/localStorage";
 import {
   ConfirmModalEditText,
   SuccessModal,
@@ -40,7 +30,6 @@ import {
 import {
   propsIds,
   propsStatus,
-  propsSuccess,
   SaveFormAction,
   onFormSubmit,
   ListForm2Action,
@@ -55,13 +44,10 @@ import { StoreTemplateAction } from "../../../redux/actions/StoreSearchAction";
 import { UpdateTempateAction } from "../../../redux/actions/TemplateAction";
 import moment from "moment";
 import { ListInstitutionsAction, LIST_INSTITUTIONS } from '../../../redux/actions/ListMasterAction'
-import { SetIsusedAction } from "../../../redux/actions/TemplateAction"
 import LayoutReport from './LayoutReport'
 import StepProcess from '../../items/StepProcess'
 
-const { Text, Link } = Typography;
-const { RangePicker } = DatePicker;
-const { Step } = Steps;
+const { Text } = Typography;
 const temp_columns = [
   {
     title: <Text className="big6-title">รายการ</Text>,
@@ -88,9 +74,6 @@ const ReportForm2 = () => {
   const listForm = useSelector((state) => state?.main?.[LIST_FROM_2]);
   const [listTemplate, setListTemplate] = useState([]);
   const [listTempMaster, setListTempMaster] = useState([]);
-  const [columns, setColumns] = useState(temp_columns);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [dataSource, setDataSource] = useState([]);
   const [listField, setListField] = useState([]);
   const [profile, setProfile] = useState({});
   const [listComponent, setListComponent] = useState([]);
@@ -186,7 +169,7 @@ const ReportForm2 = () => {
   };
 
   const setLayoutReport = (listComponent) => {
-    console.log('setLayoutReport', listComponent)
+    // console.log('setLayoutReport', listComponent)
     setListField(<LayoutReport form={form2} store={listComponent} />)
   }
 

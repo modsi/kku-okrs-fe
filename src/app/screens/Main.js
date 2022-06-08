@@ -22,7 +22,7 @@ import { ConfirmModalEditText } from "./items/Modal";
 import logoProfile from "../../assets/images/icon/pixlr-bg-result.png";
 import logoLogOut from "../../assets/images/icon/log-out.png";
 
-import { ListHistoryAction, SaveFormAction, ListFormAction, LIST_FORM, UpdateFormAction } from "../redux/actions/FormAction";
+import { LIST_FROM_2,ListHistoryAction, SaveFormAction, ListFormAction, LIST_FORM, UpdateFormAction } from "../redux/actions/FormAction";
 import { UpdateAccAction } from '../redux/actions/UserAction'
 
 const { Text, Link } = Typography;
@@ -35,6 +35,7 @@ const Main = () => {
     const [profile, setProfile] = useState({})
     const [key, setKey] = useState(['6'])
     const listForm = useSelector(state => state?.main?.[LIST_FORM])
+    const listForm2 = useSelector((state) => state?.main?.[LIST_FROM_2]);
     const [count2, setCount2] = useState(0)
     const [count31, setCount31] = useState(0)
     const [count32, setCount32] = useState(0)
@@ -45,20 +46,20 @@ const Main = () => {
     }
 
     useEffect(() => {
-        console.log('listForm', listForm)
+        console.log('listForm', listForm, listForm2)
         if (profile?.role?.priority === '1') {
             // let c = listForm?.result?.filter(l => l.step_id !== "3" && l.step_id !== "5" && l.step_id !== "8" && l.step_id !== "1")
             // setCount2(c?.length)
             setCount2(0)
             let c = listForm?.result?.filter(l => (l.step_id === "4" || l.step_id === "8" || l.step_id === "3") && l.type_id === '1')
             setCount31(c?.length)
-            c = listForm?.result?.filter(l => (l.step_id === "4" || l.step_id === "8" || l.step_id === "3") && l.type_id === '2')
+            c = listForm2?.result?.filter(l => (l.step_id === "4" || l.step_id === "8" || l.step_id === "3") && l.type_id === '2')
             setCount32(c?.length)
         } else if (profile?.role?.priority === '2') {
             setCount2(0)
             let c = listForm?.result?.filter(l => (l.step_id === "4") && l.type_id === '1')
             setCount31(c?.length)
-            c = listForm?.result?.filter(l => (l.step_id === "4") && l.type_id === '2')
+            c = listForm2?.result?.filter(l => (l.step_id === "4") && l.type_id === '2')
             setCount32(c?.length)
         } else if (profile?.role?.priority === '3') {
             let c            
@@ -72,13 +73,13 @@ const Main = () => {
             setCount32(0)
         } else if (profile?.role?.priority === '4') {
             setCount2(0)
-            let c = listForm?.result?.filter(l => (l.step_id === "3" || l.step_id === "8") && l.type_id === '1')
+            let c = listForm?.result?.filter(l => (l.step_id === "3" || l.step_id === "8") && l.type_id === "1")
             setCount31(c?.length)
-            c = listForm?.result?.filter(l => (l.step_id === "3" || l.step_id === "8") && l.type_id === '2')
-            setCount32(c?.length)
+            let v = listForm2?.result?.filter(l => (l.step_id === "3" || l.step_id === "8") && l.type_id === "2")
+            setCount32(v?.length)
         }
 
-    }, [listForm, profile])
+    }, [listForm, profile, listForm2])
 
     useEffect(() => {
         checkToken()
