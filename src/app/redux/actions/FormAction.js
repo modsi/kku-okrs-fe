@@ -362,19 +362,19 @@ export const propsStatus =
       "label": "รับคืนแก้ไข",
       "value": 2
     },
-    // {
-    //   "index": 2,
-    //   "label": "ส่งคืนแผนปฏิบัติการแก้ไข",
-    //   "value": 6
-    // },
-    // {
-    //   "index": 3,
-    //   "label": "ส่งคืนแผนงบประมาณแก้ไข",
-    //   "value": 7
-    // },
+    {
+      "index": 2,
+      "label": "ส่งคืนแผนปฏิบัติการแก้ไข",
+      "value": 6
+    },
+    {
+      "index": 3,
+      "label": "ส่งคืนแผนงบประมาณแก้ไข",
+      "value": 7
+    },
     {
       "index": 4,
-      "label": "ส่งคืนแก้ไข",
+      "label": "ส่งคืนผู้ใช้งานแก้ไข",
       "value": 8
     },
     {
@@ -526,9 +526,9 @@ export const onFormSubmit = async (profile, form, listComponent) => {
       if (value === 1) {
         data.status = 1
         data.stepId = 5
-      } else if (value === 8) {
+      } else if (value === 8 || value === 6 || value === 7) {
         data.status = 0
-        data.stepId = 8
+        data.stepId = value      
       // } else {
       //   data.status = 0
       //   data.stepId = 4
