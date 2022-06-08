@@ -159,13 +159,14 @@ export const SaveCompalteFormAction = async (id, data) => {
       o.value = ov
       o.isTable = true;
       component.push(o)
-    } else if (c.value && Array.isArray(c.value)) {
-      c.value.map((v) => {
-        o.label = v.label
-        o.key = v.key
-        o.value = v.value
-        component.push(o)
-      })
+    // } else if (c.value && Array.isArray(c.value)) {
+    //   console.log('c.value',c)
+    //   c.value.map((v) => {
+    //     o.label = v.label
+    //     o.key = v.key
+    //     o.value = v.value
+    //     component.push(o)
+    //   })
     } else if (c.value && typeof c.value === 'object') {
       let v = c.value
       o.value = v.value
@@ -184,7 +185,7 @@ export const SaveCompalteFormAction = async (id, data) => {
   })
   obj.formId = id
   obj.component = component?.filter(c => c.key)
-  // console.log(obj)
+  // console.log('SaveComplateFormService >> ',obj)
   const result = await SaveComplateFormService(obj)
   return result?.data
 }
@@ -317,6 +318,7 @@ export const propsSuccess =
   "id": "00002",
   "index": 0,
   "key": "OKRs_Success",
+  "label": "ความสำเร็จ",
   "size": "long",
   "type": "title",
   "align": "left",
@@ -539,15 +541,15 @@ export const onFormSubmit = async (profile, form, listComponent) => {
   // if (!components?.find(f => f.key === 'OKRs_PIC')) {
   components = components?.filter(f => f.key !== 'OKRs_PIC');
   let sp = propsPic
-  sp.value = data.groupTypeId
+  sp.value = data.groupTypeId ?? data.group_type_id
   components.push(sp)
   // }
 
   if (countTargetGroup > 0) {
-    components = components?.filter(f => f.key !== 'OKRs_TargetGroupNum');
-    let s = propsTargetGroupNum
-    s.value = countTargetGroup
-    components.push(s)
+    // components = components?.filter(f => f.key !== 'OKRs_TargetGroupNum');
+    // let s = propsTargetGroupNum
+    // s.value = countTargetGroup
+    // components.push(s)
   }
 
   if (form.getFieldValue('OKRs_Value') || form.getFieldValue('OKRs_ResultValue')) {
@@ -555,7 +557,7 @@ export const onFormSubmit = async (profile, form, listComponent) => {
     let s = propsSuccess
     let b1 = form.getFieldValue('OKRs_Value') && !isNaN(+form.getFieldValue('OKRs_Value')) ? form.getFieldValue('OKRs_Value') : 0
     let b2 = form.getFieldValue('OKRs_ResultValue') && !isNaN(+form.getFieldValue('OKRs_ResultValue')) ? form.getFieldValue('OKRs_ResultValue') : 0
-    console.log('check OKRs_Success', b1, b2)
+    // console.log('check OKRs_Success', b1, b2)
     let val = b1 <= b2 ? 'success' : 'failed'
     s.value = val
     components.push(s)

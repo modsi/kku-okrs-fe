@@ -156,7 +156,7 @@ const LayoutReport = ({ form, store, isView }) => {
       )
       listField.push(field)
       if (currentItem.type === 'day' || currentItem.type === 'date_time') {
-        form.setFieldsValue({ [currentItem.key]: moment(currentItem.value) })
+        form.setFieldsValue({ [currentItem.key]: currentItem.value ? moment(currentItem.value) : null })
       } else if (currentItem.type === 'range_date' && currentItem.value) {
         form.setFieldsValue({ [currentItem.key]: [moment(currentItem.value[0]), moment(currentItem.value[1])] })
       } else {
