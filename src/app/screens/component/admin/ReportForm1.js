@@ -494,7 +494,7 @@ const ReportForm1 = () => {
                       handleClickEdit(record.record_data);
                     }}
                   >
-                    <Text className="big6-title">รายงาน {profile?.role?.priority} {record?.record_data?.step_id}</Text>
+                    <Text className="big6-title">รายงาน</Text>
                   </Button>
                   <Button
                     disabled={(profile?.role?.priority === '1' || profile?.role?.priority === '4') && (record?.record_data?.step_id === '3' || record?.record_data?.step_id === '8') ? false : true}
