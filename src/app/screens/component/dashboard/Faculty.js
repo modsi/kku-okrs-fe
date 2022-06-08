@@ -93,8 +93,8 @@ const Faculty = (props) => {
   const columns = [
     {
       title: "#",
-      dataIndex: "id",
-      key: "id",
+      dataIndex: "running",
+      key: "running",
       align: "center",
       width: 20,
       fixed: "left",
@@ -103,7 +103,7 @@ const Faculty = (props) => {
       title: "ประเด็นยุทธศาสตร์",
       dataIndex: "name",
       key: "name",
-      align: "center",
+      align: "left",
       width: 80,
       render: (_, record) => record?.name,
     },
@@ -138,8 +138,8 @@ const Faculty = (props) => {
   const columns2 = [
     {
       title: "#",
-      dataIndex: "id",
-      key: "id",
+      dataIndex: "running",
+      key: "running",
       align: "center",
       width: 20,
       fixed: "left",
@@ -148,7 +148,7 @@ const Faculty = (props) => {
       title: "SDGs",
       dataIndex: "name",
       key: "name",
-      align: "center",
+      align: "left",
       width: 80,
     },
     {
@@ -172,8 +172,8 @@ const Faculty = (props) => {
   const columns3 = [
     {
       title: "#",
-      dataIndex: "id",
-      key: "id",
+      dataIndex: "running",
+      key: "running",
       align: "center",
       width: 20,
       fixed: "left",
@@ -182,7 +182,7 @@ const Faculty = (props) => {
       title: "21 Century Skill",
       dataIndex: "name",
       key: "name",
-      align: "center",
+      align: "left",
       width: 80,
     },
     {

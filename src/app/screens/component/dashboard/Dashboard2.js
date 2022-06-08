@@ -99,17 +99,17 @@ const Dashboard2 = () => {
   const columns = [
     {
       title: "#",
-      dataIndex: "id",
-      key: "id",
+      dataIndex: "running",
+      key: "running",
       align: "center",
-      width: 20,
+      width: 40,
       fixed: "left",
     },
     {
       title: "ประเด็นยุทธศาสตร์",
       dataIndex: "name",
       key: "name",
-      align: "center",
+      align: "left",
       width: 80,
       render: (_, record) => record?.name,
     },
@@ -144,8 +144,8 @@ const Dashboard2 = () => {
   const columns2 = [
     {
       title: "#",
-      dataIndex: "id",
-      key: "id",
+      dataIndex: "running",
+      key: "running",
       align: "center",
       width: 20,
       fixed: "left",
@@ -154,7 +154,7 @@ const Dashboard2 = () => {
       title: "SDGs",
       dataIndex: "name",
       key: "name",
-      align: "center",
+      align: "left",
       width: 80,
     },
     {
@@ -178,8 +178,8 @@ const Dashboard2 = () => {
   const columns3 = [
     {
       title: "#",
-      dataIndex: "id",
-      key: "id",
+      dataIndex: "running",
+      key: "running",
       align: "center",
       width: 20,
       fixed: "left",
@@ -188,7 +188,7 @@ const Dashboard2 = () => {
       title: "21 Century Skill",
       dataIndex: "name",
       key: "name",
-      align: "center",
+      align: "left",
       width: 80,
     },
     {

@@ -80,10 +80,12 @@ const ManageTemplate = () => {
   }, [listForm2])
 
   const setRecord = (f) => {
+    // console.log('sss', f)
     let obj = {}
     obj.component = f.component
     obj.templateId = f?.templateId ?? f?.template_id
     obj.templateName = f?.templateName ?? f?.template_name
+    obj.projectName = f?.projectName ?? f?.project_name
     obj.stepName = f?.stepName ?? f?.step_name
     obj.typeId = f?.typeId ?? f?.type_id
     obj.id = f?.id
@@ -137,6 +139,13 @@ const ManageTemplate = () => {
       align: "left",
       width: 180,
       render: (_, record) => record?.templateName,
+    },
+    {
+      title: "ชื่อโครงการ",
+      dataIndex: "projectName",
+      align: "left",
+      width: 180,
+      render: (_, record) => record?.projectName,
     },
     {
       title: "ชื่อรายงาน",
@@ -350,6 +359,7 @@ const ManageTemplate = () => {
       data.component = components
       data.templateId = obj?.id
       data.templateName = obj?.template_name
+      data.projectName = obj?.project_name
       data.typeId = obj?.type_id
       data.stepId = profile.role_id === '1' ? 2 : 1
       data.stepName = 'สร้างแบบรายงาน'

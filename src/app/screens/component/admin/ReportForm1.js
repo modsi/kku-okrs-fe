@@ -463,27 +463,48 @@ const ReportForm1 = () => {
                   <Text className="big6-title">manage</Text>
                 </Button>
               </>
-              :
-              <div className="text-center">
-                <Button
-                  disabled={(profile?.role?.priority === '1' || profile?.role?.priority === '4') && (record?.record_data?.step_id === '3' || record?.record_data?.step_id === '8') ? false : true}
-                  type="primary"
-                  className="pre-button"
-                  onClick={() => {
-                    handleClickEdit(record.record_data);
-                  }}
-                >
-                  <Text className="big6-title">รายงาน</Text>
-                </Button>
-                <Button
-                  disabled={(profile?.role?.priority === '1' || profile?.role?.priority === '4') && (record?.record_data?.step_id === '3' || record?.record_data?.step_id === '8') ? false : true}
-                  type="primary"
-                  className={record?.id ? "pre-button" : "nol-button"}
-                  onClick={() => handleUpStep(record.record_data)}
-                >
-                  <Text className="big6-title">ส่งไปแบบรายงาน</Text>
-                </Button>
-              </div>
+              : (profile?.role?.priority === '4') && (record?.record_data?.step_id === '5') ?
+                <>
+                  <Button
+                    type="primary"
+                    className={record?.record_data?.step_id === '5' ? "appr-button" : "pre-button"}
+                    onClick={() => {
+                      handleClickView(record.record_data)
+                    }
+                    }
+                  >
+                    <Text className="big6-title">รายงาน</Text>
+                  </Button>
+                  <Button
+                    disabled={(profile?.role?.priority === '1' || profile?.role?.priority === '4') && (record?.record_data?.step_id === '3' || record?.record_data?.step_id === '8') ? false : true}
+                    type="primary"
+                    className={record?.id ? "pre-button" : "nol-button"}
+                    onClick={() => handleUpStep(record.record_data)}
+                  >
+                    <Text className="big6-title">ส่งไปแบบรายงาน</Text>
+                  </Button>
+                </>
+                :
+                <div className="text-center">
+                  <Button
+                    disabled={(profile?.role?.priority === '1' || profile?.role?.priority === '4') && (record?.record_data?.step_id === '3' || record?.record_data?.step_id === '8') ? false : true}
+                    type="primary"
+                    className="pre-button"
+                    onClick={() => {
+                      handleClickEdit(record.record_data);
+                    }}
+                  >
+                    <Text className="big6-title">รายงาน {profile?.role?.priority} {record?.record_data?.step_id}</Text>
+                  </Button>
+                  <Button
+                    disabled={(profile?.role?.priority === '1' || profile?.role?.priority === '4') && (record?.record_data?.step_id === '3' || record?.record_data?.step_id === '8') ? false : true}
+                    type="primary"
+                    className={record?.id ? "pre-button" : "nol-button"}
+                    onClick={() => handleUpStep(record.record_data)}
+                  >
+                    <Text className="big6-title">ส่งไปแบบรายงาน</Text>
+                  </Button>
+                </div>
             }
           </>
         )
@@ -511,7 +532,7 @@ const ReportForm1 = () => {
     }
     form2.setFieldsValue({ ['name']: record.name })
     form2.setFieldsValue({ ['groupName']: record.group_name ? record.group_type_name + "/" + record.group_name : '' })
-   setListComponent(record)
+    setListComponent(record)
     let s = 0
     if (record.step_id === "4") {
       s = 4;
@@ -597,6 +618,7 @@ const ReportForm1 = () => {
           />
           <Row gutter={24} className="row-inquiry-customer">
             <FormReport form={form2} isView={true} />
+            <FormUpload form={form2} />
           </Row>
         </>
       ) : showConfigPage ? (
