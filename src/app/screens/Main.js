@@ -63,18 +63,18 @@ const Main = () => {
         } else if (profile?.role?.priority === '3') {
             let c            
             if (profile?.role_id === '3') {
-                c = listForm?.result?.filter(l => l.step_id === "10" && l.form_status === "3")
+                c = listForm?.result?.filter(l => l.step_id === "7" || (l.step_id === "10" && l.form_status === "3"))
             } else if (profile?.role_id === '4') {
-                c = listForm?.result?.filter(l => l.step_id === "11" && l.form_status === "3")
+                c = listForm?.result?.filter(l => l.step_id === "6" || (l.step_id === "11" && l.form_status === "3"))
             }
             setCount2(c?.length)
             setCount31(0)
             setCount32(0)
         } else if (profile?.role?.priority === '4') {
             setCount2(0)
-            let c = listForm?.result?.filter(l => (l.step_id === "3") && l.type_id === '1')
+            let c = listForm?.result?.filter(l => (l.step_id === "3" || l.step_id === "8") && l.type_id === '1')
             setCount31(c?.length)
-            c = listForm?.result?.filter(l => (l.step_id === "3") && l.type_id === '2')
+            c = listForm?.result?.filter(l => (l.step_id === "3" || l.step_id === "8") && l.type_id === '2')
             setCount32(c?.length)
         }
 

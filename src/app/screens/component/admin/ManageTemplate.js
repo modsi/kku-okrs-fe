@@ -6,7 +6,7 @@ import { LIST_TEMPLATES, ListTemplateAction } from '../../../redux/actions/Templ
 import SetOptionsForSelect from '../../items/SetOptionsForSelect'
 import { getStorage } from "../../state/localStorage";
 import { ConfirmModalEditText, SuccessModal, ErrorModalMassageHtml, } from "../../items/Modal";
-import { ListStepAction, onFormSubmit, ListFormAction, LIST_FORM, UpdateFormAction, ListForm2Action, LIST_FROM_2 } from "../../../redux/actions/FormAction";
+import { propsStatus, ListStepAction, onFormSubmit, ListFormAction, LIST_FORM, UpdateFormAction, ListForm2Action, LIST_FROM_2 } from "../../../redux/actions/FormAction";
 import { ListInstitutionsAction, LIST_INSTITUTIONS } from '../../../redux/actions/ListMasterAction'
 import LayoutReport from './LayoutReport'
 import StepProcess from '../../items/StepProcess'
@@ -247,7 +247,17 @@ const ManageTemplate = () => {
     setIsLoading(true);
     console.log('upStep', record)
     let data = { ...record }
-    if (record.stepId === '10' || record.stepId === '11') {
+    data.status = record?.status && !isNaN(+record?.status) ? record?.status : (record?.form_status ?? (record?.formStatus ?? 0));
+    let components = record?.component
+    if (record.stepId === '6' || record.stepId === '7') {
+      data.stepId = 4
+      components = components?.filter(f => f.key !== 'OKRs_Status');
+      let s = propsStatus
+      s.value = 2
+      let label = s.options.find(k => k.value === 2)?.label
+      s.labelValue = label
+      components.push(s)
+    } else if (record.stepId === '10' || record.stepId === '11') {
       if (!record.formStatus || record.formStatus === '0') {
         data.stepId = record.stepId === '10' ? 11 : 10
         data.status = 3
@@ -262,8 +272,9 @@ const ManageTemplate = () => {
         data.stepId = (record.typeId === 2 || record.typeId === '2') ? 9 : 3
       }
     } else {
-      data.stepId = (record.stepId === '6' || record.stepId === '7' || record.stepId === '8' ? 4 : parseInt(record.stepId) + 1)
+      data.stepId =  parseInt(record.stepId) + 1
     }
+    data.component = components    
     let res = await UpdateFormAction(data);
     if (res.error === null) {
       SuccessModal("Success");
