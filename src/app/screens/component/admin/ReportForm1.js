@@ -65,6 +65,8 @@ const ReportForm1 = () => {
   const [listTableForm, setListTableForm] = useState([]);
   const [showConfigPage, setShowConfigPage] = useState(false);
   const [showViewPage, setShowViewPage] = useState(false);
+  const [title1, setTitle1] = useState("");
+  const [title2, setTitle2] = useState("");
 
   const layout = {
     labelCol: { span: 24 },
@@ -114,6 +116,8 @@ const ReportForm1 = () => {
     setShowConfigPage(false);
     setTemplate({});
     setStep(null)
+    setTitle1("")
+    setTitle2("")
   };
 
   const setLayoutStep = (listComponent, index) => {
@@ -516,7 +520,7 @@ const ReportForm1 = () => {
     console.log("handleClickValidated", record)
     let l = record?.component?.filter(i => i.permission === 2)
     let c = l.find((k) => k.key === 'OKRs_Status');
-    console.log("handleClickValidated >> c ", l, c)
+    // console.log("handleClickValidated >> c ", l, c)
     if (!c) {
       let status = { ...propsStatus }
       if (record.status) {
@@ -529,6 +533,14 @@ const ReportForm1 = () => {
       setLayoutReport([...l, status])
     } else {
       setLayoutReport(l)
+    }
+    let t1 = record?.component?.filter(i => i.key === "OKRs_Project")
+    if(t1){
+      setTitle1(t1[0].label + " : " + (t1[0].value ?? ""))
+    }
+    let t2 = record?.component?.filter(i => i.key === "OKRs_Officer")
+    if(t2){
+      setTitle2(t2[0].label + " : " + (t2[0].value ?? ""))
     }
     form2.setFieldsValue({ ['name']: record.name })
     form2.setFieldsValue({ ['groupName']: record.group_name ? record.group_type_name + "/" + record.group_name : '' })
@@ -710,6 +722,12 @@ const ReportForm1 = () => {
               </Col>
             </Row>
             <Row>
+              <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                <Text>{title1}</Text>
+              </Col>
+              <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                <Text>{title2}</Text>
+              </Col>
               <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                 <Form.Item
                   label='ชื่อรายงาน'

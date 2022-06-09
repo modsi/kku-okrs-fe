@@ -12,8 +12,6 @@ import LayoutReport from './LayoutReport'
 const { Text, Link } = Typography;
 const { RangePicker } = DatePicker;
 const FormReport = ({ form, isView }) => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
   const [showConfigPage, setShowConfigPage] = useState(false);
   const [isModalAddEditVisible, setIsModalAddEditVisible] = useState(false);
@@ -37,7 +35,7 @@ const FormReport = ({ form, isView }) => {
   }, [storeTemplate]);
 
   const setLayoutReport = (store) => {
-    setListField(<LayoutReport form={form} store={store?.component?.filter(l => l.permission !== 2)} isView={isView} />)
+    setListField(<LayoutReport form={form} store={store?.component?.filter(l => l.permission !== 2 && l.permission !== 0)} isView={isView} />)
   }
 
   return (

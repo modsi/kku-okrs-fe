@@ -13,6 +13,7 @@ import moment from "moment";
 import TargetGroupField from "../setting/field/TargetGroupField";
 import PDCAField from "../setting/field/PDCAField";
 import { formatCurrency } from '../../../utils/CommonUtils'
+import { Success, WarningModal } from "../../items/Modal";
 
 const { Text, Link } = Typography;
 const { RangePicker } = DatePicker;
@@ -117,7 +118,14 @@ const LayoutReport = ({ form, store, isView }) => {
                       {currentItem.type === 'textArea' ?
                         (<Input.TextArea  showCount maxLength={currentItem.maxLength} disabled={isView || isDisabled ? true : false} />)
                         : currentItem.type === 'inputNumber' ?
-                          (<InputNumber min={currentItem.min} max={currentItem.max} disabled={isView || currentItem.key === 'OKRs_Budget3' || isDisabled} onChange={(e) => setAutoValue(e, currentItem.key)} />)
+                          (<InputNumber 
+                            formatter={value => !isNaN(+value) ? formatCurrency(value) : 0}
+                            // parser={value => value <= 0 ? null : value?.replace(/\฿\s?|(,*)/g, '')}
+                            style={{ width: '100%' }} 
+                            min={currentItem.min} 
+                            max={currentItem.max} 
+                            disabled={isView || currentItem.key === 'OKRs_Budget3' || isDisabled} 
+                            onChange={(e) => setAutoValue(e, currentItem.key)} />)
                           : currentItem.type === 'checkbox' ?
                             (<Checkbox.Group options={currentItem.options} disabled={isView || isDisabled ? true : false} />)
                             : currentItem.type === 'select' ?
@@ -188,11 +196,17 @@ const LayoutReport = ({ form, store, isView }) => {
   const setAutoValue = (v, key) => {
     // console.log('setAutoValue', v, key)
     if (key === 'OKRs_Budget1' || key === 'OKRs_Budget2') {
-      // console.log('setAutoValue', form.getFieldValue('OKRs_Budget1'), form.getFieldValue('OKRs_Budget2'))
+      console.log('setAutoValue', form.getFieldValue('OKRs_Budget1'), form.getFieldValue('OKRs_Budget2'))
       let b1 = form.getFieldValue('OKRs_Budget1') && !isNaN(+form.getFieldValue('OKRs_Budget1')) ? form.getFieldValue('OKRs_Budget1') : 0
       let b2 = form.getFieldValue('OKRs_Budget2') && !isNaN(+form.getFieldValue('OKRs_Budget2')) ? form.getFieldValue('OKRs_Budget2') : 0
-      let val = b1 - b2
-      form.setFieldsValue({ OKRs_Budget3: val })
+      if (b2 > b1) {
+        WarningModal('งบประมาณที่ใช้ ต้องไม่มากกว่า งบประมาณที่จัดสรร')
+        form.setFieldsValue({ OKRs_Budget2: 0 })
+        form.setFieldsValue({ OKRs_Budget3: 0 })
+      } else {
+        let val = b1 - b2
+        form.setFieldsValue({ OKRs_Budget3: val })
+      }
     }
   }
 

@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import store from './config/store/ConfigureStore'
 import Homepage from './screens/Homepage';
 import Main from './screens/Main';
+import PageControl from './screens/PageControl'
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Routes>
           <Route  path="/" element={<Homepage/>} />
           <Route  path="/admin" element={<Main/>} />
+          {/* <Route  path="/" element={<PageControl/>} />           */}
         </Routes>
       </Provider>
     </Router>

@@ -323,6 +323,7 @@ export const propsSuccess =
   "type": "title",
   "align": "left",
   "labelPosition": "vertical",
+  "permission": 0,
 }
 
 export const propsIds =
@@ -447,12 +448,12 @@ export const onFormSubmit = async (profile, form, listComponent) => {
           if (s[1] === 'title') {
             vo = {
               index: parseInt(s[2]),
-              title: v ?? null
+              title: v ?? ""
             }
           } else {
             vo = {
               index: parseInt(s[2]),
-              month: v ?? null
+              month: v ?? ""
             }
           }
 
@@ -478,7 +479,7 @@ export const onFormSubmit = async (profile, form, listComponent) => {
             // console.log('s[1]',s[1], parseInt(s[1]))
             vo = {
               index: parseInt(s[1]),
-              value: v ?? null
+              value: v ?? ""
             }
 
             if (v && v != "") {

@@ -83,6 +83,8 @@ const ReportForm2 = () => {
   const [showConfigPage, setShowConfigPage] = useState(false);
   const [showViewPage, setShowViewPage] = useState(false);
   const listInstitutions = useSelector(state => state?.main?.[LIST_INSTITUTIONS]);
+  const [title1, setTitle1] = useState("");
+  const [title2, setTitle2] = useState("");
 
   const layout = {
     labelCol: { span: 24 },
@@ -151,6 +153,8 @@ const ReportForm2 = () => {
     form.resetFields();
     setShowConfigPage(false);
     setTemplate({});
+    setTitle1("")
+    setTitle2("")
   };
 
   const newTemplate = () => {
@@ -267,7 +271,7 @@ const ReportForm2 = () => {
       s.labelValue = label
       components.push(s)
     }
-    
+
     data.component = components
     let res = await UpdateFormAction(data);
     if (res.error === null) {
@@ -341,9 +345,7 @@ const ReportForm2 = () => {
           } else if (component.key === "OKRs_BookNumber") {
             colData.OKRs_BookNumber = component.value;
           } else if (component.key === "OKRs_Project") {
-            colData.OKRs_Project = component.value;
-          } else if (component.key === "OKRs_Project") {
-            colData.OKRs_Project = component.value;
+            colData.OKRs_Project = component.value;         
           } else if (component.key === "OKRs_Value") {
             colData.OKRs_Value = component.value;
           } else if (component.key === "OKRs_Unit_Value") {
@@ -588,7 +590,7 @@ const ReportForm2 = () => {
   };
 
   const handleClickValidated = (record) => {
-    // console.log("handleClickValidated", record);
+    console.log("handleClickValidated", record);
     let l = record?.component?.filter(i => i.permission === 2)
     let c = l.find((k) => k.key === 'OKRs_Status');
     let status = { ...propsStatus };
@@ -596,7 +598,6 @@ const ReportForm2 = () => {
       (l) => l.value !== 6 && l.value !== 7
     );
     if (!c) {
-      let status = { ...propsStatus }
       if (record.status) {
         if (record.status === "1") {
           Object.assign(status, { value: 1 })
@@ -607,6 +608,14 @@ const ReportForm2 = () => {
       setLayoutReport([...l, status])
     } else {
       setLayoutReport(l)
+    }
+    let t1 = record?.component?.filter(i => i.key === "OKRs_Project")
+    if(t1){
+      setTitle1(t1[0].label + " : " + (t1[0].value ?? ""))
+    }
+    let t2 = record?.component?.filter(i => i.key === "OKRs_Officer")
+    if(t2){
+      setTitle2(t2[0].label + " : " + (t2[0].value ?? ""))
     }
     form2.setFieldsValue({ ["name"]: record.name });
     form2.setFieldsValue({ ['groupName']: record.group_name ? record.group_type_name + "/" + record.group_name : '' })
@@ -688,7 +697,7 @@ const ReportForm2 = () => {
             title="Back"
           />
           <Row gutter={24} className="row-inquiry-customer">
-            <FormReport form={form2} isView={true}/>
+            <FormReport form={form2} isView={true} />
           </Row>
         </>
       ) : showConfigPage ? (
@@ -795,10 +804,16 @@ const ReportForm2 = () => {
                 xl={24}
                 style={{ paddingBottom: "15px" }}
               >
-               {step}
+                {step}
               </Col>
             </Row>
             <Row>
+              <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                <Text>{title1}</Text>
+              </Col>
+              <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                <Text>{title2}</Text>
+              </Col>
               <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                 <Form.Item
                   label="ชื่อรายงาน"

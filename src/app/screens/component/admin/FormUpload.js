@@ -15,7 +15,6 @@ import { ExportFormCsvAction, ExportFormWordAction } from '../../../redux/action
 const { Text, Link } = Typography;
 const { RangePicker } = DatePicker;
 const FormUpload = ({ form }) => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
   const [showConfigPage, setShowConfigPage] = useState(false);
@@ -27,7 +26,7 @@ const FormUpload = ({ form }) => {
     (state) => state?.storeSearchReducer?.[STORE_TEMPLATE]
   );
   const [fieldContent, setFieldContent] = useState(null);
-  const [templateId, setTemplateId] = useState(null);
+  const [token, setToken] = useState(null);
 
   const layout = {
     labelCol: { span: 24 },
@@ -35,28 +34,24 @@ const FormUpload = ({ form }) => {
     layout: "Inline",
   };
 
-
-
   useEffect(() => {
-    setLayoutTemplate(storeTemplate)
-  }, [storeTemplate]);
-
-  const setLayoutTemplate = (store) => {
-
-  }
+    let p = getStorage('token')
+    setToken(p)
+  }, []);
 
   const props = {
     name: 'file_attached',
-    action: 'http://localhost:8080/api/file/upload',
+    action: 'https://e-project.kku.ac.th/api/file/upload',
     data: {
       formId: '1',
       componentId: '2',
       type: 'application/json'
     },
     headers: {
-      Authorization: 'Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJ1c2VybmFtZSI6ImlhbXN1cGVyIiwiZW1haWwiOiJpYW1zdXBlckBnbWFpbC5jb20iLCJpYXQiOjE2NTM1Nzc0NjEsImV4cCI6MTY1MzY2Mzg2MX0.F9H7CYqCjYdbdVZ35zGOLkUpJUZ6m3vqBN2pO2UNrfR4ORsH4UQIa-iSt8Z3a4Qi8I7NqcW576YBdIyk-BPeyw'
+      Authorization: 'Bearer ' + token
     },
     onChange(info) {
+      console.log(`info: `, info);
       if (info.file.status !== 'uploading') {
         console.log(info.file, info.fileList);
       }
@@ -89,24 +84,16 @@ const FormUpload = ({ form }) => {
         <Row gutter={[16, 16]}>
           <Col span={10} style={{ textAlign: "left" }}>
             <Form {...layout} form={form}>
-              <Upload {...props}>
+              <Upload {...props} accept=".doc,.docx,.pdf">
                 <Button icon={<UploadOutlined />}>Upload</Button>
               </Upload>
-              {/* <form ref='uploadForm'
-                id='uploadForm'
-                action='http://localhost:8000/upload'
-                method='post'
-                encType="multipart/form-data">
-                <input type="file" name="sampleFile" />
-                <input type='submit' value='Upload!' />
-              </form> */}
             </Form>
           </Col>
           <Col span={12} style={{ textAlign: "center" }}>
             <Space direction="vertical">
-              <Button type="primary" onClick={() => ExportReportCsv()} icon={<DownloadOutlined />} size="large" style={{ width: '300px' }}>
+              {/* <Button type="primary" onClick={() => ExportReportCsv()} icon={<DownloadOutlined />} size="large" style={{ width: '300px' }}>
                 Download CSV
-              </Button>
+              </Button> */}
               <Button type="primary" onClick={() => ExportReportWord()} icon={<DownloadOutlined />} size="large" style={{ width: '300px' }}>
                 Download Word
               </Button>
