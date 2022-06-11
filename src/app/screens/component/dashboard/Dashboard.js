@@ -3,6 +3,7 @@ import { Card, Row, Col, Table } from "antd";
 
 import PieFull from "./_component/PieFull";
 import Graph from "./_component/Graph";
+import GraphGroup from './_component/GraphGroup';
 import { useDispatch, useSelector } from "react-redux";
 import {
   LIST_DASHBOARD,
@@ -207,7 +208,7 @@ const Dashboard = () => {
                 />
               </div>
               <div style={{ paddingBottom: "20px" }}>
-                <Graph
+                <GraphGroup
                   title={"สรุปจำนวนโครงการตามเสาหลักมหาวิทยาลัย"}
                   data={dataPllar}
                   dataColor={"#fd8e61"}
@@ -224,7 +225,7 @@ const Dashboard = () => {
               </div>
               <div style={{ paddingBottom: "20px" }}>
                 <Graph
-                  title={"สรุปจำนวนโครงการตาม 21 Century Skill"}
+                  title={"สรุปจำนวนโครงการตาม 21st Century Skills"}
                   data={dataCenturySkill}
                   dataColor={"#fd8e61"}
                   dataTextColor={["#A15219", "#45B649"]}

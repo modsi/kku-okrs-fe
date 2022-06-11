@@ -29,7 +29,7 @@ const PieFull = (props) => {
   useEffect(() => {
     sumCount();
     if (text && pie) setShowAll(true);
-  }, [text, pie]);
+  }, [text, pie, data]);
 
   const sumCount = () => {
     let sum = 0;
@@ -72,7 +72,7 @@ const PieFull = (props) => {
       autoRotate: false,
       content: ({ value }) => `${formatCurrency(value)} ${unit}`,
       style: {
-        fontSize: 13,
+        fontSize: 16,
         textAlign: "center",
         fill: textInPlots,
       },

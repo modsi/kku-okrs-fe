@@ -63,6 +63,7 @@ const RadarPlot = (props) => {
       label: false,
       grid: {
         alternateColor: "rgba(0, 0, 0, 0.04)",
+        fontSize: 16,
       },
     },
     // 开启辅助点

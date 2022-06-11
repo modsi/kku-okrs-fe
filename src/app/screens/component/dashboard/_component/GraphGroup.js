@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { Card, Row, Col, Space, Button } from 'antd';
 import { Column } from '@ant-design/plots';
 
-const Graph = (props) => {
+const GraphGroup = (props) => {
 
   const {
     width = 200,
@@ -24,10 +24,11 @@ const Graph = (props) => {
   const config = {
     width: width,
     height: height,
+    isGroup: true,
     data: data?.dataGraph || [],
     xField: 'name',
     yField: 'value',
-    seriesField: '',
+    seriesField: 'name_label',
     color: ({ name }) => {
       return brandColor;
     },
@@ -102,4 +103,4 @@ const Graph = (props) => {
 
   )
 };
-export default Graph;
+export default GraphGroup;

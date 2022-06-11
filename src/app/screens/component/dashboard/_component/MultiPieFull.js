@@ -98,7 +98,7 @@ const MultiPieFull = (props) => {
       autoRotate: false,
       content: ({ value }) => `${formatCurrency(value)} ${unit}`,
       style: {
-        fontSize: 13,
+        fontSize: 16,
         textAlign: "center",
         fill: textInPlots,
       },

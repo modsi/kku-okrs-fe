@@ -185,7 +185,7 @@ const Dashboard2 = () => {
       fixed: "left",
     },
     {
-      title: "21 Century Skill",
+      title: "21st Century Skills",
       dataIndex: "name",
       key: "name",
       align: "left",
@@ -429,13 +429,13 @@ const Dashboard2 = () => {
           </Card>
           <div style={{ padding: "20px 15px 10px 15px" }}>
             <span className="head-plots" style={{ margin: "10px 0px" }}>
-              21 Century Skill (ภาพรวมคณะ){" "}
+              21st Century Skills (ภาพรวมคณะ){" "}
             </span>
           </div>
           <Row style={{ paddingBottom: "20px" }}>
             <Col xs={24} sm={24} md={10} lg={10}>
               <PieFull
-                title={"สรุปจำนวนโครงการตาม 21 Century Skill"}
+                title={"สรุปจำนวนโครงการตาม 21st Century Skills"}
                 width={200}
                 height={200}
                 data={centurySkill}

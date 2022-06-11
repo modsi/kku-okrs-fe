@@ -179,7 +179,7 @@ const Faculty = (props) => {
       fixed: "left",
     },
     {
-      title: "21 Century Skill",
+      title: "21st Century Skills",
       dataIndex: "name",
       key: "name",
       align: "left",
@@ -202,6 +202,8 @@ const Faculty = (props) => {
       width: 80,
     },
   ];
+
+  console.log(dataSummary)
 
   return (
     <>
@@ -261,7 +263,7 @@ const Faculty = (props) => {
           </Card>
           <div style={{ padding: "20px 15px 10px 15px" }}>
             <span className="head-plots" style={{ margin: "10px 0px" }}>
-              SDGs ({subTitle})
+              SDGs {subTitle}
             </span>
           </div>
           <Row style={{ paddingBottom: "20px" }}>
@@ -309,13 +311,13 @@ const Faculty = (props) => {
           </Card>
           <div style={{ padding: "20px 15px 10px 15px" }}>
             <span className="head-plots" style={{ margin: "10px 0px" }}>
-              21 Century Skill ({subTitle}){" "}
+              21st Century Skills {subTitle}{" "}
             </span>
           </div>
           <Row style={{ paddingBottom: "20px" }}>
             <Col xs={24} sm={24} md={10} lg={10}>
               <PieFull
-                title={"สรุปจำนวนโครงการตาม 21 Century Skill"}
+                title={"สรุปจำนวนโครงการตาม 21st Century Skills"}
                 width={200}
                 height={200}
                 data={centurySkill}

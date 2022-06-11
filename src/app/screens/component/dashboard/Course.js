@@ -243,11 +243,11 @@ const Course = () => {
                                 columns={columns2} />
                         </Card>
                         <div style={{ padding: '20px 15px 10px 15px' }}>
-                            <span className="head-plots" style={{ margin: "10px 0px" }}>21 Century Skill (ภาพรวมคณะ) </span>
+                            <span className="head-plots" style={{ margin: "10px 0px" }}>21st Century Skills (ภาพรวมคณะ) </span>
                         </div>
                         <Row style={{ paddingBottom: '20px' }}>
                             <Col xs={24} sm={24} md={10} lg={10}>
-                                <PieFull title={'สรุปจำนวนโครงการตาม 21 Century Skill'} width={200} height={200} data={dataSDGs} dataColor={['#f6c863', '#ef5261']} dataTextColor={['#A15219', '#45B649']} text={true} pie={false} unit={'รายการ'} />
+                                <PieFull title={'สรุปจำนวนโครงการตาม 21st Century Skills'} width={200} height={200} data={dataSDGs} dataColor={['#f6c863', '#ef5261']} dataTextColor={['#A15219', '#45B649']} text={true} pie={false} unit={'รายการ'} />
                             </Col>
                             <Col xs={0} sm={0} md={1} lg={1}></Col>
                             <Col xs={24} sm={24} md={13} lg={13} className="box-plan">
@@ -273,7 +273,7 @@ const Course = () => {
                         </div>
                         <Row style={{ paddingBottom: '20px' }}>
                             <Col xs={24} sm={24} md={24} lg={24}>
-                                <PieFull title={'สรุปจำนวนโครงการตาม 21 Century Skill'} width={200} height={200} data={dataSDGs} dataColor={['#f6c863', '#ef5261']} dataTextColor={['#A15219', '#45B649']} text={true} unit={'รายการ'} />
+                                <PieFull title={'สรุปจำนวนโครงการตาม 21st Century Skills'} width={200} height={200} data={dataSDGs} dataColor={['#f6c863', '#ef5261']} dataTextColor={['#A15219', '#45B649']} text={true} unit={'รายการ'} />
                             </Col>
                         </Row>
 
