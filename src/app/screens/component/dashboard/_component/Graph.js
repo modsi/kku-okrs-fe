@@ -15,7 +15,8 @@ const Graph = (props) => {
     showRefresh = false,
     dataTextColor = false,
     bachgroundColor = '#fff',
-    textInPlots = '#fff'
+    textInPlots = '#fff',
+    title21 = false
   } = props;
 
   const paletteSemanticRed = '#F4664A';
@@ -57,13 +58,17 @@ const Graph = (props) => {
 
   };
 
+  console.log('test', title21   )
+
   return (
     <Card className="rounded plots-grap" style={{ width: '100%', backgroundColor: bachgroundColor }}>
       {
         titleFirst != '' ? (
           <span className="head-plots">{titleFirst}</span>
-        ) : (
+      ) : !title21 ? (
           <span className="head-plots-second">{title}</span>
+        ) : (
+          <span className="head-plots-second">{title21} สรุปจำนวนโครงการตาม 21<sup><strong>st</strong></sup> Century Skills</span>
         )
       }
       <Row lg={24}>

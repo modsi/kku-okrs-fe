@@ -284,13 +284,13 @@ const Faculty = (props) => {
           </Card>
           <div style={{ padding: "20px 15px 10px 15px" }}>
             <span className="head-plots" style={{ margin: "10px 0px" }}>
-              21st Century Skills (หลักสูตร){" "}
+              21<sup>st</sup> Century Skills (หลักสูตร){" "}
             </span>
           </div>
           <Row style={{ paddingBottom: "20px" }}>
             <Col xs={24} sm={24} md={12} lg={12}>
               <PieFull
-                title={"สรุปจำนวนโครงการตาม 21st Century Skills"}
+                title={"สรุปจำนวนโครงการตาม 21<sup>st</sup> Century Skills"}
                 width={200}
                 height={200}
                 data={dataSDGs}

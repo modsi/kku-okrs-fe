@@ -225,7 +225,7 @@ const Dashboard = () => {
               </div>
               <div style={{ paddingBottom: "20px" }}>
                 <Graph
-                  title={"สรุปจำนวนโครงการตาม 21st Century Skills"}
+                  title21={true}
                   data={dataCenturySkill}
                   dataColor={"#fd8e61"}
                   dataTextColor={["#A15219", "#45B649"]}

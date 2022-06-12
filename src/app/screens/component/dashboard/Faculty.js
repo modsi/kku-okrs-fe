@@ -203,8 +203,6 @@ const Faculty = (props) => {
     },
   ];
 
-  console.log(dataSummary)
-
   return (
     <>
       {fetchData && (
@@ -311,13 +309,13 @@ const Faculty = (props) => {
           </Card>
           <div style={{ padding: "20px 15px 10px 15px" }}>
             <span className="head-plots" style={{ margin: "10px 0px" }}>
-              21st Century Skills {subTitle}{" "}
+            21<sup><strong>st</strong></sup> Century Skills {subTitle}{" "}
             </span>
           </div>
           <Row style={{ paddingBottom: "20px" }}>
             <Col xs={24} sm={24} md={10} lg={10}>
               <PieFull
-                title={"สรุปจำนวนโครงการตาม 21st Century Skills"}
+                title21={true}
                 width={200}
                 height={200}
                 data={centurySkill}

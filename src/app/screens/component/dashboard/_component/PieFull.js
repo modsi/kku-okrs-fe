@@ -21,6 +21,7 @@ const PieFull = (props) => {
     brk = false,
     helfData = false,
     showFormatCurrency = false,
+    title21 = false
   } = props;
 
   const [showAll, setShowAll] = useState(false);
@@ -95,8 +96,10 @@ const PieFull = (props) => {
     >
       {titleFirst != "" ? (
         <span className="head-plots">{titleFirst}</span>
-      ) : (
+      ) : !title21 ? (
         <span className="head-plots-second">{title}</span>
+      ) : (
+        <span className="head-plots-second">สรุปจำนวนโครงการตาม 21<sup><strong>st</strong></sup> Century Skills</span>
       )}
       <Row lg={24} className="box-plols-detail">
         {pie && (

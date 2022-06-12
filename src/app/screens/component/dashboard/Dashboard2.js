@@ -429,12 +429,13 @@ const Dashboard2 = () => {
           </Card>
           <div style={{ padding: "20px 15px 10px 15px" }}>
             <span className="head-plots" style={{ margin: "10px 0px" }}>
-              21st Century Skills (ภาพรวมคณะ){" "}
+            21<sup><strong>st</strong></sup> Century Skills (ภาพรวมคณะ){" "}
             </span>
           </div>
           <Row style={{ paddingBottom: "20px" }}>
             <Col xs={24} sm={24} md={10} lg={10}>
               <PieFull
+                title21={true}
                 title={"สรุปจำนวนโครงการตาม 21st Century Skills"}
                 width={200}
                 height={200}

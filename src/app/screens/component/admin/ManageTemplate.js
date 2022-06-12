@@ -496,7 +496,7 @@ const ManageTemplate = () => {
                 </Form.Item>
               </Col>
             </Row>
-            <Row gutter={24} className="row-inquiry-customer">
+            <Row gutter={24} className="row-inquiry-customer" style={{marginTop: 15}}>
               <Col span={24} style={{ textAlign: "center" }}>
                 <Button
                   className="btn-event btn-color-cancel"
@@ -569,7 +569,7 @@ const ManageTemplate = () => {
                 : null}
               {listField}
             </Row>
-            <Row gutter={24} className="row-inquiry-customer">
+            <Row gutter={24} className="row-inquiry-customer" style={{marginTop: 15}}>
               <Col span={24} style={{ textAlign: "center" }}>
                 <Button
                   className='btn-event btn-color-cancel'
