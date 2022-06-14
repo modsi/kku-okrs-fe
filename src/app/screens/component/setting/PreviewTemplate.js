@@ -196,7 +196,7 @@ const PreviewTemplate = () => {
                             onStop={eventHandler}
                         >
                             <Card id={currentItem.id} >
-                                <Card.Grid style={{ width: '100%' }}>
+                                <Card.Grid style={{ width: '100%', border: '1px solid #d9d5d5' }}>
                                     {currentItem.key === 'OKRs_TargetGroup' ?
                                         <>
                                             <Row>
@@ -293,7 +293,7 @@ const PreviewTemplate = () => {
                                                                 {currentItem.type === 'textArea' ?
                                                                     (<Input.TextArea showCount maxLength={currentItem.maxLength} />)
                                                                     : currentItem.type === 'inputNumber' ?
-                                                                        (<InputNumber min={currentItem.min} max={currentItem.max} />)
+                                                                        (<InputNumber min={currentItem.min} max={currentItem.max} style={{ width: '100%'}} />)
                                                                         : currentItem.type === 'checkbox' ?
                                                                             (<Checkbox.Group options={currentItem.options} />)
                                                                             : currentItem.type === 'select' ?

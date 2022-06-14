@@ -119,7 +119,16 @@ const LayoutReport = ({ form, store, isView }) => {
                         (<Input.TextArea  showCount maxLength={currentItem.maxLength} disabled={isView || isDisabled ? true : false} />)
                         : currentItem.type === 'inputNumber' ?
                           (<InputNumber 
-                            formatter={value => !isNaN(+value) ? formatCurrency(value) : 0}
+                            formatter={value => {
+                              // console.log('chk formatter' , value);
+                              if (value && !isNaN(+value)) {
+                                return formatCurrency(value)
+                              } else {
+                                form.setFieldsValue({ [currentItem.key]: null })
+                                return 0;
+                              }
+                            }
+                            }
                             // parser={value => value <= 0 ? null : value?.replace(/\฿\s?|(,*)/g, '')}
                             style={{ width: '100%' }} 
                             min={currentItem.min} 

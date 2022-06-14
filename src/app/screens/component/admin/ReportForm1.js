@@ -673,7 +673,7 @@ const ReportForm1 = () => {
           </Row>
         </>
       ) : (
-        <Card title={"Report Form 1"} className="rounded">
+        <Card title={"แบบรายงานกองบริการงานคณะ (ตามแบบปฏิบัติการ) / ศูนย์"} className="rounded">
           <Row gutter={24}>
             {/* {profile?.role?.priority === '1' || profile?.role?.priority === '4' ?
               <Col span={24} style={{ textAlign: "right" }} >
