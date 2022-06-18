@@ -93,6 +93,7 @@ const ManageTemplate = () => {
     obj.status = f?.status
     obj.name = f?.name
     obj.updatedBy = f?.updatedBy ?? f?.updated_by
+    obj.createBy = f?.createBy ?? f?.created_by
     obj.formStatus = f?.form_status ?? (f?.formStatus ?? 0)
     obj.groupId = f?.groupId ?? f?.group_id
     obj.groupTypeId = f?.groupTypeId ?? f?.group_type_id
@@ -217,6 +218,7 @@ const ManageTemplate = () => {
       align: "center",
       width: 100,
       render: (record) => {
+        console.log('record', record, ((record?.stepId === '10' || record?.stepId === '11') && (record?.updated_by && record?.updated_by === profile?.username)));
         let canEdit = (record?.stepId === '11' && profile?.role_id === '3') || (record?.stepId === '10' && profile?.role_id === '4') || (record?.stepId === '6' && profile?.role_id === '3') || (record?.stepId === '7' && profile?.role_id === '4') ? false : true
         return (
           <>
@@ -232,7 +234,7 @@ const ManageTemplate = () => {
             </Button>
             {/* {record.typeId === '1' ? */}
             <Button
-              disabled={!canEdit || (record?.stepId !== '1' && record?.stepId !== '2' && record?.stepId !== '10' && record?.stepId !== '11' && record?.stepId !== '6' && record?.stepId !== '7') || !record?.id ? true : false}
+              disabled={((record?.stepId === '10' || record?.stepId === '11') && ((!record?.updatedBy && record?.createBy !== profile?.username ) && record?.updatedBy !== profile?.username)) || !canEdit || (record?.stepId !== '1' && record?.stepId !== '2' && record?.stepId !== '10' && record?.stepId !== '11' && record?.stepId !== '6' && record?.stepId !== '7') || !record?.id ? true : false}
               type="primary"
               className={record?.id ? "pre-button" : "nol-button"}
               onClick={() =>
@@ -416,7 +418,7 @@ const ManageTemplate = () => {
       <Card title={"Manage Report"} className="rounded">
         <Row gutter={24} className="row-inquiry-customer">
           <Col span={12} style={{ marginTop: 10 }}>
-            <Text strong style={{ color: 'rgba(0, 0, 0, 0.5)' }}>แบบรายงานที่ 1</Text>
+            <Text strong style={{ color: 'rgba(0, 0, 0, 0.5)' }}>แบบรายงานกองบริการงานคณะ (ตามแบบปฏิบัติการ) / ศูนย์</Text>
           </Col>
           <Col span={12} style={{ textAlign: "right" }} >
             <Button type="primary" shape="circle" size="large"
@@ -442,7 +444,7 @@ const ManageTemplate = () => {
             />
           </Col>
           <Col span={24} style={{ textAlign: "left" }}>
-            <Text strong style={{ color: 'rgba(0, 0, 0, 0.5)' }}>แบบรายงานที่ 2</Text>
+            <Text strong style={{ color: 'rgba(0, 0, 0, 0.5)' }}>แบบรายงานสาขาวิชา / หลักสูตร</Text>
             <Table
               className="table-user custom-table-dashboard"
               rowKey={(record, index) => record.key}

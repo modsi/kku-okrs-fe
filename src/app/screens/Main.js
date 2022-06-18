@@ -22,7 +22,7 @@ import { ConfirmModalEditText } from "./items/Modal";
 import logoProfile from "../../assets/images/icon/pixlr-bg-result.png";
 import logoLogOut from "../../assets/images/icon/log-out.png";
 
-import { LIST_FROM_2,ListHistoryAction, SaveFormAction, ListFormAction, LIST_FORM, UpdateFormAction } from "../redux/actions/FormAction";
+import { LIST_FROM_2, ListHistoryAction, SaveFormAction, ListFormAction, LIST_FORM, UpdateFormAction } from "../redux/actions/FormAction";
 import { UpdateAccAction } from '../redux/actions/UserAction'
 
 const { Text, Link } = Typography;
@@ -62,7 +62,7 @@ const Main = () => {
             c = listForm2?.result?.filter(l => (l.step_id === "4") && l.type_id === '2')
             setCount32(c?.length)
         } else if (profile?.role?.priority === '3') {
-            let c            
+            let c
             if (profile?.role_id === '3') {
                 c = listForm?.result?.filter(l => l.step_id === "7" || (l.step_id === "10" && l.form_status === "3"))
             } else if (profile?.role_id === '4') {
@@ -114,7 +114,7 @@ const Main = () => {
 
     async function handleListMaster() {
         let p = getStorage('profile')
-        dispatch(await ListFormAction({  userId: p.id , roleId: p.role_id, str: '', username: p.username }))
+        dispatch(await ListFormAction({ userId: p.id, roleId: p.role_id, str: '', username: p.username }))
     }
 
     const onClickMenu = value => {
@@ -201,12 +201,12 @@ const Main = () => {
                         </Menu.Item>
                         <Menu.Item key="4" icon={<FileTextOutlined />} hidden={profile?.role?.priority === '3' || profile?.role?.priority === '5'}>
                             <Badge count={count31} offset={[20, 5]} >
-                                Report Form 1
+                                แบบรายงานกองบริการงานคณะ (ตามแบบปฏิบัติการ) / ศูนย์
                             </Badge>
                         </Menu.Item>
                         <Menu.Item key="5" icon={<FileTextOutlined />} hidden={profile?.role?.priority === '3' || profile?.role?.priority === '5'}>
                             <Badge count={count32} offset={[20, 5]} >
-                                Report Form 2
+                                แบบรายงานสาขาวิชา / หลักสูตร
                             </Badge>
                         </Menu.Item>
 

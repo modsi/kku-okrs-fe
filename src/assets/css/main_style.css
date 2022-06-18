@@ -529,11 +529,10 @@ display: inline;
   background-color: #fff;
 }
 
-.ant-page-header-back-button {
+.anticon .anticon-arrow-left, .ant-page-header-back-button, .ant-page-header-heading-title {
   color: rgba(0, 0, 0, 0.5);
-}
-.ant-page-header-heading-title {
-  color: rgba(0, 0, 0, 0.5);
+  font-size: 19px !important;
+  font-family: "InterBold" !important;
 }
 
 .from-search .ant-select-single.ant-select-show-arrow .ant-select-selection-placeholder{

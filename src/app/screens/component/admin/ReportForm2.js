@@ -740,7 +740,7 @@ const ReportForm2 = () => {
           </Row>
         </>
       ) : (
-        <Card title={"Report Form 2"} className="rounded">
+        <Card title={"แบบรายงานสาขาวิชา / หลักสูตร"} className="rounded">
           <Row gutter={24} className="row-inquiry-customer">
             {profile?.role?.priority === "1" ||
               profile?.role?.priority === "4" ? (
