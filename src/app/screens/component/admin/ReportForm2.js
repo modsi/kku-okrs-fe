@@ -775,7 +775,8 @@ const ReportForm2 = () => {
                 scroll={{ x: "max-content" }}
                 size="small"
                 dataSource={listTableForm}
-                pagination={false}
+                pagination={true}
+                pageSize={10}
                 columns={columnsTable}
               />
             </Col>

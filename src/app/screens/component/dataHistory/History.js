@@ -512,7 +512,8 @@ const History = () => {
                       scroll={{ x: "max-content" }}
                       size="small"
                       dataSource={listTableForm}
-                      pagination={false}
+                      pagination={true}
+                      pageSize={10}
                       columns={columns}
                     />
                   </div>
