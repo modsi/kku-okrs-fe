@@ -78,6 +78,20 @@ const Faculty = (props) => {
     }));
   }
 
+  const formatCurrency = (values) => {
+    // if (showFormatCurrency) {
+      if (values && values != undefined && values != "" && values != null) {
+        var cast = values.toString().split(".");
+        var prefixSet = cast[1] !== undefined ? "." + cast[1] : "";
+        var formattedString =
+          cast[0].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + prefixSet;
+        return formattedString;
+      // }
+    }
+
+    return values;
+  };
+
   const gridStyle = {
     width: "48%",
     textAlign: "center",
@@ -123,6 +137,7 @@ const Faculty = (props) => {
       fixed: "right",
       className: "column-money",
       width: 80,
+      render: (_, record) => formatCurrency(record?.budget_2),
     },
     {
       title: "งบประมาณคงเหลือ",
@@ -132,6 +147,7 @@ const Faculty = (props) => {
       fixed: "right",
       className: "column-money",
       width: 80,
+      render: (_, record) => formatCurrency(record?.budget_3),
     },
   ];
 
@@ -166,6 +182,7 @@ const Faculty = (props) => {
       fixed: "right",
       className: "column-money",
       width: 80,
+      render: (_, record) => formatCurrency(record?.budget_2),
     },
   ];
 
@@ -200,6 +217,7 @@ const Faculty = (props) => {
       fixed: "right",
       className: "column-money",
       width: 80,
+      render: (_, record) => formatCurrency(record?.budget_2),
     },
   ];
 
@@ -221,7 +239,7 @@ const Faculty = (props) => {
                 height={200}
                 data={dataSummary}
                 dataColor={["#9c00ff", "#f32654", "#349751"]}
-                dataTextColor={["#A15219", "#45B649"]}
+                dataTextColor={["#9c00ff", "#f32654"]}
                 text={true}
                 unit={"โครงการ"}
               />

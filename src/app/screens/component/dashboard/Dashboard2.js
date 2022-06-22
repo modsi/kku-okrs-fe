@@ -84,6 +84,20 @@ const Dashboard2 = () => {
     );
   }
 
+  const formatCurrency = (values) => {
+    // if (showFormatCurrency) {
+      if (values && values != undefined && values != "" && values != null) {
+        var cast = values.toString().split(".");
+        var prefixSet = cast[1] !== undefined ? "." + cast[1] : "";
+        var formattedString =
+          cast[0].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + prefixSet;
+        return formattedString;
+      // }
+    }
+
+    return values;
+  };
+
   const gridStyle = {
     width: "48%",
     textAlign: "center",
@@ -129,6 +143,7 @@ const Dashboard2 = () => {
       fixed: "right",
       className: "column-money",
       width: 80,
+      render: (_, record) => formatCurrency(record?.budget_2),
     },
     {
       title: "งบประมาณคงเหลือ",
@@ -138,6 +153,7 @@ const Dashboard2 = () => {
       fixed: "right",
       className: "column-money",
       width: 80,
+      render: (_, record) => formatCurrency(record?.budget_3),
     },
   ];
 
@@ -172,6 +188,7 @@ const Dashboard2 = () => {
       fixed: "right",
       className: "column-money",
       width: 80,
+      render: (_, record) => formatCurrency(record?.budget_2),
     },
   ];
 
@@ -206,6 +223,7 @@ const Dashboard2 = () => {
       fixed: "right",
       className: "column-money",
       width: 80,
+      render: (_, record) => formatCurrency(record?.budget_2),
     },
   ];
 
@@ -241,7 +259,7 @@ const Dashboard2 = () => {
       fixed: "right",
       className: "column-money",
       width: 80,
-      render: (_, record) => record?.counts.budget2,
+      render: (_, record) => formatCurrency(record?.counts.budget2),
     },
   ];
 
@@ -277,7 +295,7 @@ const Dashboard2 = () => {
       fixed: "right",
       className: "column-money",
       width: 80,
-      render: (_, record) => record?.counts.budget2,
+      render: (_, record) => formatCurrency(record?.counts.budget2),
     },
   ];
 
@@ -313,7 +331,7 @@ const Dashboard2 = () => {
       fixed: "right",
       className: "column-money",
       width: 80,
-      render: (_, record) => record?.counts.budget2,
+      render: (_, record) => formatCurrency(record?.counts.budget2),
     },
   ];
 
@@ -356,7 +374,7 @@ const Dashboard2 = () => {
                     dataTextColor={["#A15219", "#45B649"]}
                     text={true}
                     pie={false}
-                    unit={"โครงการ"}
+                    unit={""}
                   />
                 </Col>
                 <Col xs={24} sm={24} md={24} lg={24} className="box-plan" style={{marginTop: 20}}>

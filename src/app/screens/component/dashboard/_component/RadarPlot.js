@@ -29,7 +29,7 @@ const RadarPlot = (props) => {
 
   useEffect(() => {
     sumCount();
-  }, []);
+  }, [text, pie, data]);
 
   const sumCount = () => {
     let sum = 0;

@@ -29,15 +29,17 @@ const GraphGroup = (props) => {
     xField: 'name',
     yField: 'value',
     seriesField: 'name_label',
-    color: ({ name }) => {
-      return brandColor;
-    },
+    // color: ({ name }) => {
+    //   return brandColor;
+    // },
+    color: brandColor,
     label: {
       position: 'middle',
       style: {
         fill: '#FFFFFF',
         opacity: 0.6,
-        fontSize: 16
+        fontSize: 16,
+        color: '#FFF'
       },
       // content: (originData) => {
       //   const val = parseFloat(originData.value);

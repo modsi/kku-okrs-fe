@@ -67,21 +67,22 @@ const PieFull = (props) => {
     legend: false,
     color: dataColor,
     innerRadius: innerRadius,
-    label: {
-      type: "inner",
-      offset: "-50%",
-      autoRotate: false,
-      content: ({ value }) => `${formatCurrency(value)} ${unit}`,
-      style: {
-        fontSize: 16,
-        textAlign: "center",
-        fill: textInPlots,
-      },
-    },
+    // label: {
+    //   type: "inner",
+    //   offset: "-50%",
+    //   autoRotate: false,
+    //   content: ({ value }) => `${formatCurrency(value)}`,
+    //   style: {
+    //     fontSize: 16,
+    //     textAlign: "center",
+    //     fill: textInPlots,
+    //   },
+    // },
+    label: false,
     interactions: [
-      {
-        type: "element-active",
-      },
+      // {
+      //   type: "element-active",
+      // },
     ],
     statistic: false,
   };

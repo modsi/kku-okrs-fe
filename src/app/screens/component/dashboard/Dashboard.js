@@ -3,7 +3,7 @@ import { Card, Row, Col, Table } from "antd";
 
 import PieFull from "./_component/PieFull";
 import Graph from "./_component/Graph";
-import GraphGroup from './_component/GraphGroup';
+import GraphGroup from "./_component/GraphGroup";
 import { useDispatch, useSelector } from "react-redux";
 import {
   LIST_DASHBOARD,
@@ -25,6 +25,7 @@ const Dashboard = () => {
   const [dataPllar, setDataPllar] = useState(null);
   const [dataCenturySkill, setDataCenturySkill] = useState(null);
   const [dataSDG, setDataSDG] = useState(null);
+  const [arrStrategic, setArrStrategic] = useState([]);
 
   useEffect(() => {
     handleListDashboard();
@@ -40,7 +41,7 @@ const Dashboard = () => {
         setDataPlan(setData(storeListDashboard.data.overall));
 
       if (storeListDashboard.data.success)
-        setDataSuccess(setData(storeListDashboard.data.success));
+        setDataSuccess(setData2(storeListDashboard.data.success));
 
       if (storeListDashboard.data.pic)
         setDataSource(storeListDashboard.data.pic);
@@ -51,6 +52,7 @@ const Dashboard = () => {
           act: act,
           dataGraph: storeListDashboard.data.strategy.Grap,
         });
+        setArrStrategic(storeListDashboard.data.strategy.Grap);
       }
 
       if (storeListDashboard.data.pillar) {
@@ -99,6 +101,20 @@ const Dashboard = () => {
       },
       {
         type: "ยังไม่ดำเนินการ",
+        value: list.notCompletePercent,
+      },
+    ];
+    return data;
+  }
+
+  function setData2(list) {
+    const data = [
+      {
+        type: "สำเร็จ",
+        value: list.completePercent,
+      },
+      {
+        type: "ไม่สำเร็จ",
         value: list.notCompletePercent,
       },
     ];
@@ -172,7 +188,7 @@ const Dashboard = () => {
                 data={dataOKRs}
                 // backgroundColor={"rgba(255, 164, 92, 0.25)"}
                 dataColor={["#f6c863", "#ef5261"]}
-                dataTextColor={["#A15219", "#45B649"]}
+                dataTextColor={["#f6c863", "#ef5261"]}
               />
             </Col>
             <Col xs={0} sm={0} md={1} lg={1} style={{ maxWidth: "2%" }}></Col>
@@ -180,13 +196,13 @@ const Dashboard = () => {
               <PieFull
                 title={"ผลการดำเนินงานตามแผนปฏิบัติการ"}
                 data={dataPlan}
-                dataColor={["#35cea1", "#dbffee"]}
-                dataTextColor={["#A15219", "#45B649"]}
+                dataColor={["#6395f9", "#62daab"]}
+                dataTextColor={["#6395f9", "#62daab"]}
                 textInPlots={"#000"}
               />
             </Col>
             <Col xs={0} sm={0} md={1} lg={1} style={{ maxWidth: "2%" }}></Col>
-            <Col xs={24} sm={24} md={7} lg={7} className="box-plan">
+            {/* <Col xs={24} sm={24} md={7} lg={7} className="box-plan">
               <PieFull
                 title={"ความสำเร็จของแผน"}
                 data={dataSuccess}
@@ -195,8 +211,38 @@ const Dashboard = () => {
                 dataTextColor={["#A15219", "#45B649"]}
                 innerRadius={0.6}
               />
-            </Col>
+            </Col> */}
           </Row>
+
+          <Row style={{  }}>
+          
+            {arrStrategic && arrStrategic.length > 0 && (
+              
+                arrStrategic.map(el => {
+                  return <>
+                  <Col xs={24} sm={24} md={7} lg={7} className="box-plan" style={{marginBottom: 20}}>
+                  <PieFull
+                    title={"ความสำเร็จของ" + el.name}
+                    data={el.data}
+                    // width={250}
+                    // height={250}
+                    dataColor={["#6395f9", "#62daab"]}
+                    dataTextColor={["#6395f9", "#62daab"]}
+                    innerRadius={0.6}
+                  />
+                </Col>
+                <Col
+                  xs={0}
+                  sm={0}
+                  md={1}
+                  lg={1}
+                  style={{ maxWidth: "2%" }}
+                ></Col></>
+                })
+              
+            )}
+          </Row>
+
           <Row>
             <Col xs={24} sm={24} md={24} lg={24}>
               <div style={{ paddingBottom: "20px" }}>
@@ -211,15 +257,15 @@ const Dashboard = () => {
                 <GraphGroup
                   title={"สรุปจำนวนโครงการตามเสาหลักมหาวิทยาลัย"}
                   data={dataPllar}
-                  dataColor={"#fd8e61"}
+                  dataColor={["#A15219", "#45B649"]}
                   dataTextColor={["#A15219", "#45B649"]}
                 />
               </div>
               <div style={{ paddingBottom: "20px" }}>
-                <Graph
+                <GraphGroup
                   title={"สรุปจำนวนโครงการตาม SDGs"}
                   data={dataSDG}
-                  dataColor={"#fd8e61"}
+                  dataColor={["#A15219", "#45B649"]}
                   dataTextColor={["#A15219", "#45B649"]}
                 />
               </div>
@@ -240,14 +286,15 @@ const Dashboard = () => {
                   data={dataSuccess}
                   width={250}
                   height={250}
-                  dataTextColor={["#A15219", "#45B649"]}
+                  dataColor={["#6395f9", "#62daab"]}
+                  dataTextColor={["#6395f9", "#62daab"]}
                   innerRadius={0.6}
                 />
               </div>
             </Col>
             <Col xs={0} sm={0} md={1} lg={1} style={{ maxWidth: "2%" }}></Col>
             <Col xs={24} sm={24} md={16} lg={16}>
-            <div>
+              <div>
                 <Card className="rounded ">
                   <div style={{ padding: "0px 15px 15px 15px" }}>
                     <span className="head-plots" style={{ margin: "10px 0px" }}>
