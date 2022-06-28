@@ -457,7 +457,7 @@ const ManageTemplate = () => {
                       handleUpStep(record)
                     }
                   >
-                    <Text className="big6-title">ส่งไปแบบรายงาน</Text>
+                    <Text className="big6-title">ส่งแบบรายงาน</Text>
                     {/* <EditOutlined /> */}
                   </Button>
                 </>

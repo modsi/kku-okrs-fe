@@ -241,7 +241,7 @@ const ManageTemplate = () => {
                 handleUpStep(record)
               }
             >
-              <Text className="big6-title">ส่งไปแบบรายงาน</Text>
+              <Text className="big6-title">ส่งแบบรายงาน</Text>
             </Button>
             {/* : null} */}
           </>
@@ -418,7 +418,7 @@ const ManageTemplate = () => {
       <Card title={"Manage Report"} className="rounded">
         <Row gutter={24} className="row-inquiry-customer">
           <Col span={12} style={{ marginTop: 10 }}>
-            <Text strong style={{ color: 'rgba(0, 0, 0, 0.5)' }}>แบบรายงานกองบริการงานคณะ (ตามแบบปฏิบัติการ) / ศูนย์</Text>
+            <Text strong style={{ color: 'rgba(0, 0, 0, 0.5)' }}>แบบรายงานกองบริการงานคณะ</Text>
           </Col>
           <Col span={12} style={{ textAlign: "right" }} >
             <Button type="primary" shape="circle" size="large"
@@ -444,7 +444,7 @@ const ManageTemplate = () => {
             />
           </Col>
           <Col span={24} style={{ textAlign: "left" }}>
-            <Text strong style={{ color: 'rgba(0, 0, 0, 0.5)' }}>แบบรายงานสาขาวิชา / หลักสูตร</Text>
+            <Text strong style={{ color: 'rgba(0, 0, 0, 0.5)' }}>แบบรายงานสาขาวิชา / ศูนย์</Text>
             <Table
               className="table-user custom-table-dashboard"
               rowKey={(record, index) => record.key}

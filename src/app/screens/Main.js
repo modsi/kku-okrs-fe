@@ -201,12 +201,12 @@ const Main = () => {
                         </Menu.Item>
                         <Menu.Item key="4" icon={<FileTextOutlined />} hidden={profile?.role?.priority === '3' || profile?.role?.priority === '5'}>
                             <Badge count={count31} offset={[20, 5]} >
-                                แบบรายงานกองบริการงานคณะ (ตามแบบปฏิบัติการ) / ศูนย์
+                                แบบรายงานกองบริการงานคณะ
                             </Badge>
                         </Menu.Item>
                         <Menu.Item key="5" icon={<FileTextOutlined />} hidden={profile?.role?.priority === '3' || profile?.role?.priority === '5'}>
                             <Badge count={count32} offset={[20, 5]} >
-                                แบบรายงานสาขาวิชา / หลักสูตร
+                                แบบรายงานสาขาวิชา / ศูนย์
                             </Badge>
                         </Menu.Item>
 

@@ -570,7 +570,7 @@ const ReportForm2 = () => {
                   className={record?.id ? "pre-button" : "nol-button"}
                   onClick={() => handleUpStep(record.record_data)}
                 >
-                  <Text className="big6-title">ส่งไปแบบรายงาน</Text>
+                  <Text className="big6-title">ส่งแบบรายงาน</Text>
                 </Button>
               </div>
             )}
@@ -740,7 +740,7 @@ const ReportForm2 = () => {
           </Row>
         </>
       ) : (
-        <Card title={"แบบรายงานสาขาวิชา / หลักสูตร"} className="rounded">
+        <Card title={"แบบรายงานสาขาวิชา / ศูนย์"} className="rounded">
           <Row gutter={24} className="row-inquiry-customer">
             {profile?.role?.priority === "1" ||
               profile?.role?.priority === "4" ? (
