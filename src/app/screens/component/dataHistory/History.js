@@ -184,7 +184,7 @@ const History = () => {
             } else if (component.key === "OKRs_Value") {
               colData.OKRs_Value = component.value;
             } else if (component.key === "OKRs_Unit_Value") {
-              colData.OKRs_Unit_Value = component.value;
+              colData.OKRs_Unit_Value = component.value ?? '';
             } else if (component.key === "OKRs_Success") {
               colData.OKRs_Success = component.value;
             } else if (component.key === "OKRs_Budget2") {

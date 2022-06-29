@@ -60,7 +60,7 @@
 
 
 .custom-table-dashboard .ant-table-thead .ant-table-cell {
-    color: #fff;
+    color: #fff !important;
     /* font-weight: bold; */
     font-family: "InteMedium" !important;
     font-size: 14px !important;

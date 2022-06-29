@@ -159,14 +159,14 @@ export const SaveCompalteFormAction = async (id, data) => {
       o.value = ov
       o.isTable = true;
       component.push(o)
-    // } else if (c.value && Array.isArray(c.value)) {
-    //   console.log('c.value',c)
-    //   c.value.map((v) => {
-    //     o.label = v.label
-    //     o.key = v.key
-    //     o.value = v.value
-    //     component.push(o)
-    //   })
+      // } else if (c.value && Array.isArray(c.value)) {
+      //   console.log('c.value',c)
+      //   c.value.map((v) => {
+      //     o.label = v.label
+      //     o.key = v.key
+      //     o.value = v.value
+      //     component.push(o)
+      //   })
     } else if (c.value && typeof c.value === 'object') {
       let v = c.value
       o.value = v.value
@@ -427,114 +427,126 @@ export const onFormSubmit = async (profile, form, listComponent) => {
   let components = listComponent?.component
   let countTargetGroup = 0;
   Object.keys(form.getFieldsValue()).forEach(function (key) {
-    let c = components.find((k) => k.key === key);
-    if (c) {
-      c.value = form.getFieldValue(key) ?? null;
+    if (form.getFieldValue('OKRs_Ids')) {
+      let c = components.find(k => k.key === 'OKRs_Ids')
+      if (!c) {
+        c = propsIds
+        components.push(c)
+      }
+      let ids = form.getFieldValue('OKRs_Ids');
+      c.label = 'เลขการรับเงิน : ' + ids
+      c.value = ids
     } else {
-      let s = key.split('#')
-      // console.log('key.split', s)
-      c = components.find((k) => k.key === s[1] || k.key === s[0]);
+      let c = components.find((k) => k.key === key);
       if (c) {
-        let v = form.getFieldValue(key);
-        // console.log('c', c, v)
-        if (key.startsWith('OKRs_Status')) {
-          if (s[1] === 'date') {
-            c.date = v
+        c.value = form.getFieldValue(key) ?? null;
+      } else {
+        let s = key.split('#')
+        // console.log('key.split', s)
+        c = components.find((k) => k.key === s[1] || k.key === s[0]);
+        if (c) {
+          let v = form.getFieldValue(key);
+          // console.log('c', c, v)
+          if (key.startsWith('OKRs_Status')) {
+            if (s[1] === 'date') {
+              c.date = v
+            } else {
+              c.detail = v
+            }
+          } else if (key.startsWith('OKRs_PDCA')) {
+            let vo = {}
+            if (s[1] === 'title') {
+              vo = {
+                index: parseInt(s[2]),
+                title: v ?? ""
+              }
+            } else {
+              vo = {
+                index: parseInt(s[2]),
+                month: v ?? ""
+              }
+            }
+
+            if (!c.value) {
+              c.value = []
+              c.value.push(vo)
+            } else {
+              let old = c.value.find(v => v.index === vo.index)
+              if (!old) {
+                c.value.push(vo)
+              } else {
+                Object.assign(old, vo)
+              }
+            }
+          } else if (key.startsWith('OKRs_TargetGroup')) {
+            let vo = {}
+            if (s[1] === 'label') {
+              vo = {
+                index: 6,
+                label: v
+              }
+            } else {
+              // console.log('s[1]',s[1], parseInt(s[1]))
+              vo = {
+                index: parseInt(s[1]),
+                value: v ?? ""
+              }
+
+              if (v && v != "") {
+                countTargetGroup++;
+              }
+            }
+            if (!c.value) {
+              c.value = []
+              c.value.push(vo)
+            } else {
+              let old = c.value.find(v => v.index === vo.index)
+              if (!old) {
+                c.value.push(vo)
+              } else {
+                Object.assign(old, vo)
+              }
+            }
+
           } else {
-            c.detail = v
-          }
-        } else if (key.startsWith('OKRs_PDCA')) {
-          let vo = {}
-          if (s[1] === 'title') {
-            vo = {
+            let vo = {
               index: parseInt(s[2]),
-              title: v ?? ""
+              key: s[0],
+              value: v ?? ''
             }
-          } else {
-            vo = {
-              index: parseInt(s[2]),
-              month: v ?? ""
-            }
-          }
-
-          if (!c.value) {
-            c.value = []
-            c.value.push(vo)
-          } else {
-            let old = c.value.find(v => v.index === vo.index)
-            if (!old) {
+            if (!c.value) {
+              c.value = []
               c.value.push(vo)
             } else {
-              Object.assign(old, vo)
-            }
-          }
-        } else if (key.startsWith('OKRs_TargetGroup')) {
-          let vo = {}
-          if (s[1] === 'label') {
-            vo = {
-              index: 6,
-              label: v
-            }
-          } else {
-            // console.log('s[1]',s[1], parseInt(s[1]))
-            vo = {
-              index: parseInt(s[1]),
-              value: v ?? ""
-            }
-
-            if (v && v != "") {
-              countTargetGroup++;
-            }
-          }
-          if (!c.value) {
-            c.value = []
-            c.value.push(vo)
-          } else {
-            let old = c.value.find(v => v.index === vo.index)
-            if (!old) {
-              c.value.push(vo)
-            } else {
-              Object.assign(old, vo)
-            }
-          }
-
-        } else {
-          let vo = {
-            index: parseInt(s[2]),
-            key: s[0],
-            value: v ?? ''
-          }
-          if (!c.value) {
-            c.value = []
-            c.value.push(vo)
-          } else {
-            let old = c.value.find(v => v.index === vo.index && v.key === vo.key)
-            if (!old) {
-              c.value.push(vo)
-            } else {
-              Object.assign(old, vo)
+              let old = c.value.find(v => v.index === vo.index && v.key === vo.key)
+              if (!old) {
+                c.value.push(vo)
+              } else {
+                Object.assign(old, vo)
+              }
             }
           }
         }
       }
-    }
 
-    if (key === 'OKRs_Status') {
-      console.log('OKRs_Status', c)
-      if (c === null || c === undefined) {
-        c = propsStatus
-        components.push(c)
-      }
-      let value = form.getFieldValue(key)
-      if (value === 1) {
-        data.status = 1
-        data.stepId = 5
-      } else if (value === 8 || value === 6 || value === 7) {
-        data.status = 0
-        data.stepId = value      
-      // } else {
-      //   data.status = 0
-      //   data.stepId = 4
+
+      if (key === 'OKRs_Status') {
+        console.log('OKRs_Status', c)
+        if (c === null || c === undefined) {
+          c = propsStatus
+          components.push(c)
+        }
+        let value = form.getFieldValue(key)
+        if (value === 1) {
+          data.status = 1
+          data.stepId = 5
+        } else if (value === 8 || value === 6 || value === 7) {
+          data.status = 0
+          data.stepId = value
+          // } else {
+          //   data.status = 0
+          //   data.stepId = 4
+        }
       }
     }
   });

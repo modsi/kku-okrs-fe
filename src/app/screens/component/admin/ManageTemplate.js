@@ -218,7 +218,7 @@ const ManageTemplate = () => {
       align: "center",
       width: 100,
       render: (record) => {
-        console.log('record', record, ((record?.stepId === '10' || record?.stepId === '11') && (record?.updated_by && record?.updated_by === profile?.username)));
+        // console.log('record', record, ((record?.stepId === '10' || record?.stepId === '11') && (record?.updated_by && record?.updated_by === profile?.username)));
         let canEdit = (record?.stepId === '11' && profile?.role_id === '3') || (record?.stepId === '10' && profile?.role_id === '4') || (record?.stepId === '6' && profile?.role_id === '3') || (record?.stepId === '7' && profile?.role_id === '4') ? false : true
         return (
           <>
@@ -333,7 +333,7 @@ const ManageTemplate = () => {
     form2.setFieldsValue({ ['name']: record.name })
     form2.setFieldsValue({ ['group']: record.groupId })
     setListComponent(record)
-    let l = record?.component?.filter(i => profile.role_id === '1' ? i.permission === 3 || i.permission === 4 : i.permission === parseInt(profile.role_id))
+    let l = record?.component?.filter(i => i.key === 'OKRs_Project' || (profile.role_id === '1' ? i.permission === 3 || i.permission === 4 : i.permission === parseInt(profile.role_id)))
     setLayoutReport(l)
     setIsModal2(true);
     setAddEditTitle(profile?.role?.role_name)

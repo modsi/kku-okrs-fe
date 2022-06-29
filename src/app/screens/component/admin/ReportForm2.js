@@ -216,7 +216,11 @@ const ReportForm2 = () => {
   };
 
   const saveForm = () => {
-    ConfirmModalEditText(onSubmit, conditionSave());
+    if (form2.getFieldValue('OKRs_Ids')) {
+      ConfirmModalEditText(onSubmit, conditionSave());
+    } else {
+      form2.validateFields()
+    }
   };
 
   const handleUpStep = (record) => {
@@ -247,14 +251,14 @@ const ReportForm2 = () => {
     data.stepId = 4;
     let stepId = record?.stepId ?? record?.step_id;
     let components = record?.component;
-    let c = components.find(k => k.key === 'OKRs_Ids')
-    if (!c) {
-      c = propsIds
-      components.push(c)
-    }
-    let ids = padLeadingZeros(record?.id, 5);
-    c.label = 'เลขการรับเงิน : ' + ids
-    c.value = ids
+    // let c = components.find(k => k.key === 'OKRs_Ids')
+    // if (!c) {
+    //   c = propsIds
+    //   components.push(c)
+    // }
+    // let ids = padLeadingZeros(record?.id, 5);
+    // c.label = 'เลขการรับเงิน : ' + ids
+    // c.value = ids
 
     if (stepId === "8") {
       components = components?.filter(f => f.key !== 'OKRs_Status');
@@ -349,7 +353,7 @@ const ReportForm2 = () => {
           } else if (component.key === "OKRs_Value") {
             colData.OKRs_Value = component.value;
           } else if (component.key === "OKRs_Unit_Value") {
-            colData.OKRs_Unit_Value = component.value;
+            colData.OKRs_Unit_Value = component.value ?? '';
           } else if (component.key === "OKRs_Success") {
             colData.OKRs_Success = component.value;
           } else if (component.key === "OKRs_Budget2") {
@@ -591,7 +595,7 @@ const ReportForm2 = () => {
 
   const handleClickValidated = (record) => {
     console.log("handleClickValidated", record);
-    let l = record?.component?.filter(i => i.permission === 2)
+    let l = record?.component?.filter(i => i.permission === 2 && i.key !== 'OKRs_Ids')
     let c = l.find((k) => k.key === 'OKRs_Status');
     let status = { ...propsStatus };
     status.options = propsStatus.options.filter(
@@ -610,13 +614,17 @@ const ReportForm2 = () => {
       setLayoutReport(l)
     }
     let t1 = record?.component?.filter(i => i.key === "OKRs_Project")
-    if(t1){
+    if(t1 && t1?.length > 0){
       setTitle1(t1[0].label + " : " + (t1[0].value ?? ""))
     }
     let t2 = record?.component?.filter(i => i.key === "OKRs_Officer")
-    if(t2){
+    if(t2 && t2?.length > 0){
       setTitle2(t2[0].label + " : " + (t2[0].value ?? ""))
     }
+    let t3 = record?.component?.filter(i => i.key === "OKRs_Ids")
+    if (t3 && t3?.length > 0) {
+      form2.setFieldsValue({ ['OKRs_Ids']: t3[0].value })
+    } 
     form2.setFieldsValue({ ["name"]: record.name });
     form2.setFieldsValue({ ['groupName']: record.group_name ? record.group_type_name + "/" + record.group_name : '' })
     let s = 0
@@ -829,6 +837,15 @@ const ReportForm2 = () => {
               <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                 <Form.Item label={"ผู้รับผิดชอบโครงการ"} name={"groupName"}>
                   <Input disabled={true} />
+                </Form.Item>
+              </Col>
+              <Col xs={24} sm={24} md={11} lg={11} xl={11}>
+                <Form.Item
+                  label='เลขรับการเงิน'
+                  name={"OKRs_Ids"}
+                  rules={[{ required: true, message: 'เลขรับการเงิน is required' }]}
+                >
+                  <Input />
                 </Form.Item>
               </Col>
               {listField}

@@ -46,6 +46,7 @@ div#root {
   font-variant: unset !important;
   font-size: var(--main-font-size) !important;
   /* color: rgba(0, 0, 0, 0.5); */
+  color: black !important;
 }
 
 .site-layout-sub-header-background{
@@ -105,13 +106,13 @@ div#root {
 .big4-title {
   font-family: "InteMedium" !important;
   font-size: 18px !important;
-  color: #fff;
+  color: #fff !important;
 }
 
 .big5-title {
   font-family: "InteMedium" !important;
   font-size: 18px !important;
-  color: #fff;
+  color: #fff !important;
 }
 
 .big6-title,
