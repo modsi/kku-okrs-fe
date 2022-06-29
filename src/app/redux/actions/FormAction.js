@@ -427,7 +427,7 @@ export const onFormSubmit = async (profile, form, listComponent) => {
   let components = listComponent?.component
   let countTargetGroup = 0;
   Object.keys(form.getFieldsValue()).forEach(function (key) {
-    if (form.getFieldValue('OKRs_Ids')) {
+    if (key === 'OKRs_Ids') {
       let c = components.find(k => k.key === 'OKRs_Ids')
       if (!c) {
         c = propsIds
