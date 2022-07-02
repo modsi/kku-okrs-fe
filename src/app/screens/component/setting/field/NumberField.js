@@ -6,6 +6,7 @@ import logo from "../../../../../assets/images/favicon-96x96.png"
 import { STORE_TEMPLATE, StoreTemplateAction } from "../../../../redux/actions/StoreSearchAction"
 import { v4 as uuidv4 } from "uuid";
 import { QuestionCircleOutlined } from "@ant-design/icons";
+import { WarningModal } from "../../../items/Modal";
 
 const { Text, Link } = Typography;
 const NumberField = ({ form, content }) => {
@@ -68,40 +69,46 @@ const NumberField = ({ form, content }) => {
     // console.log(form.getFieldValue())    
     if (form.getFieldValue('label') && form.getFieldValue('key') && form.getFieldValue('size')) {
       let store = storeTemplate?.component ?? []
-      let components = store
-      if (content?.id) {
-        components = [...storeTemplate?.component?.filter((item) => {
-          if (item.id !== content?.id) {
-            return (
-              true
-            )
-          }
-        })]
+      let checkKey = store.find(i => i.key === form.getFieldValue('key') && i.id !== content?.id)
+      if (checkKey) {
+        WarningModal('Key ถูกใช้งาานแล้ว ใน Field : ' + checkKey?.label)
+        form.setFieldsValue({ key: null })
+      } else {
+        let components = store
+        if (content?.id) {
+          components = [...storeTemplate?.component?.filter((item) => {
+            if (item.id !== content?.id) {
+              return (
+                true
+              )
+            }
+          })]
+        }
+        let maxi = store.length > 0 ? Math.max(...store.map(({ index }) => index)) : 0;
+        let obj = {
+          id: content?.id ?? uuidv4(),
+          required: content?.required ?? null,
+          index: content?.index ?? (maxi + 1),
+          labelPosition: "vertical",
+          type: 'inputNumber',
+          key: form.getFieldValue('key'),
+          label: form.getFieldValue('label'),
+          size: form.getFieldValue('size') === 2 ? 'long' : 'short',
+          max: max,
+          min: min,
+          align: "left"
+        }
+
+        components.push(obj)
+        console.log(components)
+        setTitle('Label Text Field')
+        setMax(null)
+        setMin(null)
+        setSize(2)
+        setFormLayout('vertical')
+        setTemplate({ ...storeTemplate, component: components })
+        form2.resetFields();
       }
-      let maxi = store.length > 0 ? Math.max(...store.map(({ index }) => index)) : 0;
-      let obj = {
-        id: content?.id ?? uuidv4(),
-        required: content?.required ?? null,
-        index: content?.index ?? (maxi + 1),
-        labelPosition: "vertical",
-        type: 'inputNumber',
-        key: form.getFieldValue('key'),
-        label: form.getFieldValue('label'),
-        size: form.getFieldValue('size') === 2 ? 'long' : 'short',
-        max: max,
-        min: min,
-        align: "left"
-      }
-      
-      components.push(obj)
-      console.log(components)
-      setTitle('Label Text Field')
-      setMax(null)
-      setMin(null)
-      setSize(2)
-      setFormLayout('vertical')
-      setTemplate({ ...storeTemplate, component: components })
-      form2.resetFields();
     } else {
       form.validateFields()
     }
@@ -144,7 +151,7 @@ const NumberField = ({ form, content }) => {
                       ]}
                     >
                       <Input
-                      disabled={content?.required ? true : false}
+                        disabled={content?.required ? true : false}
                         onChange={(e) => {
                           form.setFieldsValue({ ["key"]: e.target.value });
                         }}

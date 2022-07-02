@@ -7,6 +7,7 @@ import { STORE_TEMPLATE, StoreTemplateAction } from "../../../../redux/actions/S
 import { PlusOutlined, MinusCircleOutlined } from "@ant-design/icons";
 import { v4 as uuidv4 } from "uuid";
 import { QuestionCircleOutlined } from "@ant-design/icons";
+import { WarningModal } from "../../../items/Modal";
 
 const { Text, Link } = Typography;
 const RadioField = ({ form, content }) => {
@@ -86,37 +87,43 @@ const RadioField = ({ form, content }) => {
     // console.log(form.getFieldValue())    
     if (form.getFieldValue('label') && form.getFieldValue('key') && checkOptions()) {
       let store = storeTemplate?.component ?? []
-      let components = store
-      if (content?.index) {
-        components = [...storeTemplate?.component?.filter((item) => {
-          if (item.index !== content?.index) {
-            return (
-              true
-            )
-          }
-        })]
+      let checkKey = store.find(i => i.key === form.getFieldValue('key') && i.id !== content?.id)
+      if (checkKey) {
+        WarningModal('Key ถูกใช้งาานแล้ว ใน Field : ' + checkKey?.label)
+        form.setFieldsValue({ key: null })
+      } else {
+        let components = store
+        if (content?.index) {
+          components = [...storeTemplate?.component?.filter((item) => {
+            if (item.index !== content?.index) {
+              return (
+                true
+              )
+            }
+          })]
+        }
+        let max = store.length > 0 ? Math.max(...store.map(({ index }) => index)) : 0;
+        let obj = {
+          d: content?.id ?? uuidv4(),
+          required: content?.required ?? null,
+          index: content?.index ?? (max + 1),
+          labelPosition: "vertical",
+          type: 'radio',
+          key: form.getFieldValue('key'),
+          label: form.getFieldValue('label'),
+          size: 'long',
+          options: options,
+          align: "left"
+        }
+        components.push(obj)
+        console.log(components)
+        setTitle('Label Text Field')
+        setOptions([{ index: 1, label: '', value: '' }])
+        setSize(2)
+        setFormLayout('vertical')
+        setTemplate({ ...storeTemplate, component: components })
+        form2.resetFields();
       }
-      let max = store.length > 0 ? Math.max(...store.map(({ index }) => index)) : 0;
-      let obj = {
-        d: content?.id ?? uuidv4(),
-        required: content?.required ?? null,
-        index: content?.index ?? (max + 1),
-        labelPosition: "vertical",
-        type: 'radio',
-        key: form.getFieldValue('key'),
-        label: form.getFieldValue('label'),
-        size: 'long',
-        options: options,
-        align: "left"
-      }
-      components.push(obj)
-      console.log(components)
-      setTitle('Label Text Field')
-      setOptions([{ index: 1, label: '', value: '' }])
-      setSize(2)
-      setFormLayout('vertical')
-      setTemplate({ ...storeTemplate, component: components })
-      form2.resetFields();
     } else {
       form.validateFields()
     }
@@ -156,8 +163,8 @@ const RadioField = ({ form, content }) => {
     } else {
       // let op2 = options.find(({ value }) => value === e.target.value)
       // if (!op2 || op2.index === op.index) {
-        op.value = e.target.value
-        form.setFieldsValue({ ["value" + op.index]: e.target.value });
+      op.value = e.target.value
+      form.setFieldsValue({ ["value" + op.index]: e.target.value });
       // } else {
       //   op.value = null
       //   form.setFieldsValue({ ["value" + op.index]: null });
