@@ -22,6 +22,8 @@ import RangeDateField from "./field/RangeDateField";
 import TableField from "./field/TableField";
 import TargetGroupField from "./field/TargetGroupField";
 import PDCAField from "./field/PDCAField";
+import ProjectListField from "./field/ProjectListField";
+import BudgetlisField from "./field/BudgetlisField";
 
 const { Text, Link } = Typography;
 const { RangePicker } = DatePicker;
@@ -197,7 +199,53 @@ const PreviewTemplate = () => {
                         >
                             <Card id={currentItem.id} >
                                 <Card.Grid style={{ width: '100%', border: '1px solid #d9d5d5' }}>
-                                    {currentItem.key === 'OKRs_TargetGroup' ?
+                                    {currentItem.key === 'OKRs_Budgetlist2' ?
+                                        <>
+                                            <Row>
+                                                <Col xs={24} sm={24} md={2} lg={2} xl={2} >
+                                                    {storeTemplate?.templateId ? null :
+                                                        <>
+                                                            <Button
+                                                                type="link"
+                                                                style={{ padding: '0px', color: 'red' }}
+                                                                onClick={() =>
+                                                                    remove(currentItem.id)
+                                                                }
+                                                            >
+                                                                <DeleteFilled />
+                                                            </Button>
+                                                        </>
+                                                    }
+                                                </Col>
+                                                <Col xs={24} sm={24} md={22} lg={22} xl={22} >
+                                                    <BudgetlisField form={formField} content={currentItem} />
+                                                </Col>
+                                            </Row>
+                                        </>
+                                        :currentItem.key === 'OKRs_Projectlist1' ?
+                                        <>
+                                            <Row>
+                                                <Col xs={24} sm={24} md={2} lg={2} xl={2} >
+                                                    {storeTemplate?.templateId ? null :
+                                                        <>
+                                                            <Button
+                                                                type="link"
+                                                                style={{ padding: '0px', color: 'red' }}
+                                                                onClick={() =>
+                                                                    remove(currentItem.id)
+                                                                }
+                                                            >
+                                                                <DeleteFilled />
+                                                            </Button>
+                                                        </>
+                                                    }
+                                                </Col>
+                                                <Col xs={24} sm={24} md={22} lg={22} xl={22} >
+                                                    <ProjectListField form={formField} content={currentItem} />
+                                                </Col>
+                                            </Row>
+                                        </>
+                                        :currentItem.key === 'OKRs_TargetGroup' ?
                                         <>
                                             <Row>
                                                 <Col xs={24} sm={24} md={2} lg={2} xl={2} >

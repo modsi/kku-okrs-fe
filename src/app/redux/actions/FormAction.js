@@ -453,6 +453,31 @@ export const onFormSubmit = async (profile, form, listComponent) => {
             } else {
               c.detail = v
             }
+          } else if (key.startsWith('OKRs_Projectlist1') || key.startsWith('OKRs_Budgetlist2')) {
+            let vo = {}
+            if (s[1] === 'list_name') {
+              vo = {
+                index: parseInt(s[2]),
+                list_name: v ?? ""
+              }
+            } else {
+              vo = {
+                index: parseInt(s[2]),
+                budget: v ?? ""
+              }
+            }
+
+            if (!c.value) {
+              c.value = []
+              c.value.push(vo)
+            } else {
+              let old = c.value.find(v => v.index === vo.index)
+              if (!old) {
+                c.value.push(vo)
+              } else {
+                Object.assign(old, vo)
+              }
+            }
           } else if (key.startsWith('OKRs_PDCA')) {
             let vo = {}
             if (s[1] === 'title') {

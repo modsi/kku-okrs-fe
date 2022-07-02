@@ -19,3 +19,10 @@ export const StoreTemplateAction = (data = {}) => {
     console.log('StoreTemplateAction act',data);
     return Payload({ params: { [STORE_TEMPLATE]: data }, type: STORE_TEMPLATE })
 }
+
+
+export const STORE_BUDGET = 'storeBudget'
+export const StoreBudgetAction = (data = {}) => {
+    console.log('StoreBudgetAction act',data);
+    return Payload({ params: { [STORE_BUDGET]: data }, type: STORE_BUDGET })
+}

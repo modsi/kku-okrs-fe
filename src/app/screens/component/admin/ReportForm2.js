@@ -216,7 +216,7 @@ const ReportForm2 = () => {
   };
 
   const saveForm = () => {
-    if (form2.getFieldValue('OKRs_Ids')) {
+    if (listComponent?.step_id !== '4' || (listComponent?.step_id === '4' && form2.getFieldValue('OKRs_Ids'))) {
       ConfirmModalEditText(onSubmit, conditionSave());
     } else {
       form2.validateFields()

@@ -3,15 +3,14 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from "react-router-dom";
 import { Card, Row, Col, Button, Typography, Table, Form, Input, Radio, Space, Image, InputNumber, Checkbox, Select, DatePicker, Upload, message } from 'antd';
 import { UploadOutlined } from "@ant-design/icons";
-import {
-  StoreTemplateAction,
-  STORE_TEMPLATE,
-} from "../../../redux/actions/StoreSearchAction";
+import { StoreBudgetAction } from "../../../redux/actions/StoreSearchAction";
 import { getStorage } from "../../state/localStorage";
 import logo from "../../../../assets/images/favicon-96x96.png"
 import moment from "moment";
 import TargetGroupField from "../setting/field/TargetGroupField";
 import PDCAField from "../setting/field/PDCAField";
+import ProjectListField from "../setting/field/ProjectListField";
+import BudgetlisField from "../setting/field/BudgetlisField";
 import { formatCurrency } from '../../../utils/CommonUtils'
 import { Success, WarningModal } from "../../items/Modal";
 
@@ -89,84 +88,93 @@ const LayoutReport = ({ form, store, isView }) => {
         <>
           <Col xs={24} sm={24} md={size} lg={size} xl={size} style={{ textAlign: currentItem.align ?? "left", paddingRight: '20px' }}>
 
-            {currentItem.key === 'OKRs_TargetGroup' ?
+            {currentItem.key === 'OKRs_Budgetlist2' ?
               <>
-                <TargetGroupField form={form} content={currentItem} isView={isView} />
+                <BudgetlisField form={form} content={currentItem} isView={isView} allContent={components} />
               </>
-              :
-              currentItem.key === 'OKRs_PDCA' ?
+              : currentItem.key === 'OKRs_Projectlist1' ?
                 <>
-                  <PDCAField form={form} content={currentItem} isView={isView} />
+
+                  <ProjectListField form={form} content={currentItem} isView={isView} />
                 </>
-                : currentItem.type === 'table' ?
+                : currentItem.key === 'OKRs_TargetGroup' ?
                   <>
-                    <Text>{currentItem.label}</Text>
-                    {setTableContent(currentItem.columns, currentItem.rows, currentItem.key, currentItem.value)}
+                    <TargetGroupField form={form} content={currentItem} isView={isView} />
                   </>
-                  : currentItem.type === 'title' ?
-                    (<Text style={currentItem.isSubTitle ? { paddingLeft: '50px' } : {}}>{currentItem?.label}</Text>)
-                    : (<Form.Item
-                      className="template-text"
-                      labelAlign='left'
-                      labelWrap='true'
-                      {...formItemLayout}
-                      layout={currentItem.labelPosition ?? 'vertical'}
-                      label={currentItem.label}
-                      name={currentItem.key}
-                    // rules={[{ required: currentItem.required ? true : false, message: 'Please input ' + currentItem?.label }]}
-                    >
-                      {currentItem.type === 'textArea' ?
-                        (<Input.TextArea  showCount maxLength={currentItem.maxLength} disabled={isView || isDisabled ? true : false} />)
-                        : currentItem.type === 'inputNumber' ?
-                          (<InputNumber 
-                            formatter={value => {
-                              // console.log('chk formatter' , value);
-                              if (value && !isNaN(+value)) {
-                                return formatCurrency(value)
-                              } else {
-                                form.setFieldsValue({ [currentItem.key]: null })
-                                return 0;
-                              }
-                            }
-                            }
-                            // parser={value => value <= 0 ? null : value?.replace(/\฿\s?|(,*)/g, '')}
-                            style={{ width: '100%' }} 
-                            min={currentItem.min} 
-                            max={currentItem.max} 
-                            disabled={isView || currentItem.key === 'OKRs_Budget3' || isDisabled} 
-                            onChange={(e) => setAutoValue(e, currentItem.key)} />)
-                          : currentItem.type === 'checkbox' ?
-                            (<Checkbox.Group options={currentItem.options} disabled={isView || isDisabled ? true : false} />)
-                            : currentItem.type === 'select' ?
-                              (<Select
-                                disabled={isView || isDisabled ? true : false}
-                                mode={currentItem.mode}
-                                placeholder="Please select"
+                  :
+                  currentItem.key === 'OKRs_PDCA' ?
+                    <>
+                      <PDCAField form={form} content={currentItem} isView={isView} />
+                    </>
+                    : currentItem.type === 'table' ?
+                      <>
+                        <Text>{currentItem.label}</Text>
+                        {setTableContent(currentItem.columns, currentItem.rows, currentItem.key, currentItem.value)}
+                      </>
+                      : currentItem.type === 'title' ?
+                        (<Text style={currentItem.isSubTitle ? { paddingLeft: '50px' } : {}}>{currentItem?.label}</Text>)
+                        : (<Form.Item
+                          className="template-text"
+                          labelAlign='left'
+                          labelWrap='true'
+                          {...formItemLayout}
+                          layout={currentItem.labelPosition ?? 'vertical'}
+                          label={currentItem.label}
+                          name={currentItem.key}
+                        // rules={[{ required: currentItem.required ? true : false, message: 'Please input ' + currentItem?.label }]}
+                        >
+                          {currentItem.type === 'textArea' ?
+                            (<Input.TextArea showCount maxLength={currentItem.maxLength} disabled={isView || isDisabled ? true : false} />)
+                            : currentItem.type === 'inputNumber' ?
+                              (<InputNumber
+                                formatter={value => {
+                                  // console.log('chk formatter' , value);
+                                  if (value && !isNaN(+value)) {
+                                    return formatCurrency(value)
+                                  } else {
+                                    form.setFieldsValue({ [currentItem.key]: null })
+                                    return 0;
+                                  }
+                                }
+                                }
+                                // parser={value => value <= 0 ? null : value?.replace(/\฿\s?|(,*)/g, '')}
                                 style={{ width: '100%' }}
-                                options={currentItem.options}
-                                onChange={(value) => handleSelectChange(value, currentItem.key)}
-                              />)
-                              : currentItem.type === 'radio' ?
-                                (<Radio.Group
-                                  disabled={isView || isDisabled ? true : false}
-                                  options={currentItem.options}
-                                />)
-                                : currentItem.type === 'day' ?
-                                  (<DatePicker disabled={isView || isDisabled ? true : false} />)
-                                  : currentItem.type === 'date_time' ?
-                                    (<DatePicker showTime format="DD/MM/YYYY HH:mm:ss" disabled={isView || isDisabled ? true : false} />)
-                                    : currentItem.type === 'range_date' ?
-                                      (<RangePicker disabled={isView || isDisabled ? true : false} />)
-                                      : currentItem.type === 'upload' ?
-                                        (<Upload {...propsUpload}>
-                                          <Button icon={<UploadOutlined />} disabled={isView || isDisabled ? true : false}>Click to Upload</Button>
-                                        </Upload>)
-                                        // : currentItem.type === 'email' ?
-                                        // (<Input placeholder="Please enter email." onChange={(e) => form.validateFields()} />)                                                                                        
-                                        : (<Input disabled={isView ||currentItem.key === 'OKRs_Budget3' || isDisabled} onChange={(e) => setAutoValue(e.target.value, currentItem.key)} />)
-                      }
-                    </Form.Item>
-                    )}
+                                min={currentItem.min}
+                                max={currentItem.max}
+                                disabled={isView || currentItem.key === 'OKRs_Budget3' || isDisabled}
+                                onChange={(e) => setAutoValue(e, currentItem.key)} />)
+                              : currentItem.type === 'checkbox' ?
+                                (<Checkbox.Group options={currentItem.options} disabled={isView || isDisabled ? true : false} />)
+                                : currentItem.type === 'select' ?
+                                  (<Select
+                                    disabled={isView || isDisabled ? true : false}
+                                    mode={currentItem.mode}
+                                    placeholder="Please select"
+                                    style={{ width: '100%' }}
+                                    options={currentItem.options}
+                                    onChange={(value) => handleSelectChange(value, currentItem.key)}
+                                  />)
+                                  : currentItem.type === 'radio' ?
+                                    (<Radio.Group
+                                      disabled={isView || isDisabled ? true : false}
+                                      options={currentItem.options}
+                                    />)
+                                    : currentItem.type === 'day' ?
+                                      (<DatePicker disabled={isView || isDisabled ? true : false} />)
+                                      : currentItem.type === 'date_time' ?
+                                        (<DatePicker showTime format="DD/MM/YYYY HH:mm:ss" disabled={isView || isDisabled ? true : false} />)
+                                        : currentItem.type === 'range_date' ?
+                                          (<RangePicker disabled={isView || isDisabled ? true : false} />)
+                                          : currentItem.type === 'upload' ?
+                                            (<Upload {...propsUpload}>
+                                              <Button icon={<UploadOutlined />} disabled={isView || isDisabled ? true : false}>Click to Upload</Button>
+                                            </Upload>)
+                                            // : currentItem.type === 'email' ?
+                                            // (<Input placeholder="Please enter email." onChange={(e) => form.validateFields()} />)                                                                                        
+                                            : (<Input disabled={isView || currentItem.key === 'OKRs_Budget3' || isDisabled} onChange={(e) => setAutoValue(e.target.value, currentItem.key)} />)
+                          }
+                        </Form.Item>
+                        )}
 
           </Col>
         </>
@@ -215,8 +223,13 @@ const LayoutReport = ({ form, store, isView }) => {
       } else {
         let val = b1 - b2
         form.setFieldsValue({ OKRs_Budget3: val })
+        setBudget1(b2)
       }
     }
+  }
+
+  async function setBudget1(data) {
+    dispatch(await StoreBudgetAction(data))
   }
 
   const setTableContent = (options, row, key, value) => {
