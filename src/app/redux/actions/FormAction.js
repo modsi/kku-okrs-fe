@@ -478,6 +478,7 @@ export const onFormSubmit = async (profile, form, listComponent) => {
                 Object.assign(old, vo)
               }
             }
+            c.type = 'table'
           } else if (key.startsWith('OKRs_PDCA')) {
             let vo = {}
             if (s[1] === 'title') {

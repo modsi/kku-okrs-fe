@@ -21,8 +21,14 @@ export const StoreTemplateAction = (data = {}) => {
 }
 
 
+export const STORE_BUDGET_USED = 'storeBudgetUsed'
+export const StoreBudgetUsedAction = (data = {}) => {
+    console.log('StoreBudgetUsedAction act',data );
+    return Payload({ params: { [STORE_BUDGET_USED]: data?.toString().replaceAll(',','') }, type: STORE_BUDGET_USED })
+}
+
 export const STORE_BUDGET = 'storeBudget'
 export const StoreBudgetAction = (data = {}) => {
-    console.log('StoreBudgetAction act',data);
-    return Payload({ params: { [STORE_BUDGET]: data }, type: STORE_BUDGET })
+    console.log('StoreBudgetAction act',data );
+    return Payload({ params: { [STORE_BUDGET]: data?.toString().replaceAll(',','') }, type: STORE_BUDGET })
 }

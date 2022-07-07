@@ -69,7 +69,6 @@ const PDCAField = ({ form, content, isView }) => {
 
   useEffect(() => {
     if (content) {
-      console.log('PDCAField', content);
       if (Array.isArray(content?.value)) {
         content?.value?.map(v => {
           form.setFieldsValue({

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from "react-router-dom";
 import { Card, Row, Col, Button, Typography, Table, Form, Input, Radio, Space, Image, InputNumber, Checkbox, Select, DatePicker, Upload, message } from 'antd';
 import { UploadOutlined } from "@ant-design/icons";
-import { StoreBudgetAction } from "../../../redux/actions/StoreSearchAction";
+import { StoreBudgetUsedAction, StoreBudgetAction } from "../../../redux/actions/StoreSearchAction";
 import { getStorage } from "../../state/localStorage";
 import logo from "../../../../assets/images/favicon-96x96.png"
 import moment from "moment";
@@ -142,7 +142,7 @@ const LayoutReport = ({ form, store, isView }) => {
                                 min={currentItem.min}
                                 max={currentItem.max}
                                 disabled={isView || currentItem.key === 'OKRs_Budget3' || isDisabled}
-                                onChange={(e) => setAutoValue(e, currentItem.key)} />)
+                                onChange={(e) => setAutoValue(e, currentItem.key)} onBlur={(e) => setBudget(e.target.value, currentItem.key)} />)
                               : currentItem.type === 'checkbox' ?
                                 (<Checkbox.Group options={currentItem.options} disabled={isView || isDisabled ? true : false} />)
                                 : currentItem.type === 'select' ?
@@ -171,7 +171,7 @@ const LayoutReport = ({ form, store, isView }) => {
                                             </Upload>)
                                             // : currentItem.type === 'email' ?
                                             // (<Input placeholder="Please enter email." onChange={(e) => form.validateFields()} />)                                                                                        
-                                            : (<Input disabled={isView || currentItem.key === 'OKRs_Budget3' || isDisabled} onChange={(e) => setAutoValue(e.target.value, currentItem.key)} />)
+                                            : (<Input disabled={isView || currentItem.key === 'OKRs_Budget3' || isDisabled} onChange={(e) => setAutoValue(e.target.value, currentItem.key)} onBlur={(e) => setBudget(e.target.value, currentItem.key)} />)
                           }
                         </Form.Item>
                         )}
@@ -194,6 +194,10 @@ const LayoutReport = ({ form, store, isView }) => {
             form.setFieldsValue({ ['OKRs_Status#detail']: currentItem.detail })
             setShowDetailStatus(true)
           }
+        } else if (currentItem.key === 'OKRs_Budget2') {
+          setBudgetUsed(currentItem.value)
+        } else if (currentItem.key === 'OKRs_Budget1') {
+          setBudget1(currentItem.value)
         }
       }
     })
@@ -223,13 +227,25 @@ const LayoutReport = ({ form, store, isView }) => {
       } else {
         let val = b1 - b2
         form.setFieldsValue({ OKRs_Budget3: val })
-        setBudget1(b2)
       }
+    }
+  }
+
+  const setBudget = (v, key) => {
+    console.log('setBudget', v, key)
+    if (key === 'OKRs_Budget2') {
+      setBudgetUsed(v)
+    } else if (key === 'OKRs_Budget1') {
+      setBudget1(v)
     }
   }
 
   async function setBudget1(data) {
     dispatch(await StoreBudgetAction(data))
+  }
+
+  async function setBudgetUsed(data) {
+    dispatch(await StoreBudgetUsedAction(data))
   }
 
   const setTableContent = (options, row, key, value) => {

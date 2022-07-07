@@ -3,19 +3,18 @@ import { Row, Col, Button, Typography, Table, Form, Input, Space, InputNumber } 
 import { PlusOutlined, MinusCircleOutlined } from "@ant-design/icons";
 import moment from "moment";
 import { formatCurrency } from '../../../../utils/CommonUtils'
-import { STORE_BUDGET } from "../../../../redux/actions/StoreSearchAction";
+import { STORE_BUDGET_USED } from "../../../../redux/actions/StoreSearchAction";
 import { useSelector } from 'react-redux'
 
 const { Text } = Typography;
 const BudgetlisField = ({ form, content, isView }) => {
   const [title, setTitle] = useState('Label Text Field');
   const [row, setRow] = useState(1);
-  const [listField, setListField] = useState([]);
   const [options, setOptions] = useState([{ index: 1, colLabel: '', colKey: '' }]);
   const [dataSource, setDataSource] = useState([]);
   const [maxBudget, setMaxBudget] = useState(null);
-  const [usedBudget, setUsedBudget] = useState(null);
-  const budget = useSelector(state => state?.storeSearchReducer?.[STORE_BUDGET])
+  const [usedBudget, setUsedBudget] = useState(form.getFieldValue('OKRs_Budget2') ? parseInt(form.getFieldValue('OKRs_Budget2')) : null);
+  const budget = useSelector(state => state?.storeSearchReducer?.[STORE_BUDGET_USED])
   // const [columns, setColumns] = useState([]);
 
   const add = () => {
@@ -66,7 +65,35 @@ const BudgetlisField = ({ form, content, isView }) => {
     } else {
       setMaxBudget(null)
     }
+    setBudgetList()
   }, [budget])
+
+  const setBudgetList = () => {
+    let usedBudget = parseInt(budget);
+    let countRemoved = 0;
+    Object.keys(form.getFieldsValue()).forEach(function (key) {
+      if (key.startsWith('OKRs_Budgetlist2#budget')) {
+        let s = key.split('#')
+        let v = form.getFieldValue(key);
+        console.log('setBudgetList', key, s, v, usedBudget);
+        if (v) {
+          if (!usedBudget || usedBudget < 1) {
+            form.setFieldsValue({ ['OKRs_Budgetlist2#list_name#' + s[2]]: null })
+            form.setFieldsValue({ [key]: null })
+            countRemoved++;
+            usedBudget = 0
+          } else if (usedBudget <= v) {
+            form.setFieldsValue({ [key]: usedBudget })
+            usedBudget = 0
+          } else {
+            usedBudget = parseInt(usedBudget) - parseInt(v)
+          }
+        }
+      }
+    })
+    setUsedBudget(usedBudget);
+    remove(countRemoved)
+  }
 
   useEffect(() => {
     if (content) {
@@ -85,99 +112,34 @@ const BudgetlisField = ({ form, content, isView }) => {
   }, [content])
 
 
-  const remove = (index) => {
-    form.setFieldsValue({ ["colLabel" + index]: null, ["colKey" + index]: null });
-    let store = [...options?.filter((item) => {
-      if (item.index !== index) {
-        return (
-          true
-        )
-      }
-    })]
-    setOptions(store)
+  const remove = (countRemoved) => {
+    setRow(row - countRemoved)
+    // let ds = []
+    // dataSource.map((data) => {      
+    //   if(data.index !== index){
+    //     let d = {}
+    //     Object.assign(d, data)
+    //     ds.push(d)
+    //   }
+    // })    
+    // console.log('remove>>', index, dataSource, ds);
+    // setDataSource(ds)
   };
 
   useEffect(() => {
     DynamicFieldSet()
   }, [options, row])
-
-  const updateOption = (inx, type, e) => {
-    // console.log('updateOption >>', index, type, e)
-    let op = options.find(({ index }) => index === inx)
-    if (type === "colLabel") {
-      op.colLabel = e.target.value
-      form.setFieldsValue({ ["colLabel" + op.index]: e.target.value });
-    } else {
-      let op2 = options.find(({ colKey }) => colKey === e.target.value)
-      if (!op2 || op2.index === op.index) {
-        op.colKey = e.target.value
-        form.setFieldsValue({ ["colKey" + op.index]: e.target.value });
-      } else {
-        op.colKey = null
-        form.setFieldsValue({ ["colKey" + op.index]: null });
-      }
-    }
-    let store = [...options?.filter((item) => {
-      if (item.index !== inx) {
-        return (
-          true
-        )
-      }
-    })]
-    setOptions([...store, op])
-  };
+ 
 
   const DynamicFieldSet = () => {
-    let listField = []
-    // console.log('options >>', options)
-    options?.sort((a, b) => (a.index > b.index) ? 1 : -1)
-    let cols = []
-    options.map((item, index) => {
-      let field = (
-        <>
-
-          <Form.Item
-            noStyle
-            name={"colLabel" + item.index}
-            rules={[{ required: true }]}
-          >
-            <Input placeholder="label" disabled={isView ? true : false} onChange={(e) => updateOption(item.index, 'colLabel', e)} defaultValue={item.colLabel} style={{ width: '40%' }} />
-          </Form.Item>
-          <Form.Item
-            noStyle
-            name={"colKey" + item.index}
-            rules={[{ required: true }]}
-          >
-            <Input placeholder="column key" disabled={isView ? true : false} onChange={(e) => updateOption(item.index, 'colKey', e)} defaultValue={item.colKey} style={{ width: '40%' }} />
-          </Form.Item>
-
-          <MinusCircleOutlined
-            className="dynamic-delete-button"
-            onClick={() => remove(item.index)}
-          />
-        </>
-      )
-      listField.push(field);
-
-      let col = {
-        title: item.colLabel ?? 'column label',
-        dataIndex: item.colKey ?? ("colKey" + item.index),
-        key: item.colKey ?? ("colKey" + item.index),
-      }
-      cols.push(col);
-    })
     let data = []
     for (let i = 0; i < row; i++) {
       let d = {}
       d.key = i
       d.index = i + 1
-      cols.map((c) => {
-        Object.assign(d, { [c.dataIndex]: null })
-      });
       data.push(d)
     }
     setDataSource(data)
-    setListField(listField);
   };
 
   const EditableCell = ({
@@ -197,10 +159,10 @@ const BudgetlisField = ({ form, content, isView }) => {
               style={{ margin: 0, padding: 0 }}
             >
               {dataIndex === 'OKRs_Budgetlist2#budget' ?
-                <InputNumber 
-                  // onChange={(e) => setAutoValue(e, dataIndex + '#' + record?.index)}
-                  style={{ width: '100%' }} 
-                  max={maxBudget}
+                <InputNumber
+                  onBlur={(e) => setAutoValue(e.target.value, dataIndex + '#' + record?.index)}
+                  style={{ width: '100%' }}
+                  // max={maxBudget}
                   formatter={value => {
                     // console.log('chk formatter' , value);
                     if (value && !isNaN(+value)) {
@@ -230,11 +192,10 @@ const BudgetlisField = ({ form, content, isView }) => {
     );
   };
 
-const setAutoValue = (v, k) => {       
-    let vv = maxBudget - v
-    console.log('setAutoValue',maxBudget, v, vv) 
-    setUsedBudget(vv)
-}
+  const setAutoValue = (v, k) => {
+    console.log('setAutoValue', maxBudget, v, k)
+    setBudgetList()
+  }
 
 
   const mergedColumns = columns.map(col => {
@@ -248,6 +209,7 @@ const setAutoValue = (v, k) => {
     };
   });
 
+  // console.log('usedBudget >> ', usedBudget);
   return (
     <>
       <Row gutter={24}>
@@ -270,7 +232,7 @@ const setAutoValue = (v, k) => {
                   />
                   {isView ? null :
                     <Button
-                      disabled={!maxBudget || maxBudget > 0 ? false : true}
+                      disabled={usedBudget === null || usedBudget > 0 ? false : true}
                       type="dashed"
                       onClick={() => add()}
                       style={{ width: "60%" }}
